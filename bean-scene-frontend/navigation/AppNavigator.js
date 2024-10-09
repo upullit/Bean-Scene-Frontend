@@ -8,6 +8,7 @@ import OrderScreen from '../screens/OrderScreen'
 const Stack = createStackNavigator()
 
 const AppNavigator = () => {
+    return (
     <NavigationContainer>
         <Stack.Navigator initialRouteName='Home'>
             <Stack.Screen name='Home' component={HomeScreen} />
@@ -15,6 +16,8 @@ const AppNavigator = () => {
             <Stack.Screen name='Order' component={OrderScreen} />
         </Stack.Navigator>
     </NavigationContainer>
+    )
+
 }
 
 export default AppNavigator;
