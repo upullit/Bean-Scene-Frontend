@@ -26,12 +26,21 @@ const MenuScreen = ({ navigation }) => {
             <View style={styles.column}>
                 <View style={styles.buttonRow}>
                     <Button title="New Ticket" />
-                    <Button title="View Tickets" />
+                    <Button title="View Tickets" onPress={() => navigation.navigate('Ticket')}/>
                     <Button title="Change Table" />
                     <Button title="Cancel Ticket" />
                 </View>
+                <View style={styles.order}>
+
+                </View>
                 <Text>Hi, this is the Bean Scene menu ordering app</Text>
                 <Button title="Go to order screen" onPress={() => navigation.navigate('Order')} />
+                <View style={styles.buttonRow}>
+                    <Button title="Cash" />
+                    <Button title="Card" />
+                    <Button title="Split" />
+                    <Button title="Refund" />
+                </View>
             </View>
             <View style={styles.column}>
                 <View style={styles.buttonRow}>
@@ -82,11 +91,19 @@ const styles = StyleSheet.create({
         backgroundColor: '#f9f9f9',
     },
     flatContainer: {
-        borderWidth: 1,         
+        borderWidth: 2,         
         borderColor: 'black',   
         borderRadius: 5,        
         overflow: 'hidden',
         height: 600,            
+        width: '100%',          
+    },
+    order: {
+        borderWidth: 2,         
+        borderColor: 'black',   
+        borderRadius: 5,        
+        overflow: 'hidden',
+        height: 400,            
         width: '100%',          
     },
 });
