@@ -210,8 +210,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 20,
         height: 600,
-        justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'left',
     },
     detailsTitle: {
         fontSize: 24,
