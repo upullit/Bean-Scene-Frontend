@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Button } from 'react-native';
+import { createItem, getItems, getSingleItem, updateMenuItem, deleteItem } from './crud';
 
+// itteration to cycle or getItems();
 const DummyMenu = [
     { id: '1', title: 'Pancakes ', price: 12.00, description: 'Fluffy pancakes served with maple syrup and fresh berries.'},
     { id: '2', title: 'Item 2', price: 15, description: 'Description for Item 2' },
