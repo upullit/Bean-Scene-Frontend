@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Button } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Button, TextInput } from 'react-native';
 
 const DummyMenu = [
-    { id: '1', title: 'Pancakes ', price: 12.00, description: 'Fluffy pancakes served with maple syrup and fresh berries.'},
-    { id: '2', title: 'Item 2', price: 15, description: 'Description for Item 2' },
-    { id: '3', title: 'Item 3', price: 7, description: 'Description for Item 3' },
-    { id: '4', title: 'Item 4', price: 12, description: 'Description for Item 4' },
-    { id: '5', title: 'Item 5', price: 9, description: 'Description for Item 5' },
-    { id: '6', title: 'Item 6', price: 20, description: 'Description for Item 6' },
-    { id: '7', title: 'Item 7', price: 5, description: 'Description for Item 7' },
-    { id: '8', title: 'Item 8', price: 25, description: 'Description for Item 8' },
-    { id: '9', title: 'Item 9', price: 8, description: 'Description for Item 9' },
-    { id: '10', title: 'Item 10', price: 30, description: 'Description for Item 10' },
+    { id: '1', title: 'Pancakes', price: 12.00, description: 'Fluffy pancakes served with maple syrup and fresh berries.', type: 'Breakfast' },
+    { id: '2', title: 'Caesar Salad', price: 10.00, description: 'Classic Caesar salad with romaine and croutons.', type: 'Lunch' },
+    { id: '3', title: 'Steak Dinner', price: 25.00, description: 'Juicy steak served with vegetables.', type: 'Dinner' },
+    { id: '4', title: 'Margarita', price: 7.00, description: 'Refreshing margarita with lime and salt.', type: 'Drinks' },
+    { id: '5', title: 'Ice Cream', price: 5.00, description: 'Delicious ice cream in various flavors.', type: 'Dessert' },
+    { id: '6', title: 'Breakfast Burrito', price: 9.00, description: 'Burrito filled with eggs, cheese, and salsa.', type: 'Breakfast' },
+    // Add more items as needed
 ];
 
 const DOUBLE_TAP_DELAY = 300; // 300ms for double-tap detection
@@ -28,10 +25,13 @@ const MenuScreen = ({ navigation }) => {
     const [selectedItem, setSelectedItem] = useState(null);
     const [lastTap, setLastTap] = useState(null);
     const [tapTimeout, setTapTimeout] = useState(null);
+    const [comment, setComment] = useState(''); // To store the custom comment
+    const [filteredMenu, setFilteredMenu] = useState(DummyMenu); // State for filtered menu items
 
-    const addToOrder = (item, price) => {
-        setOrder((prevOrder) => [...prevOrder, { item, price }]);
-        setTotalPrice((prevTotal) => prevTotal + price);
+    const addToOrder = (item, price, comment) => {
+        setOrder((prevOrder) => [...prevOrder, { item, price, comment }]);
+        setTotalPrice((prevTotal) => prevTotal + price); 
+        setComment(''); // Clear the input field after adding to the order
     };
 
     const clearOrder = () => {
@@ -43,7 +43,7 @@ const MenuScreen = ({ navigation }) => {
         const now = Date.now();
 
         if (tapTimeout) {
-            clearTimeout(tapTimeout); // If a second tap happens, clear the timeout for the single tap
+            clearTimeout(tapTimeout); // Clear the timeout for the single tap
             setTapTimeout(null);
         }
 
@@ -67,6 +67,11 @@ const MenuScreen = ({ navigation }) => {
         setSelectedItem(null); // Clear selected item to return to list
     };
 
+    const filterMenu = (type) => {
+        const filtered = DummyMenu.filter(item => item.type === type);
+        setFilteredMenu(filtered);
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.column}>
@@ -82,14 +87,19 @@ const MenuScreen = ({ navigation }) => {
                         <Text>No items in order</Text>
                     ) : (
                         order.map((orderItem, index) => (
-                            <Text key={index} style={styles.orderItem}>
-                                {orderItem.item} - ${orderItem.price.toFixed(2)}
-                            </Text>
+                            <View key={index}>
+                                <Text style={styles.orderItem}>
+                                    {orderItem.item} - ${orderItem.price.toFixed(2)}
+                                </Text>
+                                {orderItem.comment ? (
+                                    <Text style={styles.orderComment}> - {orderItem.comment}</Text> // Display the comment
+                                ) : null}
+                            </View>
                         ))
                     )}
                 </View>
                 <View style={styles.totalContainer}>
-                <Text style={styles.totalPrice}>
+                    <Text style={styles.totalPrice}>
                         Total Price: ${totalPrice.toFixed(2)}
                     </Text>
                 </View>
@@ -103,24 +113,36 @@ const MenuScreen = ({ navigation }) => {
             </View>
             <View style={styles.column}>
                 <View style={styles.buttonRow}>
-                    <Button title="Beverages" />
-                    <Button title="Breakfast" />
-                    <Button title="Lunch" />
-                    <Button title="Dinner" />
-                    <Button title="Cafe/Dessert" />
+                    <Button title="Beverages" onPress={() => filterMenu('Drinks')} />
+                    <Button title="Breakfast" onPress={() => filterMenu('Breakfast')} />
+                    <Button title="Lunch" onPress={() => filterMenu('Lunch')} />
+                    <Button title="Dinner" onPress={() => filterMenu('Dinner')} />
+                    <Button title="Dessert" onPress={() => filterMenu('Dessert')} />
                 </View>
 
                 {selectedItem ? (
                     <View style={styles.detailsContainer}>
                         <Text style={styles.detailsTitle}>{selectedItem.title}</Text>
-                        <Text>Price: ${selectedItem.price.toFixed(2)}</Text>
-                        <Text>Description: {selectedItem.description}</Text>
-                        <Button title="Back" onPress={goBackToList} />
+                        <Text style={styles.detailsText}>Price: ${selectedItem.price.toFixed(2)}</Text>
+                        <Text style={styles.detailsText}>Description: {selectedItem.description}</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Add a comment or special request"
+                            value={comment}
+                            onChangeText={setComment}
+                        />
+                        <View style={styles.buttonRow}>
+                            <Button title="Back" onPress={goBackToList} />
+                            <Button
+                                title="Add to Order"
+                                onPress={() => addToOrder(selectedItem.title, selectedItem.price, comment)} // Pass the comment
+                            />
+                        </View>
                     </View>
                 ) : (
                     <View style={styles.flatContainer}>
                         <FlatList
-                            data={DummyMenu}
+                            data={filteredMenu}
                             renderItem={({ item }) => (
                                 <Item
                                     title={item.title}
@@ -205,16 +227,23 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     detailsContainer: {
-        borderWidth: 2,
-        borderColor: 'black',
-        borderRadius: 5,
         padding: 20,
-        height: 600,
-        alignItems: 'left',
+        backgroundColor: '#f9f9f9',
+        borderRadius: 5,
     },
     detailsTitle: {
         fontSize: 24,
         fontWeight: 'bold',
+    },
+    detailsText: {
+        fontSize: 16,
+        marginVertical: 5,
+    },
+    input: {
+        borderColor: 'gray',
+        borderWidth: 1,
+        borderRadius: 5,
+        padding: 10,
         marginBottom: 10,
     },
 });
