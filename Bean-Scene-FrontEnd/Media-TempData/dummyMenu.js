@@ -1,0 +1,113 @@
+export const DummyMenu = [
+    { 
+        id: '1', 
+        title: 'Pancakes', 
+        price: 12.00, 
+        description: 'Fluffy pancakes served with maple syrup and fresh berries.', 
+        category: 'Breakfast',
+        image: require('./Images/Menu/Breakfast/Pancakes.jpg'),
+    },
+    { 
+        id: '2', 
+        title: 'Avocado Toast', 
+        price: 14.00, 
+        description: 'Smashed avocado on sourdough, topped with poached eggs and chili flakes. ', 
+        category: 'Breakfast',
+        image: require('./Images/Menu/Breakfast/Avocado-Toast.jpg'),
+    },
+    { 
+        id: '3', 
+        title: 'French Toast', 
+        price: 13.00, 
+        description: 'Thick-cut brioche soaked in cinnamon-vanilla batter, served with whipped cream and berries.', 
+        category: 'Breakfast',
+        image: require('./Images/Menu/Breakfast/French-Toast.jpg'),
+    },
+    { 
+        id: '4', 
+        title: 'Full English Breakfast', 
+        price: 18.00, 
+        description: 'Freshly cooked eggs, bacon, sausage, baked beans, grilled tomatoes, and toast.', 
+        category: 'Breakfast',
+        image: require('./Images/Menu/Breakfast/Full-English.jpg'),
+    },
+    { 
+        id: '5', 
+        title: 'Acai Bowl', 
+        price: 12.00, 
+        description: 'Acai purée topped with banana, granola, coconut flakes, and honey.', 
+        category: 'Breakfast',
+        image: require('./Images/Menu/Breakfast/Acai.jpg'),
+    },
+    { 
+        id: '6', 
+        title: 'BLT', 
+        price: 13.00, 
+        description: 'Crispy bacon, fresh lettuce, and ripe tomatoes on toasted sourdough bread, slathered with Aioli.', 
+        category: 'Breakfast',
+        image: require('./Images/Menu/Breakfast/BLT.jpg'),
+    },
+    { 
+        id: '7', 
+        title: 'Caesar Salad', 
+        price: 14.00, 
+        description: 'Romaine lettuce, parmesan, croutons, and Caesar dressing, with grilled chicken. ', 
+        category: 'Lunch',
+        image: require('./Images/Menu/Lunch/Caesar-Salad.jpg'),
+    },
+    { 
+        id: '8', 
+        title: 'Grilled Chicken Sandwich', 
+        price: 16.00, 
+        description: 'Grilled chicken breast, lettuce, tomato, avocado, and chipotle mayo on a ciabatta roll.', 
+        category: 'Lunch',
+        image: require('./Images/Menu/Lunch/Grilled-Chicken-Sandwich.jpg'),
+    },
+    { 
+        id: '9', 
+        title: 'Club Sandwich', 
+        price: 15.00, 
+        description: 'Turkey, bacon, lettuce, tomato, and mayo layered on toasted bread.', 
+        category: 'Lunch',
+
+    },
+    { 
+        id: '10', 
+        title: 'Spaghetti Bolognese', 
+        price: 18.00, 
+        description: 'House-made spaghetti pasta with rich bolognese sauce and freshly grated parmesan. ', 
+        category: 'Lunch',
+
+    },
+    { 
+        id: '11', 
+        title: 'Veggie Wrap', 
+        price: 14.00, 
+        description: 'Grilled vegetables, hummus, spinach, and feta cheese in a spinach tortilla.', 
+        category: 'Lunch',
+
+    },
+    { 
+        id: '12', 
+        title: 'Classic Beef Burger', 
+        price: 18.00, 
+        description: 'Classic burger with cheddar, lettuce, tomato, pickles, and house-made sauce on a brioche bun.', 
+        category: 'Lunch',
+
+    },
+    { 
+        id: '13', 
+        title: 'Veggie Tacos', 
+        price: 16.00, 
+        description: 'Taco', 
+        category: 'Lunch',
+
+    },
+    { 
+        id: '', 
+        title: '', 
+        price: 3, 
+        description: '', 
+        category: ''
+    },
+];

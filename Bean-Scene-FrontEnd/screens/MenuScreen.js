@@ -1,20 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Button, TextInput } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Button, TextInput, Image } from 'react-native';
+import { DummyMenu } from '../Media-TempData/dummyMenu';
 
-const DummyMenu = [
-    { id: '1', title: 'Pancakes', price: 12.00, description: 'Fluffy pancakes served with maple syrup and fresh berries.', type: 'Breakfast' },
-    { id: '2', title: 'Caesar Salad', price: 10.00, description: 'Classic Caesar salad with romaine and croutons.', type: 'Lunch' },
-    { id: '3', title: 'Steak Dinner', price: 25.00, description: 'Juicy steak served with vegetables.', type: 'Dinner' },
-    { id: '4', title: 'Margarita', price: 7.00, description: 'Refreshing margarita with lime and salt.', type: 'Drinks' },
-    { id: '5', title: 'Ice Cream', price: 5.00, description: 'Delicious ice cream in various flavors.', type: 'Dessert' },
-    { id: '6', title: 'Breakfast Burrito', price: 9.00, description: 'Burrito filled with eggs, cheese, and salsa.', type: 'Breakfast' },
-    // Add more items as needed
-];
 
 const DOUBLE_TAP_DELAY = 300; // 300ms for double-tap detection
 
-const Item = ({ title, price, onSelect }) => (
+const Item = ({ title, price, image, onSelect }) => (
     <TouchableOpacity style={styles.item} onPress={onSelect}>
+        <Image source={image} style={styles.image} />
         <Text style={styles.title}>{title} - ${price.toFixed(2)}</Text>
     </TouchableOpacity>
 );
@@ -67,8 +60,8 @@ const MenuScreen = ({ navigation }) => {
         setSelectedItem(null); // Clear selected item to return to list
     };
 
-    const filterMenu = (type) => {
-        const filtered = DummyMenu.filter(item => item.type === type);
+    const filterMenu = (category) => {
+        const filtered = DummyMenu.filter(item => item.category === category);
         setFilteredMenu(filtered);
     };
 
@@ -117,11 +110,12 @@ const MenuScreen = ({ navigation }) => {
                     <Button title="Breakfast" onPress={() => filterMenu('Breakfast')} />
                     <Button title="Lunch" onPress={() => filterMenu('Lunch')} />
                     <Button title="Dinner" onPress={() => filterMenu('Dinner')} />
-                    <Button title="Dessert" onPress={() => filterMenu('Dessert')} />
+                    <Button title="Cafe/Dessert" onPress={() => filterMenu('Dessert' || 'Cafe')} />
                 </View>
 
                 {selectedItem ? (
                     <View style={styles.detailsContainer}>
+                        <Image source={selectedItem.image} style={styles.detailImage} />
                         <Text style={styles.detailsTitle}>{selectedItem.title}</Text>
                         <Text style={styles.detailsText}>Price: ${selectedItem.price.toFixed(2)}</Text>
                         <Text style={styles.detailsText}>Description: {selectedItem.description}</Text>
@@ -147,6 +141,7 @@ const MenuScreen = ({ navigation }) => {
                                 <Item
                                     title={item.title}
                                     price={item.price}
+                                    image={item.image}
                                     onSelect={() => handleItemPress(item)}
                                 />
                             )}
@@ -228,8 +223,12 @@ const styles = StyleSheet.create({
     },
     detailsContainer: {
         padding: 20,
-        backgroundColor: '#f9f9f9',
+        borderWidth: 2,
+        borderColor: 'black',
         borderRadius: 5,
+        overflow: 'hidden',
+        height: 600,
+        width: '100%',
     },
     detailsTitle: {
         fontSize: 24,
@@ -245,6 +244,20 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 10,
         marginBottom: 10,
+    },
+    image: {
+        width: 50, // Adjust the width as needed
+        height: 50, // Adjust the height as needed
+        marginRight: 10, // Space between the image and text
+        borderRadius: 5, // Optional: round the image corners
+    },
+    detailImage: {
+        width: 200, // Adjust the width as needed
+        height: 120, // Adjust the height as needed
+        marginRight: 10, // Space between the image and text
+        borderRadius: 5, // Optional: round the image corners
+        alignContent: 'center',
+        justifyContent: 'center',
     },
 });
 
