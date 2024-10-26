@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Button, TextInput, Image } from 'react-native';
-import { DummyMenu } from '../Media-TempData/dummyMenu';
+import { getMenuItems } from '../crud';
 
 
 const Item = ({ title, price, image, onSelect, onAddToOrder }) => (
@@ -17,6 +17,7 @@ const Item = ({ title, price, image, onSelect, onAddToOrder }) => (
 );
 
 const MenuScreen = ({ navigation }) => {
+    const [menuItems, setMenuItems] = useState([]);
     const [order, setOrder] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
     const [selectedItem, setSelectedItem] = useState(null);
@@ -25,8 +26,18 @@ const MenuScreen = ({ navigation }) => {
     const [comment, setComment] = useState(''); // To store the custom comment
     const [filteredMenu, setFilteredMenu] = useState(DummyMenu); // State for filtered menu items
 
-    const addToOrder = (item, price, comment) => {
-        setOrder((prevOrder) => [...prevOrder, { item, price, comment }]);
+    // Fetch the menu items from database calling the function
+    useEffect(() => {
+        const fetchMenuItems = async () => {
+            const items = await getMenuItems(); // Fetch items using API function
+            console.log('Fetched items:', items); // See what is being fetched
+            setMenuItems(items); // Set fetched items to state
+        };
+        fetchMenuItems();
+    }, []);
+
+    const addToOrder = (item, price) => {
+        setOrder((prevOrder) => [...prevOrder, { item, price }]);
         setTotalPrice((prevTotal) => prevTotal + price);
         setComment(''); // Clear the input field after adding to the order
     };
@@ -123,17 +134,17 @@ const MenuScreen = ({ navigation }) => {
                 ) : (
                     <View style={styles.flatContainer}>
                         <FlatList
-                            data={filteredMenu}
+                            data={menuItems}
                             renderItem={({ item }) => (
                                 <Item
-                                    title={item.title}
+                                    title={item.name}
                                     price={item.price}
                                     image={item.image}
                                     onSelect={() => setSelectedItem(item)} // Show details when "View Details" is pressed
                                     onAddToOrder={() => addToOrder(item.title, item.price)} // Add item to order when "Add to Order" is pressed
                                 />
                             )}
-                            keyExtractor={item => item.id}
+                            keyExtractor={item => item._id}
                         />
                     </View>
                 )}
