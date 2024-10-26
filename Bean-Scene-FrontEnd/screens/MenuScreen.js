@@ -1,20 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Button } from 'react-native';
+import { getMenuItems } from '../crud';
 // import { createItem, getItems, getSingleItem, updateMenuItem, deleteItem } from './crud';
 
 // itteration to cycle or getItems();
-const DummyMenu = [
-    { id: '1', title: 'Pancakes ', price: 12.00, description: 'Fluffy pancakes served with maple syrup and fresh berries.'},
-    { id: '2', title: 'Item 2', price: 15, description: 'Description for Item 2' },
-    { id: '3', title: 'Item 3', price: 7, description: 'Description for Item 3' },
-    { id: '4', title: 'Item 4', price: 12, description: 'Description for Item 4' },
-    { id: '5', title: 'Item 5', price: 9, description: 'Description for Item 5' },
-    { id: '6', title: 'Item 6', price: 20, description: 'Description for Item 6' },
-    { id: '7', title: 'Item 7', price: 5, description: 'Description for Item 7' },
-    { id: '8', title: 'Item 8', price: 25, description: 'Description for Item 8' },
-    { id: '9', title: 'Item 9', price: 8, description: 'Description for Item 9' },
-    { id: '10', title: 'Item 10', price: 30, description: 'Description for Item 10' },
-];
+// const DummyMenu = [
+//     { id: '1', title: 'Pancakes ', price: 12.00, description: 'Fluffy pancakes served with maple syrup and fresh berries.'},
+//     { id: '2', title: 'Item 2', price: 15, description: 'Description for Item 2' },
+//     { id: '3', title: 'Item 3', price: 7, description: 'Description for Item 3' },
+//     { id: '4', title: 'Item 4', price: 12, description: 'Description for Item 4' },
+//     { id: '5', title: 'Item 5', price: 9, description: 'Description for Item 5' },
+//     { id: '6', title: 'Item 6', price: 20, description: 'Description for Item 6' },
+//     { id: '7', title: 'Item 7', price: 5, description: 'Description for Item 7' },
+//     { id: '8', title: 'Item 8', price: 25, description: 'Description for Item 8' },
+//     { id: '9', title: 'Item 9', price: 8, description: 'Description for Item 9' },
+//     { id: '10', title: 'Item 10', price: 30, description: 'Description for Item 10' },
+// ];
+
 
 const DOUBLE_TAP_DELAY = 300; // 300ms for double-tap detection
 
@@ -25,11 +27,22 @@ const Item = ({ title, price, onSelect }) => (
 );
 
 const MenuScreen = ({ navigation }) => {
+    const [menuItems, setMenuItems] = useState([]);
     const [order, setOrder] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
     const [selectedItem, setSelectedItem] = useState(null);
     const [lastTap, setLastTap] = useState(null);
     const [tapTimeout, setTapTimeout] = useState(null);
+
+    // Fetch the menu items from database calling the function
+    useEffect(() => {
+        const fetchMenuItems = async () => {
+            const items = await getMenuItems(); // Fetch items using API function
+            console.log('Fetched items:', items); // See what is being fetched
+            setMenuItems(items); // Set fetched items to state
+        };
+        fetchMenuItems();
+    }, []);
 
     const addToOrder = (item, price) => {
         setOrder((prevOrder) => [...prevOrder, { item, price }]);
@@ -122,15 +135,15 @@ const MenuScreen = ({ navigation }) => {
                 ) : (
                     <View style={styles.flatContainer}>
                         <FlatList
-                            data={DummyMenu}
+                            data={menuItems}
                             renderItem={({ item }) => (
                                 <Item
-                                    title={item.title}
+                                    title={item.name}
                                     price={item.price}
                                     onSelect={() => handleItemPress(item)}
                                 />
                             )}
-                            keyExtractor={item => item.id}
+                            keyExtractor={item => item._id}
                         />
                     </View>
                 )}

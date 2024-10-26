@@ -1,3 +1,6 @@
+// url to connect to api points
+const baseUrl = 'http://localhost:3000/api';
+
 //function to create menu items
 const createItem = async (data) => 
 {
@@ -16,10 +19,10 @@ const createItem = async (data) =>
             }
  }
 
-// function to get menu items
-const getItems = async () => {
+// function to get all menu items
+const getMenuItems = async () => {
     try {
-        const response = await fetch('/api/menu');
+        const response = await fetch(`${baseUrl}/menuitems`);
         if (!response.ok) throw new Error('Failed to fetch items');
         return await response.json();     
     } catch (error) {
@@ -74,4 +77,4 @@ const deleteItem = async (id) => {
     }
 }
 
-export {createItem, getItems, getSingleItem, updateMenuItem, deleteItem};
+export {createItem, getMenuItems, getSingleItem, updateMenuItem, deleteItem};
