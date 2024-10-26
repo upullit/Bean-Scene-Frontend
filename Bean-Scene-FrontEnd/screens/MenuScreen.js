@@ -1,28 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Button } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Button, TextInput, Image } from 'react-native';
 import { getMenuItems } from '../crud';
-// import { createItem, getItems, getSingleItem, updateMenuItem, deleteItem } from './crud';
 
-// itteration to cycle or getItems();
-// const DummyMenu = [
-//     { id: '1', title: 'Pancakes ', price: 12.00, description: 'Fluffy pancakes served with maple syrup and fresh berries.'},
-//     { id: '2', title: 'Item 2', price: 15, description: 'Description for Item 2' },
-//     { id: '3', title: 'Item 3', price: 7, description: 'Description for Item 3' },
-//     { id: '4', title: 'Item 4', price: 12, description: 'Description for Item 4' },
-//     { id: '5', title: 'Item 5', price: 9, description: 'Description for Item 5' },
-//     { id: '6', title: 'Item 6', price: 20, description: 'Description for Item 6' },
-//     { id: '7', title: 'Item 7', price: 5, description: 'Description for Item 7' },
-//     { id: '8', title: 'Item 8', price: 25, description: 'Description for Item 8' },
-//     { id: '9', title: 'Item 9', price: 8, description: 'Description for Item 9' },
-//     { id: '10', title: 'Item 10', price: 30, description: 'Description for Item 10' },
-// ];
 
-const DOUBLE_TAP_DELAY = 300; // 300ms for double-tap detection
-
-const Item = ({ title, price, onSelect }) => (
-    <TouchableOpacity style={styles.item} onPress={onSelect}>
-        <Text style={styles.title}>{title} - ${price.toFixed(2)}</Text>
-    </TouchableOpacity>
+const Item = ({ title, price, image, onSelect, onAddToOrder }) => (
+    <View style={styles.item}>
+        <Image source={image} style={styles.image} />
+        <View style={styles.itemContent}>
+            <Text style={styles.title}>{title} - ${price.toFixed(2)}</Text>
+            <View style={styles.buttonRowRight}>
+                <Button title="View Details" onPress={onSelect} />
+                <Button title="Add to Order" onPress={onAddToOrder} />
+            </View>
+        </View>
+    </View>
 );
 
 const MenuScreen = ({ navigation }) => {
@@ -32,6 +23,8 @@ const MenuScreen = ({ navigation }) => {
     const [selectedItem, setSelectedItem] = useState(null);
     const [lastTap, setLastTap] = useState(null);
     const [tapTimeout, setTapTimeout] = useState(null);
+    const [comment, setComment] = useState(''); // To store the custom comment
+    const [filteredMenu, setFilteredMenu] = useState(DummyMenu); // State for filtered menu items
 
     // Fetch the menu items from database calling the function
     useEffect(() => {
@@ -46,49 +39,39 @@ const MenuScreen = ({ navigation }) => {
     const addToOrder = (item, price) => {
         setOrder((prevOrder) => [...prevOrder, { item, price }]);
         setTotalPrice((prevTotal) => prevTotal + price);
+        setComment(''); // Clear the input field after adding to the order
     };
 
     const clearOrder = () => {
         setOrder([]);
         setTotalPrice(0);
     };
-
-    const handleItemPress = (item) => {
-        const now = Date.now();
-
-        if (tapTimeout) {
-            clearTimeout(tapTimeout); // If a second tap happens, clear the timeout for the single tap
-            setTapTimeout(null);
-        }
-
-        if (lastTap && (now - lastTap) < DOUBLE_TAP_DELAY) {
-            // Double tap detected - show item details
-            setSelectedItem(item);
-            setLastTap(null); // Reset lastTap to prevent further double taps
-        } else {
-            // Start a timeout for single tap
-            const timeoutId = setTimeout(() => {
-                // Single tap action - add item to the order
-                addToOrder(item.title, item.price);
-            }, DOUBLE_TAP_DELAY);
-
-            setTapTimeout(timeoutId); // Store the timeout ID to cancel if double tap occurs
-            setLastTap(now); // Update lastTap to track the first tap
+    const createNewTicket = () => {
+        if (order.length > 0) {
+            setTickets((prevTickets) => [...prevTickets, order]); // Add current order to tickets
+            clearOrder(); // Clear the current order to start a new one
         }
     };
+    const [tickets, setTickets] = useState([]);
+
 
     const goBackToList = () => {
         setSelectedItem(null); // Clear selected item to return to list
+    };
+
+    const filterMenu = (category) => {
+        const filtered = DummyMenu.filter(item => item.category === category);
+        setFilteredMenu(filtered);
     };
 
     return (
         <View style={styles.container}>
             <View style={styles.column}>
                 <View style={styles.buttonRow}>
-                    <Button title="New Ticket" />
-                    <Button title="View Tickets" onPress={() => navigation.navigate('Ticket')} />
+                    <Button title="New Ticket"/>
+                    <Button title="View Tickets" onPress={() => navigation.navigate('Ticket', { tickets })} />
                     <Button title="Change Table" />
-                    <Button title="Cancel Ticket" onPress={clearOrder} />
+                    <Button title="Clear Order - remove later" onPress={clearOrder} />
                 </View>
                 <View style={styles.order}>
                     <Text style={styles.orderTitle}>Order Details:</Text>
@@ -96,40 +79,57 @@ const MenuScreen = ({ navigation }) => {
                         <Text>No items in order</Text>
                     ) : (
                         order.map((orderItem, index) => (
-                            <Text key={index} style={styles.orderItem}>
-                                {orderItem.item} - ${orderItem.price.toFixed(2)}
-                            </Text>
+                            <View key={index}>
+                                <Text style={styles.orderItem}>
+                                    {orderItem.item} - ${orderItem.price.toFixed(2)}
+                                </Text>
+                                {orderItem.comment ? (
+                                    <Text style={styles.orderComment}> - {orderItem.comment}</Text> // Display the comment
+                                ) : null}
+                            </View>
                         ))
                     )}
                 </View>
                 <View style={styles.totalContainer}>
-                <Text style={styles.totalPrice}>
+                    <Text style={styles.totalPrice}>
                         Total Price: ${totalPrice.toFixed(2)}
                     </Text>
                 </View>
-                <Button title="Go to order screen" onPress={() => navigation.navigate('Order')} />
                 <View style={styles.buttonRow}>
-                    <Button title="Cash" />
-                    <Button title="Card" />
-                    <Button title="Split" />
-                    <Button title="Refund" />
+                    <Button title="Cash" onPress={createNewTicket}/>
+                    <Button title="Card" onPress={createNewTicket}/>
+                    <Button title="Split" onPress={createNewTicket} />
+                    <Button title="Refund"/>
                 </View>
             </View>
             <View style={styles.column}>
                 <View style={styles.buttonRow}>
-                    <Button title="Beverages" />
-                    <Button title="Breakfast" />
-                    <Button title="Lunch" />
-                    <Button title="Dinner" />
-                    <Button title="Cafe/Dessert" />
+                    <Button title="Beverages" onPress={() => filterMenu('Drinks')} />
+                    <Button title="Breakfast" onPress={() => filterMenu('Breakfast')} />
+                    <Button title="Lunch" onPress={() => filterMenu('Lunch')} />
+                    <Button title="Dinner" onPress={() => filterMenu('Dinner')} />
+                    <Button title="Cafe/Dessert" onPress={() => filterMenu('Dessert' || 'Cafe')} />
                 </View>
 
                 {selectedItem ? (
                     <View style={styles.detailsContainer}>
+                        <Image source={selectedItem.image} style={styles.detailImage} />
                         <Text style={styles.detailsTitle}>{selectedItem.title}</Text>
-                        <Text>Price: ${selectedItem.price.toFixed(2)}</Text>
-                        <Text>Description: {selectedItem.description}</Text>
-                        <Button title="Back" onPress={goBackToList} />
+                        <Text style={styles.detailsText}>Price: ${selectedItem.price.toFixed(2)}</Text>
+                        <Text style={styles.detailsText}>Description: {selectedItem.description}</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Add a comment or special request"
+                            value={comment}
+                            onChangeText={setComment}
+                        />
+                        <View style={styles.buttonRow}>
+                            <Button title="Back" onPress={goBackToList} />
+                            <Button
+                                title="Add to Order"
+                                onPress={() => addToOrder(selectedItem.title, selectedItem.price, comment)} // Pass the comment
+                            />
+                        </View>
                     </View>
                 ) : (
                     <View style={styles.flatContainer}>
@@ -139,7 +139,9 @@ const MenuScreen = ({ navigation }) => {
                                 <Item
                                     title={item.name}
                                     price={item.price}
-                                    onSelect={() => handleItemPress(item)}
+                                    image={item.image}
+                                    onSelect={() => setSelectedItem(item)} // Show details when "View Details" is pressed
+                                    onAddToOrder={() => addToOrder(item.title, item.price)} // Add item to order when "Add to Order" is pressed
                                 />
                             )}
                             keyExtractor={item => item._id}
@@ -174,10 +176,18 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     item: {
+        flexDirection: 'row', // Horizontal layout for image and item details
+        alignItems: 'center',
         padding: 20,
         marginBottom: 10,
         borderRadius: 5,
         backgroundColor: '#f9f9f9',
+    },
+    itemContent: {
+        flex: 1, // Takes up the remaining space next to the image
+        flexDirection: 'row',
+        justifyContent: 'space-between', // Space between title/price and buttons
+        alignItems: 'center',
     },
     flatContainer: {
         borderWidth: 2,
@@ -219,18 +229,42 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     detailsContainer: {
+        padding: 20,
         borderWidth: 2,
         borderColor: 'black',
         borderRadius: 5,
-        padding: 20,
+        overflow: 'hidden',
         height: 600,
-        justifyContent: 'center',
-        alignItems: 'center',
+        width: '100%',
     },
     detailsTitle: {
         fontSize: 24,
         fontWeight: 'bold',
+    },
+    detailsText: {
+        fontSize: 16,
+        marginVertical: 5,
+    },
+    input: {
+        borderColor: 'gray',
+        borderWidth: 1,
+        borderRadius: 5,
+        padding: 10,
         marginBottom: 10,
+    },
+    image: {
+        width: 50, // Adjust the width as needed
+        height: 50, // Adjust the height as needed
+        marginRight: 10, // Space between the image and text
+        borderRadius: 5, // Optional: round the image corners
+    },
+    detailImage: {
+        width: 200, // Adjust the width as needed
+        height: 120, // Adjust the height as needed
+        marginRight: 10, // Space between the image and text
+        borderRadius: 5, // Optional: round the image corners
+        alignContent: 'center',
+        justifyContent: 'center',
     },
 });
 
