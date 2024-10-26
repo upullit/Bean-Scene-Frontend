@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Button, TextInput, Image } from 'react-native';
 import { getMenuItems } from '../crud';
 
@@ -24,7 +24,7 @@ const MenuScreen = ({ navigation }) => {
     const [lastTap, setLastTap] = useState(null);
     const [tapTimeout, setTapTimeout] = useState(null);
     const [comment, setComment] = useState(''); // To store the custom comment
-    const [filteredMenu, setFilteredMenu] = useState(DummyMenu); // State for filtered menu items
+    // const [filteredMenu, setFilteredMenu] = useState(DummyMenu); // State for filtered menu items
 
     // Fetch the menu items from database calling the function
     useEffect(() => {
@@ -36,8 +36,10 @@ const MenuScreen = ({ navigation }) => {
         fetchMenuItems();
     }, []);
 
-    const addToOrder = (item, price) => {
-        setOrder((prevOrder) => [...prevOrder, { item, price }]);
+    const addToOrder = (item, comment) => {
+        const price = Number(item.price);
+        const title = item.name;
+        setOrder((prevOrder) => [...prevOrder, { title, comment, price }]);
         setTotalPrice((prevTotal) => prevTotal + price);
         setComment(''); // Clear the input field after adding to the order
     };
@@ -59,10 +61,10 @@ const MenuScreen = ({ navigation }) => {
         setSelectedItem(null); // Clear selected item to return to list
     };
 
-    const filterMenu = (category) => {
-        const filtered = DummyMenu.filter(item => item.category === category);
-        setFilteredMenu(filtered);
-    };
+    // const filterMenu = (category) => {
+    //     const filtered = DummyMenu.filter(item => item.category === category);
+    //     setFilteredMenu(filtered);
+    // };
 
     return (
         <View style={styles.container}>
@@ -81,7 +83,7 @@ const MenuScreen = ({ navigation }) => {
                         order.map((orderItem, index) => (
                             <View key={index}>
                                 <Text style={styles.orderItem}>
-                                    {orderItem.item} - ${orderItem.price.toFixed(2)}
+                                    {orderItem.title} - ${Number(orderItem.price).toFixed(2)}
                                 </Text>
                                 {orderItem.comment ? (
                                     <Text style={styles.orderComment}> - {orderItem.comment}</Text> // Display the comment
@@ -141,7 +143,7 @@ const MenuScreen = ({ navigation }) => {
                                     price={item.price}
                                     image={item.image}
                                     onSelect={() => setSelectedItem(item)} // Show details when "View Details" is pressed
-                                    onAddToOrder={() => addToOrder(item.title, item.price)} // Add item to order when "Add to Order" is pressed
+                                    onAddToOrder={() => addToOrder(item, comment)} // Add item to order when "Add to Order" is pressed
                                 />
                             )}
                             keyExtractor={item => item._id}
