@@ -69,6 +69,7 @@ export const DummyMenu = [
         price: 15.00, 
         description: 'Turkey, bacon, lettuce, tomato, and mayo layered on toasted bread.', 
         category: 'Lunch',
+        image: require('./Images/Menu/Lunch/Club-Sandwich.jpg'),
 
     },
     { 
@@ -77,6 +78,7 @@ export const DummyMenu = [
         price: 18.00, 
         description: 'House-made spaghetti pasta with rich bolognese sauce and freshly grated parmesan. ', 
         category: 'Lunch',
+        image: require('./Images/Menu/Lunch/Spaghetti-Bolognese.jpg'),
 
     },
     { 
@@ -85,6 +87,7 @@ export const DummyMenu = [
         price: 14.00, 
         description: 'Grilled vegetables, hummus, spinach, and feta cheese in a spinach tortilla.', 
         category: 'Lunch',
+        image: require('./Images/Menu/Lunch/Veggie-Wrap.jpg'),
 
     },
     { 
@@ -93,6 +96,7 @@ export const DummyMenu = [
         price: 18.00, 
         description: 'Classic burger with cheddar, lettuce, tomato, pickles, and house-made sauce on a brioche bun.', 
         category: 'Lunch',
+        image: require('./Images/Menu/Lunch/Beef-Burger.jpg'),
 
     },
     { 
@@ -101,13 +105,13 @@ export const DummyMenu = [
         price: 16.00, 
         description: 'Taco', 
         category: 'Lunch',
-
+        image: require('./Images/Menu/Lunch/Veggie-Taco.jpg'),
     },
-    { 
+    /*{ 
         id: '', 
         title: '', 
         price: 3, 
         description: '', 
         category: ''
-    },
+    },*/
 ];

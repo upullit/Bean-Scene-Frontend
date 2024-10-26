@@ -3,13 +3,17 @@ import { View, Text, StyleSheet, FlatList, TouchableOpacity, Button, TextInput, 
 import { DummyMenu } from '../Media-TempData/dummyMenu';
 
 
-const DOUBLE_TAP_DELAY = 300; // 300ms for double-tap detection
-
-const Item = ({ title, price, image, onSelect }) => (
-    <TouchableOpacity style={styles.item} onPress={onSelect}>
+const Item = ({ title, price, image, onSelect, onAddToOrder }) => (
+    <View style={styles.item}>
         <Image source={image} style={styles.image} />
-        <Text style={styles.title}>{title} - ${price.toFixed(2)}</Text>
-    </TouchableOpacity>
+        <View style={styles.itemContent}>
+            <Text style={styles.title}>{title} - ${price.toFixed(2)}</Text>
+            <View style={styles.buttonRowRight}>
+                <Button title="View Details" onPress={onSelect} />
+                <Button title="Add to Order" onPress={onAddToOrder} />
+            </View>
+        </View>
+    </View>
 );
 
 const MenuScreen = ({ navigation }) => {
@@ -23,7 +27,7 @@ const MenuScreen = ({ navigation }) => {
 
     const addToOrder = (item, price, comment) => {
         setOrder((prevOrder) => [...prevOrder, { item, price, comment }]);
-        setTotalPrice((prevTotal) => prevTotal + price); 
+        setTotalPrice((prevTotal) => prevTotal + price);
         setComment(''); // Clear the input field after adding to the order
     };
 
@@ -31,30 +35,14 @@ const MenuScreen = ({ navigation }) => {
         setOrder([]);
         setTotalPrice(0);
     };
-
-    const handleItemPress = (item) => {
-        const now = Date.now();
-
-        if (tapTimeout) {
-            clearTimeout(tapTimeout); // Clear the timeout for the single tap
-            setTapTimeout(null);
-        }
-
-        if (lastTap && (now - lastTap) < DOUBLE_TAP_DELAY) {
-            // Double tap detected - show item details
-            setSelectedItem(item);
-            setLastTap(null); // Reset lastTap to prevent further double taps
-        } else {
-            // Start a timeout for single tap
-            const timeoutId = setTimeout(() => {
-                // Single tap action - add item to the order
-                addToOrder(item.title, item.price);
-            }, DOUBLE_TAP_DELAY);
-
-            setTapTimeout(timeoutId); // Store the timeout ID to cancel if double tap occurs
-            setLastTap(now); // Update lastTap to track the first tap
+    const createNewTicket = () => {
+        if (order.length > 0) {
+            setTickets((prevTickets) => [...prevTickets, order]); // Add current order to tickets
+            clearOrder(); // Clear the current order to start a new one
         }
     };
+    const [tickets, setTickets] = useState([]);
+
 
     const goBackToList = () => {
         setSelectedItem(null); // Clear selected item to return to list
@@ -69,10 +57,10 @@ const MenuScreen = ({ navigation }) => {
         <View style={styles.container}>
             <View style={styles.column}>
                 <View style={styles.buttonRow}>
-                    <Button title="New Ticket" />
-                    <Button title="View Tickets" onPress={() => navigation.navigate('Ticket')} />
+                    <Button title="New Ticket"/>
+                    <Button title="View Tickets" onPress={() => navigation.navigate('Ticket', { tickets })} />
                     <Button title="Change Table" />
-                    <Button title="Cancel Ticket" onPress={clearOrder} />
+                    <Button title="Clear Order - remove later" onPress={clearOrder} />
                 </View>
                 <View style={styles.order}>
                     <Text style={styles.orderTitle}>Order Details:</Text>
@@ -96,12 +84,11 @@ const MenuScreen = ({ navigation }) => {
                         Total Price: ${totalPrice.toFixed(2)}
                     </Text>
                 </View>
-                <Button title="Go to order screen" onPress={() => navigation.navigate('Order')} />
                 <View style={styles.buttonRow}>
-                    <Button title="Cash" />
-                    <Button title="Card" />
-                    <Button title="Split" />
-                    <Button title="Refund" />
+                    <Button title="Cash" onPress={createNewTicket}/>
+                    <Button title="Card" onPress={createNewTicket}/>
+                    <Button title="Split" onPress={createNewTicket} />
+                    <Button title="Refund"/>
                 </View>
             </View>
             <View style={styles.column}>
@@ -142,7 +129,8 @@ const MenuScreen = ({ navigation }) => {
                                     title={item.title}
                                     price={item.price}
                                     image={item.image}
-                                    onSelect={() => handleItemPress(item)}
+                                    onSelect={() => setSelectedItem(item)} // Show details when "View Details" is pressed
+                                    onAddToOrder={() => addToOrder(item.title, item.price)} // Add item to order when "Add to Order" is pressed
                                 />
                             )}
                             keyExtractor={item => item.id}
@@ -177,10 +165,18 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     item: {
+        flexDirection: 'row', // Horizontal layout for image and item details
+        alignItems: 'center',
         padding: 20,
         marginBottom: 10,
         borderRadius: 5,
         backgroundColor: '#f9f9f9',
+    },
+    itemContent: {
+        flex: 1, // Takes up the remaining space next to the image
+        flexDirection: 'row',
+        justifyContent: 'space-between', // Space between title/price and buttons
+        alignItems: 'center',
     },
     flatContainer: {
         borderWidth: 2,
