@@ -17,7 +17,6 @@ import { getMenuItems } from '../crud';
 //     { id: '10', title: 'Item 10', price: 30, description: 'Description for Item 10' },
 // ];
 
-
 const DOUBLE_TAP_DELAY = 300; // 300ms for double-tap detection
 
 const Item = ({ title, price, onSelect }) => (
