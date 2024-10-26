@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Button } from 'react-native';
-import { createItem, getItems, getSingleItem, updateMenuItem, deleteItem } from './crud';
+// import { createItem, getItems, getSingleItem, updateMenuItem, deleteItem } from './crud';
 
 // itteration to cycle or getItems();
 const DummyMenu = [
