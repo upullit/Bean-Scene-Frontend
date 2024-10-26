@@ -20,8 +20,6 @@ const MenuScreen = ({ navigation }) => {
     const [order, setOrder] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
     const [selectedItem, setSelectedItem] = useState(null);
-    const [lastTap, setLastTap] = useState(null);
-    const [tapTimeout, setTapTimeout] = useState(null);
     const [comment, setComment] = useState(''); // To store the custom comment
     const [filteredMenu, setFilteredMenu] = useState(DummyMenu); // State for filtered menu items
 
