@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Button, TextInput, Image } from 'react-native';
-import { DummyMenu } from '../Media-TempData/dummyMenu';
+import { DummyMenu } from '../Media-TempData/dummyMenu.js';
 
 
 const Item = ({ title, price, image, onSelect, onAddToOrder }) => (
@@ -16,7 +16,7 @@ const Item = ({ title, price, image, onSelect, onAddToOrder }) => (
     </View>
 );
 
-const MenuScreen = ({ navigation }) => {
+const ServerOrderScreen = ({ navigation }) => {
     const [order, setOrder] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
     const [selectedItem, setSelectedItem] = useState(null);
@@ -255,4 +255,5 @@ const styles = StyleSheet.create({
     },
 });
 
-export default MenuScreen;
+
+export default ServerOrderScreen;
