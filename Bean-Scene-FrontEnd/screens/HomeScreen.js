@@ -1,52 +1,77 @@
 import React, { useEffect } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 
 const HomeScreen = ({ navigation }) => {
-    // Function to lock the orientation to landscape
     const lockOrientation = async () => {
         await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
     };
 
     useEffect(() => {
         lockOrientation(); // Lock the screen to landscape when the component is mounted
-        
-        // Optional: return to default orientation when unmounted
+
         return () => {
             ScreenOrientation.unlockAsync(); // Unlock the orientation on cleanup
         };
     }, []);
 
     return (
-        <View styles={styles.container}>
-            <Text>Hi this is the bean scene menu ordering app</Text>
-            <Button styles={styles.button} title="Ordering" onPress={() => navigation.navigate('Menu')} />
-            <Button styles={styles.button}  title="Tickets" onPress={() => navigation.navigate('Ticket')} />
-            <Button styles={styles.button} title="Admin" onPress={() => navigation.navigate('Admin')}/>    
-            <Button title="Cooks" onPress={() => navigation.navigate('Kitchen')}/>
+        <View>
+            <View style={styles.container}>
+            <Text style={styles.title}>Bean Scene Ordering App</Text>
+                <Text style={styles.text}>Hi, this is the Bean Scene menu ordering app</Text>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ServerOrder')}>
+                    <Text style={styles.buttonText}>Server Ordering</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Ticket')}>
+                    <Text style={styles.buttonText}>Tickets</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Admin')}>
+                    <Text style={styles.buttonText}>Admin</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Kitchen')}>
+                    <Text style={styles.buttonText}>Kitchen Ticket</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('CustomerOrder')}>
+                    <Text style={styles.buttonText}>Customer Order</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 };
 
-export default HomeScreen;
-
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        alignContent: 'center',
         justifyContent: 'center',
-        alignItems: 'center',
         padding: 20,
-        backgroundColor: '#fff',
-        margin: 300,
+        margin: 200,
+        marginBottom: 2000,
     },
-    text: {
-        fontSize: 18,
-        marginBottom: 20,
+    title: {
+        fontSize: 32,
+        marginTop: 20,
+        fontWeight: 'bold',
+        marginBottom: 50,
+        textAlign: 'center',
     },
     button: {
-        marginVertical: 10,
-        paddingHorizontal: 20,
-        width: '80%',
-        fontSize: 16,
+        backgroundColor: '#007BFF', // Set a background color for the button
+        padding: 15, // Increase padding for more space
+        marginVertical: 10, // Space between buttons
+        borderRadius: 5, // Rounded corners
+    },
+    buttonText: {
+        color: '#FFFFFF', // Text color
+        fontSize: 20, // Increase text size
+        textAlign: 'center', // Center the text
+        fontWeight: 'bold',
+    },
+    text: {
+        fontSize: 20, // Increase text size
+        textAlign: 'center', // Center the text
+        fontWeight: 'bold',
     },
 });
+
+export default HomeScreen;
