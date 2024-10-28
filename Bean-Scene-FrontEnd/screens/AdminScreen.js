@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, TextInput, Button } from 'react-native';
-import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Ensure this import is correct
+import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
 
 const AdminScreen = ({ navigation }) => {
     const [searchQuery, setSearchQuery] = useState('');
 
-    // Filter the DummyMenu based on the search query
+    // Filter the Menu based on the search query
     const searchMenu = DummyMenu
         .filter(item =>
             item.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -14,13 +14,18 @@ const AdminScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Full Menu</Text>
+            <Text style={styles.title}>Manage Menu</Text>
+            {/*Search Bar
+            the search is a bit weird sometimes*/}
             <TextInput
                 style={styles.searchBar}
                 placeholder="Search menu items..."
                 value={searchQuery}
                 onChangeText={text => setSearchQuery(text)}
             />
+            {/*Menu filter
+            doesnt properly work atm
+            */}
             <View style={styles.buttonRow}>
                 <Button title="Beverages" onPress={() => filterMenu('Drinks')} />
                 <Button title="Breakfast" onPress={() => filterMenu('Breakfast')} />
@@ -29,19 +34,19 @@ const AdminScreen = ({ navigation }) => {
                 <Button title="Cafe/Dessert" onPress={() => filterMenu('Dessert' || 'Cafe')} />
             </View>
             <FlatList
-                data={searchMenu} // Use the filtered menu
+                data={searchMenu} // currently using menu filter for search
                 renderItem={({ item }) => (
                     <TouchableOpacity
                         style={styles.item}
-                        onPress={() => navigation.navigate('AdminMenuView', { item })} // Pass the item data
+                        onPress={() => navigation.navigate('AdminMenuView', { item })} // takes item data to view page
                     >
                         <Image source={item.image} style={styles.image} />
                         <Text style={styles.itemText}>{item.title}</Text>
                     </TouchableOpacity>
                 )}
                 keyExtractor={item => item.id.toString()}
-                numColumns={4} // Display in a grid format
-                columnWrapperStyle={styles.columnWrapper} // Add some styling for columns
+                numColumns={4} // displays items in a grid format
+                columnWrapperStyle={styles.columnWrapper}
             />
         </View>
     );
@@ -81,7 +86,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     image: {
-        width: 250, // Adjust image size as needed
+        width: 250,
         height: 150,
         borderRadius: 8,
         marginBottom: 10,
@@ -92,7 +97,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     columnWrapper: {
-        justifyContent: 'space-between', // Adjust spacing between columns
+        justifyContent: 'space-between',
     },
 });
 

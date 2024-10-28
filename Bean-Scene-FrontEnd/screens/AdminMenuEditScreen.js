@@ -1,34 +1,35 @@
 import React from "react";
-import { Button, View, StyleSheet, Image, Text, TextInput } from "react-native";
+import { Button, View, StyleSheet, Text, TextInput } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 
-const AdminMenuEditScreen = ({ route, }) => {
-
-    const { item } = route.params; // Destructure the item from route parameters
-
+const AdminMenuEditScreen = ({ route }) => {
+    const { item } = route.params;
 
     return (
+        //menu edit form
         <View style={styles.container} >
+            {/*ingridents to be added*/}
             <View style={styles.column}>
                 <Text>Dish Name</Text>
                 <TextInput
-                    style={styles.searchBar}
+                    style={styles.textInput}
                     placeholder={item.title}
                 />
                 <Text>Price</Text>
                 <TextInput
-                    style={styles.searchBar}
+                    style={styles.textInput}
                     placeholder={item.Price}
                 />
                 <Text>Description</Text>
                 <TextInput
-                    style={styles.searchBar}
+                    style={styles.textInput}
                     placeholder={item.description}
                 />
                 <Button title="Save">Save</Button>
             </View>
             <View style={styles.column}>
-            <Text>Category</Text>
+                {/*image insert and diet tags to be added*/}
+                <Text>Category</Text>
                 <Picker
                     placeholder={item.category}
                     style={styles.picker}
@@ -42,8 +43,9 @@ const AdminMenuEditScreen = ({ route, }) => {
         </View>
     );
 };
+
 const styles = StyleSheet.create({
-    searchBar: {
+    textInput: {
         height: 40,
         borderWidth: 1,
         borderRadius: 8,

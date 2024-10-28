@@ -2,19 +2,22 @@ import React from "react";
 import { Button, View, StyleSheet, Image, Text } from "react-native";
 
 const AdminMenuViewScreen = ({ route, navigation }) => {
-
-    const { item } = route.params; // Destructure the item from route parameters
-
+    const { item } = route.params;
 
     return (
         <View style={styles.container}>
+            {/* takes the selected item and displays it
+            ingredients need to be added */}
             <Image source={item.image} style={styles.image} />
             <Text style={styles.title}>{item.title}</Text>
             <Text style={styles.description}>Price: {item.price}</Text>
             <Text style={styles.description}>Description: {item.description}</Text>
             <Text style={styles.description}>Category: {item.category}</Text>
-            <Button title="Edit" onPress={() => navigation.navigate('AdminMenuEdit', { item })}>Edit</Button>
-            <Button title="Delete">Delete</Button>
+            <View style={styles.actionButton}>
+                {/* takes item data to edit page */}
+                <Button title="Edit" onPress={() => navigation.navigate('AdminMenuEdit', { item })} /> 
+                <Button title="Delete" />
+            </View>
         </View>
     );
 };
@@ -38,6 +41,14 @@ const styles = StyleSheet.create({
     description: {
         fontSize: 18,
         marginVertical: 10,
+    },
+    actionButton: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 10,
+        position: 'absolute',
+        bottom: 20,
+        right: 20,
     },
 });
 export default AdminMenuViewScreen;

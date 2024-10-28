@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, Button } from 'react-native';
 
 const TicketsScreen = ({ route }) => {
-    const { tickets = [] } = route.params || {};
-    const ticketsPerPage = 8;
+    const { tickets = [] } = route.params || {}; //gets ticket data from ordering screens
+    const ticketsPerPage = 8; //defines amount of tickets visable on each page
+    const [currentPage, setCurrentPage] = useState(0); //page management
+    const totalPages = Math.ceil(tickets.length / ticketsPerPage); //page total
 
-    const [currentPage, setCurrentPage] = useState(0);
-    const totalPages = Math.ceil(tickets.length / ticketsPerPage);
-
+    //show current page number
     const currentTickets = tickets.slice(
         currentPage * ticketsPerPage,
         (currentPage + 1) * ticketsPerPage
@@ -16,6 +16,7 @@ const TicketsScreen = ({ route }) => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Active Tickets</Text>
+            {/* shows all current tickets with its menu items and their comments*/}
             {tickets.length === 0 ? (
                 <Text>No active tickets</Text>
             ) : (
@@ -32,8 +33,10 @@ const TicketsScreen = ({ route }) => {
                                     {orderItem.comment ? `\n - ${orderItem.comment}` : ''}
                                 </Text>
                             ))}
-                            <View style={styles.bottomButton}>
+                            <View style={styles.ticketButton}>
+                                {/* complete ticket function will be called here */}
                                 <Button title="Complete" />
+                                {/* delete ticket function will be called here */}
                                 <Button title="Delete" />
                             </View>
                         </View>
@@ -43,6 +46,7 @@ const TicketsScreen = ({ route }) => {
                     columnWrapperStyle={styles.columnWrapper}
                 />
             )}
+            {/* page navigation */}
             <View style={styles.pagination}>
                 <Button
                     title="Previous"
@@ -93,16 +97,20 @@ const styles = StyleSheet.create({
         fontSize: 18,
         padding: 10,
     },
-    bottomButton: {
+    ticketButton: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: 10, // Space between text and buttons
+        marginTop: 10,
     },
     pagination: {
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 10,
+        position: 'absolute',
+        bottom: 10,
+        left: 0,
+        right: 0,
     },
     pageIndicator: {
         marginHorizontal: 20,

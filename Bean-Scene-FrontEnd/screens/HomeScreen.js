@@ -3,20 +3,20 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 
 const HomeScreen = ({ navigation }) => {
+    //holds app at landscape
     const lockOrientation = async () => {
         await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
     };
-
     useEffect(() => {
-        lockOrientation(); // Lock the screen to landscape when the component is mounted
-
+        lockOrientation(); 
         return () => {
-            ScreenOrientation.unlockAsync(); // Unlock the orientation on cleanup
+            ScreenOrientation.unlockAsync();
         };
     }, []);
 
     return (
         <View>
+            {/* temporary navigation buttons */}
             <View style={styles.container}>
             <Text style={styles.title}>Bean Scene Ordering App</Text>
                 <Text style={styles.text}>Hi, this is the Bean Scene menu ordering app</Text>
@@ -56,20 +56,20 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     button: {
-        backgroundColor: '#007BFF', // Set a background color for the button
-        padding: 15, // Increase padding for more space
-        marginVertical: 10, // Space between buttons
-        borderRadius: 5, // Rounded corners
+        backgroundColor: '#007BFF', 
+        padding: 15, 
+        marginVertical: 10, 
+        borderRadius: 5, 
     },
     buttonText: {
-        color: '#FFFFFF', // Text color
-        fontSize: 20, // Increase text size
-        textAlign: 'center', // Center the text
+        color: '#FFFFFF', 
+        fontSize: 20, 
+        textAlign: 'center', 
         fontWeight: 'bold',
     },
     text: {
-        fontSize: 20, // Increase text size
-        textAlign: 'center', // Center the text
+        fontSize: 20, 
+        textAlign: 'center',
         fontWeight: 'bold',
     },
 });
