@@ -9,6 +9,7 @@ import KitchenScreen from '../screens/KitchenScreen'
 import AdminMenuViewScreen from '../screens/AdminMenuViewScreen'
 import AdminMenuEditScreen from '../screens/AdminMenuEditScreen'
 import CustomerOrderScreen from '../screens/CustomerOrderScreen'
+import CustomerCheckoutScreen from '../screens/CustomerCheckoutScreen'
 
 const Stack = createStackNavigator()
 
@@ -24,6 +25,7 @@ const AppNavigator = () => {
                 <Stack.Screen name='AdminMenuView' component={AdminMenuViewScreen} />
                 <Stack.Screen name='AdminMenuEdit' component={AdminMenuEditScreen} />
                 <Stack.Screen name='CustomerOrder' component={CustomerOrderScreen} />
+                <Stack.Screen name='CustomerCheckout' component={CustomerCheckoutScreen}/>
             </Stack.Navigator>
         </NavigationContainer>
     )
