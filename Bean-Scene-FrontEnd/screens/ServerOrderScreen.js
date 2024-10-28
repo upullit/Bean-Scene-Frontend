@@ -24,7 +24,8 @@ const ServerOrderScreen = ({ navigation }) => {
     const [totalPrice, setTotalPrice] = useState(0);
     const [selectedItem, setSelectedItem] = useState(null);
     const [comment, setComment] = useState(''); // To store the custom comment
-    const [filteredMenu, setFilteredMenu] = useState(DummyMenu); // State for filtered menu items
+    const [menuItems, setMenuItems] = useState([]);
+    //const [filteredMenu, setFilteredMenu] = useState(DummyMenu); // State for filtered menu items
     const [tickets, setTickets] = useState([]);
 
     // Fetch the menu items from database calling the function
@@ -86,11 +87,11 @@ const ServerOrderScreen = ({ navigation }) => {
         setSelectedItem(null); // remove selected item to return to list
     };
 
-    //filters menu based on category
-    const filterMenu = (category) => {
-        const filtered = DummyMenu.filter(item => item.category === category);
-        setFilteredMenu(filtered);
-    };
+    // //filters menu based on category
+    // const filterMenu = (category) => {
+    //     const filtered = DummyMenu.filter(item => item.category === category);
+    //     setFilteredMenu(filtered);
+    // };
 
     return (
         <View style={styles.container}>

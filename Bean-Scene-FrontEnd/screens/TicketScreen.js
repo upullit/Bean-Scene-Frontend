@@ -61,7 +61,7 @@ const TicketsScreen = () => {
         <View style={styles.container}>
             <Text style={styles.title}>Active Tickets</Text>
             {loading ? 
-             {/* shows all pending tickets with its menu items and their comments*/}
+             /* shows all pending tickets with its menu items and their comments*/
             (
                 <Text>Loading tickets...</Text>
             ) : pendingTickets.length === 0 ? (
