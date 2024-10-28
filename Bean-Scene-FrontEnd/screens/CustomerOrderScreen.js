@@ -1,64 +1,58 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Button, TextInput, Image } from 'react-native';
-import { getMenuItems } from '../crud';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, FlatList, Button, TextInput, Image } from 'react-native';
+import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
 
-
+//displays each menu item
 const Item = ({ title, price, image, onSelect, onAddToOrder }) => (
-    <View style={styles.item}>
-        <Image source={image} style={styles.image} />
+    <View style={styles.menuItem}>
         <View style={styles.itemContent}>
-            <Text style={styles.title}>{title} - ${price.toFixed(2)}</Text>
-            <View style={styles.buttonRowRight}>
+            <View>
+                <Text style={styles.dishTitle}>{title} - ${price.toFixed(2)}</Text>
+            </View>
+            <View>
                 <Button title="View Details" onPress={onSelect} />
                 <Button title="Add to Order" onPress={onAddToOrder} />
             </View>
+            <Image source={image} style={styles.listImage} />
         </View>
     </View>
 );
 
-const MenuScreen = ({ navigation }) => {
-    const [menuItems, setMenuItems] = useState([]);
+const CustomerOrderScreen = ({ navigation }) => {
     const [order, setOrder] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
     const [selectedItem, setSelectedItem] = useState(null);
-    const [lastTap, setLastTap] = useState(null);
-    const [tapTimeout, setTapTimeout] = useState(null);
-    const [comment, setComment] = useState(''); // To store the custom comment
-    const [filteredMenu, setFilteredMenu] = useState(DummyMenu); // State for filtered menu items
+    const [comment, setComment] = useState(''); // so store the comment
+    const [filteredMenu, setFilteredMenu] = useState(DummyMenu); // state for filtered menu items
+    const [tickets, setTickets] = useState([]);
 
-    // Fetch the menu items from database calling the function
-    useEffect(() => {
-        const fetchMenuItems = async () => {
-            const items = await getMenuItems(); // Fetch items using API function
-            console.log('Fetched items:', items); // See what is being fetched
-            setMenuItems(items); // Set fetched items to state
-        };
-        fetchMenuItems();
-    }, []);
-
-    const addToOrder = (item, price) => {
-        setOrder((prevOrder) => [...prevOrder, { item, price }]);
+    //adds selected item to order preview
+    const addToOrder = (item, price, comment) => {
+        setOrder((prevOrder) => [...prevOrder, { item, price, comment }]);
         setTotalPrice((prevTotal) => prevTotal + price);
         setComment(''); // Clear the input field after adding to the order
     };
 
+    //clears everything in current order preview
     const clearOrder = () => {
         setOrder([]);
         setTotalPrice(0);
     };
+
+    //turns order into ticket - wip
     const createNewTicket = () => {
         if (order.length > 0) {
             setTickets((prevTickets) => [...prevTickets, order]); // Add current order to tickets
             clearOrder(); // Clear the current order to start a new one
         }
     };
-    const [tickets, setTickets] = useState([]);
 
-
+    //returns back to menu list
     const goBackToList = () => {
-        setSelectedItem(null); // Clear selected item to return to list
+        setSelectedItem(null); // remove selected item to return to list
     };
 
+    //filters menu based on category
     const filterMenu = (category) => {
         const filtered = DummyMenu.filter(item => item.category === category);
         setFilteredMenu(filtered);
@@ -66,43 +60,48 @@ const MenuScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.column}>
-                <View style={styles.buttonRow}>
-                    <Button title="New Ticket"/>
-                    <Button title="View Tickets" onPress={() => navigation.navigate('Ticket', { tickets })} />
-                    <Button title="Change Table" />
-                    <Button title="Clear Order - remove later" onPress={clearOrder} />
-                </View>
-                <View style={styles.order}>
+            <View style={styles.orderColumn}>
+                <View style={styles.orderContainer}>
                     <Text style={styles.orderTitle}>Order Details:</Text>
+                    {/*if there are no items in order preview empty order text is shown*/}
                     {order.length === 0 ? (
                         <Text>No items in order</Text>
                     ) : (
                         order.map((orderItem, index) => (
                             <View key={index}>
-                                <Text style={styles.orderItem}>
-                                    {orderItem.item} - ${orderItem.price.toFixed(2)}
-                                </Text>
-                                {orderItem.comment ? (
-                                    <Text style={styles.orderComment}> - {orderItem.comment}</Text> // Display the comment
-                                ) : null}
+                                <View style={styles.orderItemRow}>
+                                    <Text style={styles.orderItem}>
+                                        {orderItem.item} - ${orderItem.price.toFixed(2)}
+                                    </Text>
+                                    <View style={styles.actionButtons}>
+                                        {/* edit select item function will be called here */}
+                                        <Button title="Edit" />
+                                        {/* delete item function will be called here */}
+                                        <Button title="Delete" />
+                                    </View>
+                                </View>
+                                {/* adds order comment below item */}
+                                <Text>
+                                    {orderItem.comment ? (
+                                        <Text style={styles.orderComment}> - {orderItem.comment}</Text>
+                                    ) : null}</Text>
                             </View>
                         ))
                     )}
                 </View>
                 <View style={styles.totalContainer}>
+                    {/* total price is show with 2dcp */}
                     <Text style={styles.totalPrice}>
                         Total Price: ${totalPrice.toFixed(2)}
                     </Text>
                 </View>
-                <View style={styles.buttonRow}>
-                    <Button title="Cash" onPress={createNewTicket}/>
-                    <Button title="Card" onPress={createNewTicket}/>
-                    <Button title="Split" onPress={createNewTicket} />
-                    <Button title="Refund"/>
+                <View style={styles.button}>
+                    {/* navigates to checkout page and passes the order items and total price */}
+                    <Button title="Checkout" onPress={() => navigation.navigate('CustomerCheckout', { order, totalPrice })} />
                 </View>
             </View>
-            <View style={styles.column}>
+            <View style={styles.menuColumn}>
+                {/* menu filter */}
                 <View style={styles.buttonRow}>
                     <Button title="Beverages" onPress={() => filterMenu('Drinks')} />
                     <Button title="Breakfast" onPress={() => filterMenu('Breakfast')} />
@@ -110,7 +109,7 @@ const MenuScreen = ({ navigation }) => {
                     <Button title="Dinner" onPress={() => filterMenu('Dinner')} />
                     <Button title="Cafe/Dessert" onPress={() => filterMenu('Dessert' || 'Cafe')} />
                 </View>
-
+                {/* shows a more customer friendly menu list and details view */}
                 {selectedItem ? (
                     <View style={styles.detailsContainer}>
                         <Image source={selectedItem.image} style={styles.detailImage} />
@@ -118,33 +117,34 @@ const MenuScreen = ({ navigation }) => {
                         <Text style={styles.detailsText}>Price: ${selectedItem.price.toFixed(2)}</Text>
                         <Text style={styles.detailsText}>Description: {selectedItem.description}</Text>
                         <TextInput
-                            style={styles.input}
+                            style={styles.commentInput}
                             placeholder="Add a comment or special request"
                             value={comment}
                             onChangeText={setComment}
                         />
                         <View style={styles.buttonRow}>
+                            {/* navigates back to list */}
                             <Button title="Back" onPress={goBackToList} />
                             <Button
                                 title="Add to Order"
-                                onPress={() => addToOrder(selectedItem.title, selectedItem.price, comment)} // Pass the comment
+                                onPress={() => addToOrder(selectedItem.title, selectedItem.price, comment)} // Pass the comment and item details
                             />
                         </View>
                     </View>
                 ) : (
                     <View style={styles.flatContainer}>
                         <FlatList
-                            data={menuItems}
+                            data={filteredMenu}
                             renderItem={({ item }) => (
                                 <Item
-                                    title={item.name}
+                                    title={item.title}
                                     price={item.price}
                                     image={item.image}
                                     onSelect={() => setSelectedItem(item)} // Show details when "View Details" is pressed
                                     onAddToOrder={() => addToOrder(item.title, item.price)} // Add item to order when "Add to Order" is pressed
                                 />
                             )}
-                            keyExtractor={item => item._id}
+                            keyExtractor={item => item.id}
                         />
                     </View>
                 )}
@@ -161,32 +161,52 @@ const styles = StyleSheet.create({
         padding: 10,
         height: '100%',
     },
-    column: {
+    menuColumn: {
+        flex: 1.5,
+        padding: 10,
+        height: '100%',
+    },
+    orderColumn: {
         flex: 1,
         padding: 10,
         height: '100%',
+    },
+    orderComment: {
+        fontSize: 18,
+    },
+    orderItemRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginVertical: 5,
+    },
+    actionButtons: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        gap: 5,
     },
     buttonRow: {
         flexDirection: 'row',
         marginTop: 10,
         width: '100%',
     },
-    title: {
+    dishTitle: {
         fontSize: 18,
         fontWeight: 'bold',
     },
-    item: {
-        flexDirection: 'row', // Horizontal layout for image and item details
+    menuItem: {
+        flexDirection: 'row',
         alignItems: 'center',
         padding: 20,
         marginBottom: 10,
         borderRadius: 5,
         backgroundColor: '#f9f9f9',
+        height: 150,
     },
     itemContent: {
-        flex: 1, // Takes up the remaining space next to the image
+        flex: 1,
         flexDirection: 'row',
-        justifyContent: 'space-between', // Space between title/price and buttons
+        justifyContent: 'space-between',
         alignItems: 'center',
     },
     flatContainer: {
@@ -194,15 +214,15 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         borderRadius: 5,
         overflow: 'hidden',
-        height: 600,
+        height: 1200,
         width: '100%',
     },
-    order: {
+    orderContainer: {
         borderWidth: 2,
         borderColor: 'black',
         borderRadius: 5,
         overflow: 'hidden',
-        height: 450,
+        height: 550,
         width: '100%',
         padding: 10,
     },
@@ -212,8 +232,9 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     orderItem: {
-        fontSize: 16,
+        fontSize: 18,
         marginVertical: 5,
+        fontWeight: 'bold',
     },
     totalPrice: {
         fontSize: 18,
@@ -245,27 +266,28 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginVertical: 5,
     },
-    input: {
+    commentInput: {
         borderColor: 'gray',
         borderWidth: 1,
         borderRadius: 5,
         padding: 10,
         marginBottom: 10,
     },
-    image: {
-        width: 50, // Adjust the width as needed
-        height: 50, // Adjust the height as needed
-        marginRight: 10, // Space between the image and text
-        borderRadius: 5, // Optional: round the image corners
+    listImage: {
+        width: 140,
+        height: 140,
+        marginRight: 10,
+        borderRadius: 5,
     },
     detailImage: {
-        width: 200, // Adjust the width as needed
-        height: 120, // Adjust the height as needed
-        marginRight: 10, // Space between the image and text
-        borderRadius: 5, // Optional: round the image corners
+        width: 200,
+        height: 120,
+        marginRight: 10,
+        borderRadius: 5,
         alignContent: 'center',
         justifyContent: 'center',
     },
 });
 
-export default MenuScreen;
+
+export default CustomerOrderScreen;
