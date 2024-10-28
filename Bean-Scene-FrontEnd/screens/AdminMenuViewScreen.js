@@ -1,8 +1,42 @@
 import React from "react";
-import { Button, View, StyleSheet, Image, Text } from "react-native";
+import { Button, View, StyleSheet, Image, Text, Alert } from "react-native";
+import { deleteItem } from "../crud/menuitems";
 
 const AdminMenuViewScreen = ({ route, navigation }) => {
     const { item } = route.params;
+
+    // Seperated alert from handle delete as alert does not work with async function
+
+    const deleteMenuItem = () => {
+        Alert.alert(
+            "Confirm deletion",
+            "Are you sure you want to delete this item?",
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel",
+                },
+                {
+                    text: "Delete",
+                    style: "destructive",
+                    onPress: handleDelete,
+                },
+            ],
+            { cancelable: true }
+        );
+    };
+
+    const handleDelete = async () => {
+        try {
+            await deleteItem(item._id);
+            Alert.alert("Deleted", "Item has been deleted successfully");
+            navigation.goBack();
+        } catch (error) {
+            console.error("Error deleting item:", error);
+            Alert.alert("Error", "An error occurred while deleting the item");
+        }
+    };
+
 
     return (
         <View style={styles.container}>
@@ -10,13 +44,14 @@ const AdminMenuViewScreen = ({ route, navigation }) => {
             ingredients need to be added */}
             <Image source={item.image} style={styles.image} />
             <Text style={styles.title}>{item.title}</Text>
-            <Text style={styles.description}>Price: {item.price}</Text>
-            <Text style={styles.description}>Description: {item.description}</Text>
-            <Text style={styles.description}>Category: {item.category}</Text>
+            <Text style={styles.description}><b>Name: </b>{item.name}</Text>
+            <Text style={styles.description}><b>Price: </b>{item.price}</Text>
+            <Text style={styles.description}><b>Description: </b>{item.description}</Text>
+            <Text style={styles.description}><b>Category: </b>{item.category}</Text>
             <View style={styles.actionButton}>
                 {/* takes item data to edit page */}
                 <Button title="Edit" onPress={() => navigation.navigate('AdminMenuEdit', { item })} /> 
-                <Button title="Delete" />
+                <Button title="Delete" onPress={deleteMenuItem} />
             </View>
         </View>
     );

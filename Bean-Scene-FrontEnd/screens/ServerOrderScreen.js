@@ -37,6 +37,7 @@ const ServerOrderScreen = ({ navigation }) => {
         fetchMenuItems();
     }, []);
 
+    //adds selected item to order preview
     const addToOrder = (item, comment) => {
         const price = Number(item.price);
         const title = item.name;
@@ -51,7 +52,7 @@ const ServerOrderScreen = ({ navigation }) => {
         setTotalPrice(0);
     };
 
-    //turns order into ticket - wip
+    //turns order into ticket
     const createNewTicket = async (paymentMethod) => {
         if (order.length > 0) {
             // Prepare the new ticket object with required fieldsw

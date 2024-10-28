@@ -5,7 +5,7 @@ const baseUrl = 'http://localhost:3000/api';
 const createItem = async (data) => 
 {
     try {
-        const response = await fetch('/api/menu', 
+        const response = await fetch(`${baseUrl}/menuitems`, 
             {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -33,7 +33,7 @@ const getMenuItems = async () => {
 // function to get menu items
 const getSingleItem = async (id) => {
     try {
-        const response = await fetch(`/api/menu/${id}`);
+        const response = await fetch(`${baseUrl}/menuitems/${id}`);
         if (!response.ok) throw new Error('Failed to fetch item');
         return await response.json();     
     } catch (error) {
@@ -44,7 +44,7 @@ const getSingleItem = async (id) => {
 // function to update menu items
 const updateMenuItem = async (id, updatedItem) => {
     try{
-        const response = await fetch(`/api/menu/${id}`, {
+        const response = await fetch(`${baseUrl}/menuitems/${id}`, {
             method: 'PUT',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(updatedItem)
@@ -63,7 +63,7 @@ const updateMenuItem = async (id, updatedItem) => {
 // function to Delete menu items
 const deleteItem = async (id) => {
     try {
-        const response = await fetch(`/api/menu/${id}`, {
+        const response = await fetch(`${baseUrl}/menuitems/${id}`, {
         method: 'DELETE',
     });
 
