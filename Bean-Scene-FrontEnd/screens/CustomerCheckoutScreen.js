@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { View, Text, Button, StyleSheet, TextInput } from "react-native";
+import { RadioButton } from 'react-native-paper';
 import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
 
 
 const CustomerCheckoutScreen = ({ navigation, route }) => {
     const { order, totalPrice } = route.params; //holds order from previous page
+    const [checked, setChecked] = React.useState('first');
 
     {/*
         functions are work in progress
@@ -62,12 +64,39 @@ const CustomerCheckoutScreen = ({ navigation, route }) => {
                         <Text style={styles.subheading}>Order Name:</Text>
                         <TextInput style={styles.input}></TextInput>
                         <Text style={styles.subheading}>Select Payment Method:</Text>
+                        <View>
+                            <View style={styles.radio}>
+                                <RadioButton
+                                    value="first"
+                                    status={checked === 'first' ? 'checked' : 'unchecked'}
+                                    onPress={() => setChecked('first')}
+                                />
+                                <Text style={styles.radioText}>Online Payment</Text>
+                            </View>
+                            <View style={styles.radio}>
+                                <RadioButton
+                                    value="second"
+                                    status={checked === 'second' ? 'checked' : 'unchecked'}
+                                    onPress={() => setChecked('second')}
+                                />
+                                <Text style={styles.radioText}>Card</Text>
+                            </View>
+                            <View style={styles.radio}>
+                                <RadioButton
+                                    value="third"
+                                    status={checked === 'third' ? 'checked' : 'unchecked'}
+                                    onPress={() => setChecked('third')}
+                                />
+                                <Text style={styles.radioText}>In Store</Text>
+                            </View>
+
+                        </View>
                         <Text style={styles.subheading}>Enter Promo or Discount Code:</Text>
                         <TextInput style={styles.input}></TextInput>
-                        <View style={styles.payButton}>
-                            {/* create ticket function will be called here */}
-                            <Button title="Pay"/>
-                        </View>
+                    </View>
+                    <View style={styles.payButton}>
+                        {/* create ticket function will be called here */}
+                        <Button title="Pay" />
                     </View>
                 </View>
             </View>
@@ -157,7 +186,7 @@ const styles = StyleSheet.create({
         top: 10,
     },
     formContaier: {
-        padding: 40,
+        padding: 38,
         marginLeft: 50,
         marginHorizontal: 50,
     },
@@ -168,9 +197,17 @@ const styles = StyleSheet.create({
     },
     payButton: {
         position: 'absolute',
-        bottom: 10,
-        left: 0,
-        right: 0,
+        bottom: 20,
+        left: 20,
+        right: 20,
+    },
+    radio: {
+        flexDirection: 'row',
+        padding: 10,
+        width: '100%',
+    },
+    radioText: {
+        fontSize: 18,
     },
 });
 
