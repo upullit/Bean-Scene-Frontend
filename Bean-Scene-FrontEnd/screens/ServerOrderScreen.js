@@ -37,9 +37,10 @@ const ServerOrderScreen = ({ navigation }) => {
         fetchMenuItems();
     }, []);
 
-    //adds selected item to order preview
-    const addToOrder = (item, price, comment) => {
-        setOrder((prevOrder) => [...prevOrder, { item, price, comment }]);
+    const addToOrder = (item, comment) => {
+        const price = Number(item.price);
+        const title = item.name;
+        setOrder((prevOrder) => [...prevOrder, { title, comment, price }]);
         setTotalPrice((prevTotal) => prevTotal + price);
         setComment(''); // Clear the input field after adding to the order
     };
@@ -89,7 +90,7 @@ const ServerOrderScreen = ({ navigation }) => {
                             <View key={index}>
                                 <View style={styles.orderItemRow}>
                                     <Text style={styles.orderItem}>
-                                        {orderItem.item} - ${orderItem.price.toFixed(2)}
+                                    {orderItem.title} - ${Number(orderItem.price).toFixed(2)}
                                     </Text>
                                     <View style={styles.actionButtons}>
                                         {/* edit select item function will be called here */}
@@ -162,7 +163,7 @@ const ServerOrderScreen = ({ navigation }) => {
                                     price={item.price}
                                     image={item.image}
                                     onSelect={() => setSelectedItem(item)} // Show details when "View Details" is pressed
-                                    onAddToOrder={() => addToOrder(item.title, item.price)} // Add item to order when "Add to Order" is pressed
+                                    onAddToOrder={() => addToOrder(item, comment)} // Add item to order when "Add to Order" is pressed
                                 />
                             )}
                             keyExtractor={item => item._id}
