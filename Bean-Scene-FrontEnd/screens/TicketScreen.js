@@ -86,7 +86,7 @@ const TicketsScreen = () => {
                         </View>
                     )}
                     keyExtractor={(item) => item._id}
-                    numColumns={2}
+                    numColumns={4}
                     columnWrapperStyle={styles.columnWrapper}
                 />
             )}
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#ccc',
         borderRadius: 5,
-        width: '48%',
+        width: 300,
     },
     ticketTitle: {
         fontSize: 24,
