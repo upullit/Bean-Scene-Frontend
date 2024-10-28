@@ -1,23 +1,70 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Button } from 'react-native';
+import { updateTicket, deleteTicket , getTickets} from '../crud/ticket';
 
-const TicketsScreen = ({ route }) => {
-    const { tickets = [] } = route.params || {}; //gets ticket data from ordering screens
-    const ticketsPerPage = 8; //defines amount of tickets visable on each page
-    const [currentPage, setCurrentPage] = useState(0); //page management
-    const totalPages = Math.ceil(tickets.length / ticketsPerPage); //page total
+const TicketsScreen = () => {
+    const [tickets, setTickets] = useState([]);
+    const [pendingTickets, setPendingTickets] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const ticketsPerPage = 8;
+    const [currentPage, setCurrentPage] = useState(0);
 
-    //show current page number
-    const currentTickets = tickets.slice(
+    // Fetch tickets on mount
+    useEffect(() => {
+        const fetchTickets = async () => {
+            try {
+                const fetchedTickets = await getTickets(); // Fetch all tickets
+                setTickets(fetchedTickets);
+            } catch (error) {
+                console.error('Error fetching tickets:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchTickets();
+    }, []);
+
+
+    // Sync pendingTickets whenever tickets change
+    useEffect(() => {
+        setPendingTickets(tickets.filter(ticket => ticket.status === 'Pending'));
+    }, [tickets]);
+
+    // Function to mark ticket as complete
+    const markAsComplete = async (ticketId) => {
+        try {
+            await updateTicket(ticketId, { status: 'Completed' });
+            const updatedTickets = await getTickets(); // Fetch the updated list of tickets
+            setTickets(updatedTickets); // Update the state with the latest tickets
+        } catch (error) {
+            console.error('Error marking ticket as complete:', error);
+        }
+    };
+
+    // Function to delete a ticket
+    const removeTicket = async (ticketId) => {
+        try {
+            await deleteTicket(ticketId);
+            setTickets(prevTickets => prevTickets.filter(ticket => ticket._id !== ticketId));
+        } catch (error) {
+            console.error('Error deleting ticket:', error);
+        }
+    };
+    
+    const currentTickets = pendingTickets.slice(
         currentPage * ticketsPerPage,
         (currentPage + 1) * ticketsPerPage
     );
+    const totalPages = Math.ceil(pendingTickets.length / ticketsPerPage);
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Active Tickets</Text>
-            {/* shows all current tickets with its menu items and their comments*/}
-            {tickets.length === 0 ? (
+            {loading ? 
+             /* shows all pending tickets with its menu items and their comments*/
+            (
+                <Text>Loading tickets...</Text>
+            ) : pendingTickets.length === 0 ? (
                 <Text>No active tickets</Text>
             ) : (
                 <FlatList
@@ -27,21 +74,20 @@ const TicketsScreen = ({ route }) => {
                             <Text style={styles.ticketTitle}>
                                 Ticket #{currentPage * ticketsPerPage + index + 1}
                             </Text>
-                            {item.map((orderItem, itemIndex) => (
+                            {item.items.map((orderItem, itemIndex) => (
                                 <Text style={styles.ticketText} key={itemIndex}>
-                                    {orderItem.item}
-                                    {orderItem.comment ? `\n - ${orderItem.comment}` : ''}
+                                    {orderItem.menuItem.name} - Quantity: {orderItem.quantity}
+                                    {orderItem.specialInstructions ? `\n - ${orderItem.specialInstructions}` : ''}
                                 </Text>
                             ))}
-                            <View style={styles.ticketButton}>
-                                {/* complete ticket function will be called here */}
-                                <Button title="Complete" />
-                                {/* delete ticket function will be called here */}
-                                <Button title="Delete" />
+                            <Text style={styles.totalPrice}>Total: ${item.totalPrice.toFixed(2)}</Text>
+                            <View style={styles.bottomButton}>
+                                <Button title="Complete" onPress={() => markAsComplete(item._id)} />
+                                <Button title="Delete" onPress={() => removeTicket(item._id)} />
                             </View>
                         </View>
                     )}
-                    keyExtractor={(item, index) => index.toString()}
+                    keyExtractor={(item) => item._id}
                     numColumns={4}
                     columnWrapperStyle={styles.columnWrapper}
                 />

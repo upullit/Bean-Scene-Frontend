@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Button, TextInput, Image } from 'react-native';
 import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
+import { getMenuItems } from '../crud/menuitems.js';
+import { createTicket } from '../crud/ticket.js';
 
 //displays each menu item
 const Item = ({ title, price, image, onSelect, onAddToOrder }) => (
@@ -23,12 +25,24 @@ const CustomerOrderScreen = ({ navigation }) => {
     const [totalPrice, setTotalPrice] = useState(0);
     const [selectedItem, setSelectedItem] = useState(null);
     const [comment, setComment] = useState(''); // so store the comment
-    const [filteredMenu, setFilteredMenu] = useState(DummyMenu); // state for filtered menu items
+    const [menuItems, setMenuItems] = useState([]);
+    // const [filteredMenu, setFilteredMenu] = useState(DummyMenu); // state for filtered menu items
     const [tickets, setTickets] = useState([]);
 
+    // Fetch the menu items from database calling the function
+    useEffect(() => {
+        const fetchMenuItems = async () => {
+            const items = await getMenuItems(); // Fetch items using API function
+            setMenuItems(items); // Set fetched items to state
+        };
+        fetchMenuItems();
+    }, []);
+
     //adds selected item to order preview
-    const addToOrder = (item, price, comment) => {
-        setOrder((prevOrder) => [...prevOrder, { item, price, comment }]);
+    const addToOrder = (item, comment) => {
+        const price = Number(item.price);
+        const title = item.name;
+        setOrder((prevOrder) => [...prevOrder, { menuItemId: item._id, title, comment, price }]);
         setTotalPrice((prevTotal) => prevTotal + price);
         setComment(''); // Clear the input field after adding to the order
     };
@@ -39,24 +53,48 @@ const CustomerOrderScreen = ({ navigation }) => {
         setTotalPrice(0);
     };
 
-    //turns order into ticket - wip
-    const createNewTicket = () => {
+    //turns order into ticket
+    const createNewTicket = async (paymentMethod) => {
         if (order.length > 0) {
-            setTickets((prevTickets) => [...prevTickets, order]); // Add current order to tickets
-            clearOrder(); // Clear the current order to start a new one
+            // Prepare the new ticket object with required fieldsw
+            const newTicket = {
+                items: order.map((orderItem) => ({
+                    menuItem: orderItem.menuItemId, // Ensure this is a valid MenuItem ID
+                    quantity: orderItem.quantity || 1, // Default quantity to 1 if not specified
+                    specialInstructions: orderItem.comment || '' // Add any special instructions or default to an empty string
+                })),
+                totalPrice: totalPrice,
+                paymentMethod: paymentMethod,
+                CustomerId: "60b8b22d7b9e4b00156a5c3b" // Replace with a valid Customer ID if needed
+            };
+    
+            try {
+                // Call the createTicket function to save the ticket to the database
+                const savedTicket = await createTicket(newTicket);
+                // Update local state with the new ticket
+                setTickets((prevTickets) => [...prevTickets, savedTicket]);
+                // Clear the order for a new entry
+                clearOrder();
+                console.log('Ticket created successfully:', savedTicket);
+            } catch (error) {
+                console.error('Error creating ticket:', error);
+            }
+        } else {
+            console.warn('No items in order to create a ticket.');
         }
     };
+
 
     //returns back to menu list
     const goBackToList = () => {
         setSelectedItem(null); // remove selected item to return to list
     };
 
-    //filters menu based on category
-    const filterMenu = (category) => {
-        const filtered = DummyMenu.filter(item => item.category === category);
-        setFilteredMenu(filtered);
-    };
+    // //filters menu based on category
+    // const filterMenu = (category) => {
+    //     const filtered = DummyMenu.filter(item => item.category === category);
+    //     setFilteredMenu(filtered);
+    // };
 
     return (
         <View style={styles.container}>
@@ -71,7 +109,7 @@ const CustomerOrderScreen = ({ navigation }) => {
                             <View key={index}>
                                 <View style={styles.orderItemRow}>
                                     <Text style={styles.orderItem}>
-                                        {orderItem.item} - ${orderItem.price.toFixed(2)}
+                                    {orderItem.title} - ${Number(orderItem.price).toFixed(2)}
                                     </Text>
                                     <View style={styles.actionButtons}>
                                         {/* edit select item function will be called here */}
@@ -134,17 +172,17 @@ const CustomerOrderScreen = ({ navigation }) => {
                 ) : (
                     <View style={styles.flatContainer}>
                         <FlatList
-                            data={filteredMenu}
+                            data={menuItems}
                             renderItem={({ item }) => (
                                 <Item
-                                    title={item.title}
+                                    title={item.name}
                                     price={item.price}
                                     image={item.image}
                                     onSelect={() => setSelectedItem(item)} // Show details when "View Details" is pressed
-                                    onAddToOrder={() => addToOrder(item.title, item.price)} // Add item to order when "Add to Order" is pressed
+                                    onAddToOrder={() => addToOrder(item, comment)} // Add item to order when "Add to Order" is pressed
                                 />
                             )}
-                            keyExtractor={item => item.id}
+                            keyExtractor={item => item._id}
                         />
                     </View>
                 )}

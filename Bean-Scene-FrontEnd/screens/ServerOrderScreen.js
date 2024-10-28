@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Button, TextInput, Image } from 'react-native';
-//import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
-import { getMenuItems } from '../crud';
+import { getMenuItems } from '../crud/menuitems';
+import { createTicket } from '../crud/ticket';
 
 //displays each menu item
 const Item = ({ title, price, image, onSelect, onAddToOrder }) => (
@@ -24,23 +24,24 @@ const ServerOrderScreen = ({ navigation }) => {
     const [totalPrice, setTotalPrice] = useState(0);
     const [selectedItem, setSelectedItem] = useState(null);
     const [comment, setComment] = useState(''); // To store the custom comment
-    const [filteredMenu, setFilteredMenu] = useState(DummyMenu); // State for filtered menu items
+    const [menuItems, setMenuItems] = useState([]);
+    //const [filteredMenu, setFilteredMenu] = useState(DummyMenu); // State for filtered menu items
     const [tickets, setTickets] = useState([]);
 
     // Fetch the menu items from database calling the function
     useEffect(() => {
         const fetchMenuItems = async () => {
             const items = await getMenuItems(); // Fetch items using API function
-            console.log('Fetched items:', items); // See what is being fetched
             setMenuItems(items); // Set fetched items to state
         };
         fetchMenuItems();
     }, []);
 
+    //adds selected item to order preview
     const addToOrder = (item, comment) => {
         const price = Number(item.price);
         const title = item.name;
-        setOrder((prevOrder) => [...prevOrder, { title, comment, price }]);
+        setOrder((prevOrder) => [...prevOrder, { menuItemId: item._id, title, comment, price }]);
         setTotalPrice((prevTotal) => prevTotal + price);
         setComment(''); // Clear the input field after adding to the order
     };
@@ -51,11 +52,34 @@ const ServerOrderScreen = ({ navigation }) => {
         setTotalPrice(0);
     };
 
-    //turns order into ticket - wip
-    const createNewTicket = () => {
+    //turns order into ticket
+    const createNewTicket = async (paymentMethod) => {
         if (order.length > 0) {
-            setTickets((prevTickets) => [...prevTickets, order]); // Add current order to tickets
-            clearOrder(); // Clear the current order to start a new one
+            // Prepare the new ticket object with required fieldsw
+            const newTicket = {
+                items: order.map((orderItem) => ({
+                    menuItem: orderItem.menuItemId, // Ensure this is a valid MenuItem ID
+                    quantity: orderItem.quantity || 1, // Default quantity to 1 if not specified
+                    specialInstructions: orderItem.comment || '' // Add any special instructions or default to an empty string
+                })),
+                totalPrice: totalPrice,
+                paymentMethod: paymentMethod,
+                CustomerId: "60b8b22d7b9e4b00156a5c3b" // Replace with a valid Customer ID if needed
+            };
+    
+            try {
+                // Call the createTicket function to save the ticket to the database
+                const savedTicket = await createTicket(newTicket);
+                // Update local state with the new ticket
+                setTickets((prevTickets) => [...prevTickets, savedTicket]);
+                // Clear the order for a new entry
+                clearOrder();
+                console.log('Ticket created successfully:', savedTicket);
+            } catch (error) {
+                console.error('Error creating ticket:', error);
+            }
+        } else {
+            console.warn('No items in order to create a ticket.');
         }
     };
 
@@ -64,11 +88,11 @@ const ServerOrderScreen = ({ navigation }) => {
         setSelectedItem(null); // remove selected item to return to list
     };
 
-    //filters menu based on category
-    const filterMenu = (category) => {
-        const filtered = DummyMenu.filter(item => item.category === category);
-        setFilteredMenu(filtered);
-    };
+    // //filters menu based on category
+    // const filterMenu = (category) => {
+    //     const filtered = DummyMenu.filter(item => item.category === category);
+    //     setFilteredMenu(filtered);
+    // };
 
     return (
         <View style={styles.container}>
@@ -116,10 +140,10 @@ const ServerOrderScreen = ({ navigation }) => {
                 </View>
                 {/* processes "payment" and creates ticket */}
                 <View style={styles.buttonRow}>
-                    <Button title="Cash" onPress={createNewTicket} />
-                    <Button title="Card" onPress={createNewTicket} />
-                    <Button title="Split" onPress={createNewTicket} />
-                    <Button title="Refund" />
+                    <Button title="Cash" onPress={() => createNewTicket('Cash')}/>
+                    <Button title="Card" onPress={() => createNewTicket('Card')}/>
+                    <Button title="Split" onPress={() => createNewTicket('Split')}/>
+                    <Button title="Refund"/>
                 </View>
             </View>
             <View style={styles.column}>
