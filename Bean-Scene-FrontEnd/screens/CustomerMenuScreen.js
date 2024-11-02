@@ -1,5 +1,6 @@
 import React from "react";
-import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Alert, Button } from 'react-native';
+import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
 
 
@@ -13,8 +14,35 @@ const MenuItem = ({ item }) => (
     </View>
 );
 
-const CustomerMenuScreen = ({ }) => {
+const exportMenuToPDF = async () => {
+    try {
+      const htmlContent = `
+        <h1 style="text-align: center;">Bean Scene Menu</h1>
+        <ul>
+          ${DummyMenu.map(item => `
+            <li style="margin-bottom: 10px;">
+              <strong>${item.title}</strong><br />
+              <em>${item.description}</em><br />
+              Price: ${item.price}
+            </li>
+          `).join('')}
+        </ul>
+      `;
+  
+      const options = {
+        html: htmlContent,
+        fileName: 'Bean_Scene_Menu',
+        directory: 'Documents',
+      };
+  
+      const file = await RNHTMLtoPDF.convert(options);
+      Alert.alert('PDF created', `File saved to: ${file.filePath}`);
+    } catch (error) {
+      Alert.alert('Error', 'Failed to create PDF: ' + error.message);
+    }
+  };
 
+  const CustomerMenuScreen = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Bean Scene Menu</Text>
@@ -24,6 +52,7 @@ const CustomerMenuScreen = ({ }) => {
                 keyExtractor={item => item.id}
                 contentContainerStyle={styles.menuList}
             />
+            <Button title="Export Menu to PDF" onPress={exportMenuToPDF} />
         </View>
     );
 };
