@@ -10,12 +10,13 @@ import AdminMenuViewScreen from '../screens/AdminMenuViewScreen'
 import AdminMenuEditScreen from '../screens/AdminMenuEditScreen'
 import CustomerOrderScreen from '../screens/CustomerOrderScreen'
 import CustomerCheckoutScreen from '../screens/CustomerCheckoutScreen'
+import CustomerMenuScreen from '../screens/CustomerMenuScreen'
 
 const Stack = createStackNavigator()
 
 const AppNavigator = () => {
     return (
-        <NavigationContainer>
+        <NavigationContainer theme={{ colors: { background: '#F8FAE5' } }}>
             <Stack.Navigator initialRouteName='Home'>
                 <Stack.Screen name='Home' component={HomeScreen} />
                 <Stack.Screen name='ServerOrder' component={ServerOrderScreen} />
@@ -26,6 +27,7 @@ const AppNavigator = () => {
                 <Stack.Screen name='AdminMenuEdit' component={AdminMenuEditScreen} />
                 <Stack.Screen name='CustomerOrder' component={CustomerOrderScreen} />
                 <Stack.Screen name='CustomerCheckout' component={CustomerCheckoutScreen}/>
+                <Stack.Screen name='CustomerMenu' component={CustomerMenuScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     )

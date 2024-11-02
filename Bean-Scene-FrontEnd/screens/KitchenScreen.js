@@ -181,6 +181,7 @@ const styles = StyleSheet.create({
         bottom: 10,
         left: 0,
         right: 0,
+        
     },
     pageIndicator: {
         marginHorizontal: 20,
@@ -195,7 +196,7 @@ const styles = StyleSheet.create({
         width: 250,
         height: 400,
         padding: 20,
-        backgroundColor: '#fff',
+        backgroundColor: '#F8FAE5',
         borderRadius: 8,
         alignItems: 'left',
         shadowColor: '#000',
@@ -220,7 +221,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 20,  
         right: 20, 
-        backgroundColor: '#007AFF',
+        backgroundColor: '#43766C',
         paddingVertical: 12,
         paddingHorizontal: 18,
         borderRadius: 30,
@@ -231,7 +232,7 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     buttonText: {
-        color: '#fff',
+        color: '#F8FAE5',
         fontSize: 16,
         fontWeight: '600',
     },

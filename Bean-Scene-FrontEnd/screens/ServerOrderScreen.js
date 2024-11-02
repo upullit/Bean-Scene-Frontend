@@ -82,9 +82,9 @@ const ServerOrderScreen = ({ navigation }) => {
                                     </Text>
                                     <View style={styles.actionButtons}>
                                         {/* edit select item function will be called here */}
-                                        <Button title="Edit" /> 
+                                        <Button title="Edit" />
                                         {/* delete item function will be called here */}
-                                        <Button title="Delete" /> 
+                                        <Button title="Delete" />
                                     </View>
                                 </View>
                                 {/* adds order comment below item */}

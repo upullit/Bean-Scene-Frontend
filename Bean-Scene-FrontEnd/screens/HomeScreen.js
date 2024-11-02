@@ -8,7 +8,7 @@ const HomeScreen = ({ navigation }) => {
         await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
     };
     useEffect(() => {
-        lockOrientation(); 
+        lockOrientation();
         return () => {
             ScreenOrientation.unlockAsync();
         };
@@ -35,6 +35,9 @@ const HomeScreen = ({ navigation }) => {
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('CustomerOrder')}>
                     <Text style={styles.buttonText}>Customer Order</Text>
                 </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('CustomerMenu')}>
+                    <Text style={styles.buttonText}>Customer Menu</Text>
+                </TouchableOpacity>
             </View>
         </View>
     );
@@ -45,11 +48,10 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         justifyContent: 'center',
         padding: 20,
-        marginTop: 80,
+        marginTop: 20,
         marginLeft: 200,
         marginRight: 200,
         marginBottom: 200,
-        flex: 1,
     },
     title: {
         fontSize: 32,
@@ -59,21 +61,22 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     button: {
-        backgroundColor: '#007BFF', 
-        padding: 15, 
-        marginVertical: 10, 
-        borderRadius: 5, 
+        backgroundColor: '#007BFF',
+        padding: 15,
+        marginVertical: 10,
+        borderRadius: 5,
     },
     buttonText: {
-        color: '#FFFFFF', 
-        fontSize: 20, 
-        textAlign: 'center', 
+        color: '#FFFFFF',
+        fontSize: 20,
+        textAlign: 'center',
         fontWeight: 'bold',
     },
     text: {
-        fontSize: 20, 
+        fontSize: 20,
         textAlign: 'center',
         fontWeight: 'bold',
+        color: '#007BFF',
     },
 });
 
