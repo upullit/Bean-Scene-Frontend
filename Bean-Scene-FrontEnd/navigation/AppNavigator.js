@@ -10,13 +10,25 @@ import AdminMenuViewScreen from '../screens/AdminMenuViewScreen'
 import AdminMenuEditScreen from '../screens/AdminMenuEditScreen'
 import CustomerOrderScreen from '../screens/CustomerOrderScreen'
 import CustomerCheckoutScreen from '../screens/CustomerCheckoutScreen'
+import CustomerMenuScreen from '../screens/CustomerMenuScreen'
 
 const Stack = createStackNavigator()
 
 const AppNavigator = () => {
     return (
-        <NavigationContainer>
-            <Stack.Navigator initialRouteName='Home'>
+        <NavigationContainer theme={{ colors: { background: '#F8FAE5' } }}>
+        <Stack.Navigator
+            initialRouteName='Home'
+            screenOptions={{
+                headerStyle: {
+                    backgroundColor: '#76453B', // Set your header background color here
+                },
+                headerTintColor: '#F8FAE5', // Set your header text and arrow color here
+                headerTitleStyle: {
+                    fontWeight: 'bold', // Customize header title style if needed
+                },
+            }}
+        >
                 <Stack.Screen name='Home' component={HomeScreen} />
                 <Stack.Screen name='ServerOrder' component={ServerOrderScreen} />
                 <Stack.Screen name='Ticket' component={TicketScreen} />
@@ -26,6 +38,7 @@ const AppNavigator = () => {
                 <Stack.Screen name='AdminMenuEdit' component={AdminMenuEditScreen} />
                 <Stack.Screen name='CustomerOrder' component={CustomerOrderScreen} />
                 <Stack.Screen name='CustomerCheckout' component={CustomerCheckoutScreen}/>
+                <Stack.Screen name='CustomerMenu' component={CustomerMenuScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     )

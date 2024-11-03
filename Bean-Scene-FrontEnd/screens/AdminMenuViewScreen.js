@@ -1,6 +1,11 @@
 import React from "react";
+<<<<<<< HEAD
 import { Button, View, StyleSheet, Image, Text, Alert } from "react-native";
 import { deleteItem } from "../crud/menuitems";
+=======
+import { Button, View, StyleSheet, Image, Text } from "react-native";
+import CustomButton from '../CustomButton.js';
+>>>>>>> ui-creation-frontend
 
 const AdminMenuViewScreen = ({ route, navigation }) => {
     const { item } = route.params;
@@ -50,8 +55,13 @@ const AdminMenuViewScreen = ({ route, navigation }) => {
             <Text style={styles.description}><b>Category: </b>{item.category}</Text>
             <View style={styles.actionButton}>
                 {/* takes item data to edit page */}
+<<<<<<< HEAD
                 <Button title="Edit" onPress={() => navigation.navigate('AdminMenuEdit', { item })} /> 
                 <Button title="Delete" onPress={deleteMenuItem} />
+=======
+                <CustomButton title="Edit" onPress={() => navigation.navigate('AdminMenuEdit', { item })} /> 
+                <CustomButton title="Delete" />
+>>>>>>> ui-creation-frontend
             </View>
         </View>
     );

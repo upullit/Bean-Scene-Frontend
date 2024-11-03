@@ -3,19 +3,24 @@ import { View, Text, StyleSheet, FlatList, Button, TextInput, Image } from 'reac
 import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
 import { getMenuItems } from '../crud/menuitems.js';
 import { createTicket } from '../crud/ticket.js';
+import CustomButton from '../CustomButton.js';
 
 //displays each menu item
 const Item = ({ title, price, image, onSelect, onAddToOrder }) => (
     <View style={styles.menuItem}>
         <View style={styles.itemContent}>
-            <View>
-                <Text style={styles.dishTitle}>{title} - ${price.toFixed(2)}</Text>
+            <View style={styles.menuItemColum1}>
+                <View>
+                    <Text style={styles.dishTitle}>{title} - ${price.toFixed(2)}</Text>
+                </View>
+                <View style={styles.buttonRow2}>
+                    <CustomButton title="View Details" onPress={onSelect} />
+                    <CustomButton title="Add to Order" onPress={onAddToOrder} />
+                </View>
             </View>
             <View>
-                <Button title="View Details" onPress={onSelect} />
-                <Button title="Add to Order" onPress={onAddToOrder} />
+                <Image source={image} style={styles.listImage} />
             </View>
-            <Image source={image} style={styles.listImage} />
         </View>
     </View>
 );
@@ -101,9 +106,8 @@ const CustomerOrderScreen = ({ navigation }) => {
             <View style={styles.orderColumn}>
                 <View style={styles.orderContainer}>
                     <Text style={styles.orderTitle}>Order Details:</Text>
-                    {/*if there are no items in order preview empty order text is shown*/}
                     {order.length === 0 ? (
-                        <Text>No items in order</Text>
+                        <Text style={styles.emptyOrderText}>No items in order</Text>
                     ) : (
                         order.map((orderItem, index) => (
                             <View key={index}>
@@ -112,42 +116,39 @@ const CustomerOrderScreen = ({ navigation }) => {
                                     {orderItem.title} - ${Number(orderItem.price).toFixed(2)}
                                     </Text>
                                     <View style={styles.actionButtons}>
-                                        {/* edit select item function will be called here */}
-                                        <Button title="Edit" />
-                                        {/* delete item function will be called here */}
-                                        <Button title="Delete" />
+                                        <CustomButton title="Edit" onPress={() => { }} />
+                                        <CustomButton title="Delete" onPress={() => { }} />
                                     </View>
                                 </View>
-                                {/* adds order comment below item */}
                                 <Text>
                                     {orderItem.comment ? (
                                         <Text style={styles.orderComment}> - {orderItem.comment}</Text>
-                                    ) : null}</Text>
+                                    ) : null}
+                                </Text>
                             </View>
                         ))
                     )}
                 </View>
                 <View style={styles.totalContainer}>
-                    {/* total price is show with 2dcp */}
                     <Text style={styles.totalPrice}>
                         Total Price: ${totalPrice.toFixed(2)}
                     </Text>
                 </View>
                 <View style={styles.button}>
-                    {/* navigates to checkout page and passes the order items and total price */}
-                    <Button title="Checkout" onPress={() => navigation.navigate('CustomerCheckout', { order, totalPrice })} />
+                    <CustomButton
+                        title="Checkout"
+                        onPress={() => navigation.navigate('CustomerCheckout', { order, totalPrice })}
+                    />
                 </View>
             </View>
             <View style={styles.menuColumn}>
-                {/* menu filter */}
                 <View style={styles.buttonRow}>
-                    <Button title="Beverages" onPress={() => filterMenu('Drinks')} />
-                    <Button title="Breakfast" onPress={() => filterMenu('Breakfast')} />
-                    <Button title="Lunch" onPress={() => filterMenu('Lunch')} />
-                    <Button title="Dinner" onPress={() => filterMenu('Dinner')} />
-                    <Button title="Cafe/Dessert" onPress={() => filterMenu('Dessert' || 'Cafe')} />
+                    <CustomButton title="Beverages" onPress={() => filterMenu('Drinks')} />
+                    <CustomButton title="Breakfast" onPress={() => filterMenu('Breakfast')} />
+                    <CustomButton title="Lunch" onPress={() => filterMenu('Lunch')} />
+                    <CustomButton title="Dinner" onPress={() => filterMenu('Dinner')} />
+                    <CustomButton title="Cafe/Dessert" onPress={() => filterMenu('Dessert')} />
                 </View>
-                {/* shows a more customer friendly menu list and details view */}
                 {selectedItem ? (
                     <View style={styles.detailsContainer}>
                         <Image source={selectedItem.image} style={styles.detailImage} />
@@ -161,11 +162,10 @@ const CustomerOrderScreen = ({ navigation }) => {
                             onChangeText={setComment}
                         />
                         <View style={styles.buttonRow}>
-                            {/* navigates back to list */}
-                            <Button title="Back" onPress={goBackToList} />
-                            <Button
+                            <CustomButton title="Back" onPress={goBackToList} />
+                            <CustomButton
                                 title="Add to Order"
-                                onPress={() => addToOrder(selectedItem.title, selectedItem.price, comment)} // Pass the comment and item details
+                                onPress={() => addToOrder(selectedItem.title, selectedItem.price, comment)}
                             />
                         </View>
                     </View>
@@ -191,6 +191,9 @@ const CustomerOrderScreen = ({ navigation }) => {
     );
 };
 
+
+
+
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
@@ -209,9 +212,6 @@ const styles = StyleSheet.create({
         padding: 10,
         height: '100%',
     },
-    orderComment: {
-        fontSize: 18,
-    },
     orderItemRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -225,11 +225,18 @@ const styles = StyleSheet.create({
     },
     buttonRow: {
         flexDirection: 'row',
-        marginTop: 10,
         width: '100%',
+        gap: 15,
+        justifyContent: 'center',
+    },
+    buttonRow2: {
+        flexDirection: 'row',
+        width: '100%',
+        gap: 15,
+        marginTop: 15,
     },
     dishTitle: {
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: 'bold',
     },
     menuItem: {
@@ -238,7 +245,6 @@ const styles = StyleSheet.create({
         padding: 20,
         marginBottom: 10,
         borderRadius: 5,
-        backgroundColor: '#f9f9f9',
         height: 150,
     },
     itemContent: {
@@ -249,15 +255,15 @@ const styles = StyleSheet.create({
     },
     flatContainer: {
         borderWidth: 2,
-        borderColor: 'black',
+        borderColor: '#251605',
         borderRadius: 5,
         overflow: 'hidden',
-        height: 1200,
+        height: 590,
         width: '100%',
     },
     orderContainer: {
         borderWidth: 2,
-        borderColor: 'black',
+        borderColor: '#251605',
         borderRadius: 5,
         overflow: 'hidden',
         height: 550,
@@ -269,18 +275,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 10,
     },
-    orderItem: {
-        fontSize: 18,
-        marginVertical: 5,
-        fontWeight: 'bold',
-    },
-    totalPrice: {
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
     totalContainer: {
         borderWidth: 2,
-        borderColor: 'black',
+        borderColor: '#251605',
         borderRadius: 5,
         overflow: 'hidden',
         height: 50,
@@ -290,26 +287,11 @@ const styles = StyleSheet.create({
     detailsContainer: {
         padding: 20,
         borderWidth: 2,
-        borderColor: 'black',
+        borderColor: '#251605',
         borderRadius: 5,
         overflow: 'hidden',
         height: 600,
         width: '100%',
-    },
-    detailsTitle: {
-        fontSize: 24,
-        fontWeight: 'bold',
-    },
-    detailsText: {
-        fontSize: 16,
-        marginVertical: 5,
-    },
-    commentInput: {
-        borderColor: 'gray',
-        borderWidth: 1,
-        borderRadius: 5,
-        padding: 10,
-        marginBottom: 10,
     },
     listImage: {
         width: 140,
@@ -325,7 +307,40 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         justifyContent: 'center',
     },
+    orderItem: {
+        fontSize: 18,
+        marginVertical: 5,
+        fontWeight: 'bold',
+        color: '#251605',
+    },
+    orderComment: {
+        fontSize: 16,
+        color: '#251605',
+    },
+    totalPrice: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#251605',
+    },
+    detailsTitle: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#251605',
+    },
+    detailsText: {
+        fontSize: 16,
+        marginVertical: 5,
+        color: '#251605',
+    },
+    commentInput: {
+        borderColor: '#251605',
+        borderWidth: 1,
+        borderRadius: 5,
+        padding: 10,
+        marginBottom: 10,
+    },
+    menuItemColum1: {
+        flex: 1.5,
+    },
 });
-
-
 export default CustomerOrderScreen;

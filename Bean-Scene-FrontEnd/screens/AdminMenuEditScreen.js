@@ -2,6 +2,7 @@ import React from "react";
 import { Button, View, StyleSheet, Text, TextInput } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Checkbox } from 'react-native-paper';
+import CustomButton from '../CustomButton.js';
 
 
 const AdminMenuEditScreen = ({ route }) => {
@@ -78,7 +79,7 @@ const AdminMenuEditScreen = ({ route }) => {
                     <Picker.Item label="Cafe/Dessert" value="" />
                     <Picker.Item label="Beverage" value="" />
                 </Picker>
-                <Button title="Save">Save</Button>
+                <CustomButton title="Save">Save</CustomButton>
             </View>
         </View>
     );
