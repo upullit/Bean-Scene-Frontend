@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Button, StyleSheet, Modal, TouchableOpacity, FlatList, Switch, TextInput } from 'react-native';
 import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
 import { updateTicket, deleteTicket , getTickets} from '../crud/ticket';
+import CustomButton from '../CustomButton.js';
 
-//loads menu items for menu management with a switch on each
 const Item = ({ title }) => {
     const [isEnabled, setIsEnabled] = useState(false);
     const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
@@ -20,23 +20,20 @@ const Item = ({ title }) => {
     );
 };
 
-
 const KitchenScreen = ({ route }) => {
-    const [searchQuery, setSearchQuery] = useState('');//search query for menu management search
+    const [searchQuery, setSearchQuery] = useState('');
     const [tickets, setTickets] = useState([]);
     const [pendingTickets, setPendingTickets] = useState([]);
     const [loading, setLoading] = useState(true);
-    // const { tickets = [] } = route.params || {}; //gets ticket data from ordering screens - not implimented
-    const ticketsPerPage = 8; //defines amount of tickets visable on each page
-    const [currentPage, setCurrentPage] = useState(0); //page management
-    const totalPages = Math.ceil(tickets.length / ticketsPerPage); //page total
-    const [menuVisible, setMenuVisible] = useState(false); //ensures menu management defaults to not visable unless pressed
+    const ticketsPerPage = 8;
+    const [currentPage, setCurrentPage] = useState(0);
+    const totalPages = Math.ceil(tickets.length / ticketsPerPage);
+    const [menuVisible, setMenuVisible] = useState(false);
 
-    // Fetch tickets on mount
     useEffect(() => {
         const fetchTickets = async () => {
             try {
-                const fetchedTickets = await getTickets(); // Fetch all tickets
+                const fetchedTickets = await getTickets();
                 setTickets(fetchedTickets);
             } catch (error) {
                 console.error('Error fetching tickets:', error);
@@ -47,17 +44,15 @@ const KitchenScreen = ({ route }) => {
         fetchTickets();
     }, []);
 
-    // Sync pendingTickets whenever tickets change
     useEffect(() => {
         setPendingTickets(tickets.filter(ticket => ticket.status === 'Pending'));
     }, [tickets]);
 
-    // Function to mark ticket as complete
     const markAsComplete = async (ticketId) => {
         try {
             await updateTicket(ticketId, { status: 'Completed' });
-            const updatedTickets = await getTickets(); // Fetch the updated list of tickets
-            setTickets(updatedTickets); // Update the state with the latest tickets
+            const updatedTickets = await getTickets();
+            setTickets(updatedTickets);
         } catch (error) {
             console.error('Error marking ticket as complete:', error);
         }
@@ -68,29 +63,22 @@ const KitchenScreen = ({ route }) => {
         (currentPage + 1) * ticketsPerPage
     );
 
-
-
-    //makes menu management appear
     const toggleMenu = () => {
         setMenuVisible(!menuVisible);
     };
 
-    //menu mangage search 
     const searchMenu = DummyMenu
         .filter(item =>
             item.title.toLowerCase().includes(searchQuery.toLowerCase())
         )
         .sort((a, b) => a.title.localeCompare(b.title));
 
-
-        return (
-            <View style={styles.container}>
-                <Text style={styles.title}>Active Tickets</Text>
-                {loading ? 
-                 /* shows all pending tickets with its menu items and their comments*/
-                (
-                    <Text>Loading tickets...</Text>
-                ) : pendingTickets.length === 0 ? (
+    return (
+        <View style={styles.container}>
+            <Text style={styles.title}>Active Tickets</Text>
+            {loading ? 
+                <Text>Loading tickets...</Text> 
+                : pendingTickets.length === 0 ? (
                     <Text>No active tickets</Text>
                 ) : (
                     <FlatList
@@ -108,8 +96,8 @@ const KitchenScreen = ({ route }) => {
                                 ))}
                                 <Text style={styles.totalPrice}>Total: ${item.totalPrice.toFixed(2)}</Text>
                                 <View style={styles.bottomButton}>
-                                    <Button title="Complete" onPress={() => markAsComplete(item._id)} />
-                                    <Button title="Delete" onPress={() => removeTicket(item._id)} />
+                                    <CustomButton title="Complete" onPress={() => markAsComplete(item._id)} />
+                                    <CustomButton title="Delete" onPress={() => removeTicket(item._id)} />
                                 </View>
                             </View>
                         )}
@@ -118,56 +106,54 @@ const KitchenScreen = ({ route }) => {
                         columnWrapperStyle={styles.columnWrapper}
                     />
                 )}
-                {/* page navigation and menu management */}
-                <View style={styles.pagination}>
-                    <Button
-                        title="Previous"
-                        onPress={() => setCurrentPage((prevPage) => Math.max(prevPage - 1, 0))}
-                        disabled={currentPage === 0}
-                    />
-                    <Text style={styles.pageIndicator}>
-                        {currentPage + 1} / {totalPages}
-                    </Text>
-                    <Button
-                        title="Next"
-                        onPress={() => setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages - 1))}
-                        disabled={currentPage === totalPages - 1}
-                    />
-                    <TouchableOpacity style={styles.buttonMenuMangage} onPress={toggleMenu}>
-                        <Text style={styles.buttonText}>Manage Menu</Text>
-                    </TouchableOpacity>
-                    <Modal
-                        transparent={true}
-                        visible={menuVisible}
-                        animationType="fade"
-                        onRequestClose={toggleMenu}
-                    >
-                        <View style={styles.menuOverlay}>
-                            <View style={styles.menuContainer}>
-                                {/*Menu management search bar*/}
-                                <TextInput
-                                    style={styles.searchBar}
-                                    placeholder="Search menu items..."
-                                    value={searchQuery}
-                                    onChangeText={text => setSearchQuery(text)}
+            <View style={styles.pagination}>
+                <CustomButton
+                    title="Previous"
+                    onPress={() => setCurrentPage((prevPage) => Math.max(prevPage - 1, 0))}
+                    disabled={currentPage === 0}
+                />
+                <Text style={styles.pageIndicator}>
+                    {currentPage + 1} / {totalPages}
+                </Text>
+                <CustomButton
+                    title="Next"
+                    onPress={() => setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages - 1))}
+                    disabled={currentPage === totalPages - 1}
+                />
+                <TouchableOpacity style={styles.buttonMenuMangage} onPress={toggleMenu}>
+                    <Text style={styles.buttonText}>Manage Menu</Text>
+                </TouchableOpacity>
+            </View>
+            <Modal
+                transparent={true}
+                visible={menuVisible}
+                animationType="fade"
+                onRequestClose={toggleMenu}
+            >
+                <View style={styles.menuOverlay}>
+                    <View style={styles.menuContainer}>
+                        <TextInput
+                            style={styles.searchBar}
+                            placeholder="Search menu items..."
+                            value={searchQuery}
+                            onChangeText={text => setSearchQuery(text)}
+                        />
+                        <FlatList
+                            data={searchMenu}
+                            renderItem={({ item }) => (
+                                <Item
+                                    title={item.title}
                                 />
-                                <FlatList
-                                    data={searchMenu}
-                                    renderItem={({ item }) => (
-                                        <Item
-                                            title={item.title}
-                                        />
-                                    )}
-                                    keyExtractor={item => item.id}
-                                />
-                                <TouchableOpacity onPress={toggleMenu}>
-                                    <Text style={styles.closeText}>Close Menu</Text>
-                                </TouchableOpacity>
-                        </View>
+                            )}
+                            keyExtractor={item => item.id}
+                        />
+                        <TouchableOpacity onPress={toggleMenu}>
+                            <Text style={styles.closeText}>Close Menu</Text>
+                        </TouchableOpacity>
                     </View>
-                </Modal>
-            </View >
-        </View >
+                </View>
+            </Modal>
+        </View>
     );
 };
 
@@ -235,7 +221,7 @@ const styles = StyleSheet.create({
         width: 250,
         height: 400,
         padding: 20,
-        backgroundColor: '#fff',
+        backgroundColor: '#F8FAE5',
         borderRadius: 8,
         alignItems: 'left',
         shadowColor: '#000',
@@ -260,7 +246,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 20,  
         right: 20, 
-        backgroundColor: '#007AFF',
+        backgroundColor: '#43766C',
         paddingVertical: 12,
         paddingHorizontal: 18,
         borderRadius: 30,
@@ -271,9 +257,27 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     buttonText: {
-        color: '#fff',
+        color: '#F8FAE5',
         fontSize: 16,
-        fontWeight: '600',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    searchBar: {
+        height: 40,
+        borderColor: '#ccc',
+        borderWidth: 1,
+        borderRadius: 5,
+        marginBottom: 10,
+        paddingHorizontal: 10,
+    },
+    totalPrice: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginTop: 10,
+    },
+    bottomButton: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
     },
 });
 

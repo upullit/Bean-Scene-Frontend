@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Button, TextInput, Image } from 'react-native';
 import { getMenuItems } from '../crud/menuitems';
 import { createTicket } from '../crud/ticket';
+import CustomButton from '../CustomButton.js';
 
 //displays each menu item
 const Item = ({ title, price, image, onSelect, onAddToOrder }) => (
@@ -11,10 +12,9 @@ const Item = ({ title, price, image, onSelect, onAddToOrder }) => (
                 <Text style={styles.dishTitle}>{title} - ${price.toFixed(2)}</Text>
             </View>
             <View>
-                <Button title="View Details" onPress={onSelect} />
-                <Button title="Add to Order" onPress={onAddToOrder} />
+                <CustomButton title="View Details" onPress={onSelect} />
+                <CustomButton title="Add to Order" onPress={onAddToOrder} />
             </View>
-            <Image source={image} style={styles.listImage} />
         </View>
     </View>
 );
@@ -99,10 +99,10 @@ const ServerOrderScreen = ({ navigation }) => {
             <View style={styles.column}>
                 {/* ticket management */}
                 <View style={styles.buttonRow}>
-                    <Button title="New Ticket" />
-                    <Button title="View Tickets" onPress={() => navigation.navigate('Ticket', { tickets })} />
-                    <Button title="Change Table" />
-                    <Button title="Clear Order - remove later" onPress={clearOrder} />
+                    <CustomButton title="New Ticket" />
+                    <CustomButton title="View Tickets" onPress={() => navigation.navigate('Ticket', { tickets })} />
+                    <CustomButton title="Change Table" />
+                    <CustomButton title="Clear Order - remove later" onPress={clearOrder} />
                 </View>
                 {/* shows menu list and details view */}
                 <View style={styles.orderContainer}>
@@ -118,9 +118,9 @@ const ServerOrderScreen = ({ navigation }) => {
                                     </Text>
                                     <View style={styles.actionButtons}>
                                         {/* edit select item function will be called here */}
-                                        <Button title="Edit" /> 
+                                        <CustomButton title="Edit" />
                                         {/* delete item function will be called here */}
-                                        <Button title="Delete" /> 
+                                        <CustomButton title="Delete" />
                                     </View>
                                 </View>
                                 {/* adds order comment below item */}
@@ -140,20 +140,20 @@ const ServerOrderScreen = ({ navigation }) => {
                 </View>
                 {/* processes "payment" and creates ticket */}
                 <View style={styles.buttonRow}>
-                    <Button title="Cash" onPress={() => createNewTicket('Cash')}/>
-                    <Button title="Card" onPress={() => createNewTicket('Card')}/>
-                    <Button title="Split" onPress={() => createNewTicket('Split')}/>
+                    <CustomButton title="Cash" onPress={() => createNewTicket('Cash')}/>
+                    <CustomButton title="Card" onPress={() => createNewTicket('Card')}/>
+                    <CustomButton title="Split" onPress={() => createNewTicket('Split')}/>
                     <Button title="Refund"/>
                 </View>
             </View>
             <View style={styles.column}>
                 {/*menu filter*/}
                 <View style={styles.buttonRow}>
-                    <Button title="Beverages" onPress={() => filterMenu('Drinks')} />
-                    <Button title="Breakfast" onPress={() => filterMenu('Breakfast')} />
-                    <Button title="Lunch" onPress={() => filterMenu('Lunch')} />
-                    <Button title="Dinner" onPress={() => filterMenu('Dinner')} />
-                    <Button title="Cafe/Dessert" onPress={() => filterMenu('Dessert' || 'Cafe')} />
+                    <CustomButton title="Beverages" onPress={() => filterMenu('Drinks')} />
+                    <CustomButton title="Breakfast" onPress={() => filterMenu('Breakfast')} />
+                    <CustomButton title="Lunch" onPress={() => filterMenu('Lunch')} />
+                    <CustomButton title="Dinner" onPress={() => filterMenu('Dinner')} />
+                    <CustomButton title="Cafe/Dessert" onPress={() => filterMenu('Dessert' || 'Cafe')} />
                 </View>
                 {/* shows menu list and details view */}
                 {selectedItem ? (
@@ -170,8 +170,8 @@ const ServerOrderScreen = ({ navigation }) => {
                         />
                         <View style={styles.buttonRow}>
                             {/* navigates back to list */}
-                            <Button title="Back" onPress={goBackToList} />
-                            <Button
+                            <CustomButton title="Back" onPress={goBackToList} />
+                            <CustomButton
                                 title="Add to Order"
                                 onPress={() => addToOrder(selectedItem.title, selectedItem.price, comment)} // Pass the comment to the order
                             />
@@ -214,8 +214,9 @@ const styles = StyleSheet.create({
     },
     buttonRow: {
         flexDirection: 'row',
-        marginTop: 10,
         width: '100%',
+        gap: 15,
+        justifyContent: 'center',
     },
     orderComment: {
         fontSize: 18,
@@ -237,7 +238,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     dishTitle: {
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: 'bold',
     },
     menuItem: {
@@ -245,8 +246,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 20,
         marginBottom: 10,
-        borderRadius: 5,
-        backgroundColor: '#f9f9f9',
+        borderWidth: 1, // Add border width
+        borderColor: '#B19470 ', // Set border color
+        borderRadius: 5, // Round the corners
+        backgroundColor: '#F8FAE5', 
     },
     itemContent: {
         flex: 1,
@@ -256,18 +259,18 @@ const styles = StyleSheet.create({
     },
     flatContainer: {
         borderWidth: 2,
-        borderColor: 'black',
+        borderColor: 'grey',
         borderRadius: 5,
         overflow: 'hidden',
-        height: 600,
+        height: 580,
         width: '100%',
     },
     orderContainer: {
         borderWidth: 2,
-        borderColor: 'black',
+        borderColor: 'grey',
         borderRadius: 5,
         overflow: 'hidden',
-        height: 450,
+        height: 470,
         width: '100%',
         padding: 10,
     },
@@ -282,7 +285,7 @@ const styles = StyleSheet.create({
     },
     totalContainer: {
         borderWidth: 2,
-        borderColor: 'black',
+        borderColor: 'grey',
         borderRadius: 5,
         overflow: 'hidden',
         height: 50,
@@ -292,10 +295,10 @@ const styles = StyleSheet.create({
     detailsContainer: {
         padding: 20,
         borderWidth: 2,
-        borderColor: 'black',
+        borderColor: 'grey',
         borderRadius: 5,
         overflow: 'hidden',
-        height: 600,
+        height: 580,
         width: '100%',
     },
     detailsTitle: {
@@ -305,9 +308,10 @@ const styles = StyleSheet.create({
     detailsText: {
         fontSize: 16,
         marginVertical: 5,
+        
     },
     commentInput: {
-        borderColor: 'gray',
+        borderColor: 'grey',
         borderWidth: 1,
         borderRadius: 5,
         padding: 10,
