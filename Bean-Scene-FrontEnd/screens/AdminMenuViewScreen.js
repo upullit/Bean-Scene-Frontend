@@ -42,7 +42,9 @@ const AdminMenuViewScreen = ({ route, navigation }) => {
         <View style={styles.container}>
             {/* takes the selected item and displays it
             ingredients need to be added */}
-            <Image source={item.image} style={styles.image} />
+            <Image source={item.image ? { uri: item.image }
+                : require('../Media-TempData/Images/Menu/Breakfast/Acai.jpg')}
+            style={styles.image}/>
             <Text style={styles.title}>{item.title}</Text>
             <Text style={styles.description}><b>Name: </b>{item.name}</Text>
             <Text style={styles.description}><b>Price: </b>{item.price}</Text>
