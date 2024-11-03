@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, FlatList, StyleSheet, Alert, Button } from 'react-native';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
+import CustomButton from '../CustomButton.js';
 
 
 const MenuItem = ({ item }) => (
@@ -52,7 +53,7 @@ const exportMenuToPDF = async () => {
                 keyExtractor={item => item.id}
                 contentContainerStyle={styles.menuList}
             />
-            <Button title="Export Menu to PDF" onPress={exportMenuToPDF} />
+            <CustomButton title="Export Menu to PDF" onPress={exportMenuToPDF} />
         </View>
     );
 };

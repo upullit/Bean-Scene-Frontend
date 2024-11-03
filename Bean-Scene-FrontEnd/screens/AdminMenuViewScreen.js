@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, View, StyleSheet, Image, Text } from "react-native";
+import CustomButton from '../CustomButton.js';
 
 const AdminMenuViewScreen = ({ route, navigation }) => {
     const { item } = route.params;
@@ -15,8 +16,8 @@ const AdminMenuViewScreen = ({ route, navigation }) => {
             <Text style={styles.description}>Category: {item.category}</Text>
             <View style={styles.actionButton}>
                 {/* takes item data to edit page */}
-                <Button title="Edit" onPress={() => navigation.navigate('AdminMenuEdit', { item })} /> 
-                <Button title="Delete" />
+                <CustomButton title="Edit" onPress={() => navigation.navigate('AdminMenuEdit', { item })} /> 
+                <CustomButton title="Delete" />
             </View>
         </View>
     );

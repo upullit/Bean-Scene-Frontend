@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, Button } from 'react-native';
+import CustomButton from '../CustomButton.js';
 
 const TicketsScreen = ({ route }) => {
     const { tickets = [] } = route.params || {}; //gets ticket data from ordering screens

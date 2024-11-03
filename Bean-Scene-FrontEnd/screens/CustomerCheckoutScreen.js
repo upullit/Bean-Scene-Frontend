@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, Button, StyleSheet, TextInput } from "react-native";
 import { RadioButton } from 'react-native-paper';
 import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
+import CustomButton from '../CustomButton.js';
 
 
 const CustomerCheckoutScreen = ({ navigation, route }) => {
@@ -51,7 +52,7 @@ const CustomerCheckoutScreen = ({ navigation, route }) => {
                 </View>
                 <View style={styles.button}>
                     {/* return to ordering page */}
-                    <Button title="Back" onPress={() => navigation.navigate('CustomerOrder')} />
+                    <CustomButton title="Back" onPress={() => navigation.navigate('CustomerOrder')} />
                 </View>
             </View>
             <View style={styles.menuColumn}>
@@ -96,7 +97,7 @@ const CustomerCheckoutScreen = ({ navigation, route }) => {
                     </View>
                     <View style={styles.payButton}>
                         {/* create ticket function will be called here */}
-                        <Button title="Pay" />
+                        <CustomButton title="Pay" />
                     </View>
                 </View>
             </View>

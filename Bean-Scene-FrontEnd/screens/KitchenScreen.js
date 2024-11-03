@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Button, StyleSheet, Modal, TouchableOpacity, FlatList, Switch, TextInput } from 'react-native';
 import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
+import CustomButton from '../CustomButton.js';
 
 //loads menu items for menu management with a switch on each
 const Item = ({ title }) => {
@@ -21,113 +22,103 @@ const Item = ({ title }) => {
 
 
 const KitchenScreen = ({ route }) => {
-    const [searchQuery, setSearchQuery] = useState('');//search query for menu management search
-    const { tickets = [] } = route.params || {}; //gets ticket data from ordering screens - not implimented
-    const ticketsPerPage = 8; //defines amount of tickets visable on each page
-    const [currentPage, setCurrentPage] = useState(0); //page management
-    const totalPages = Math.ceil(tickets.length / ticketsPerPage); //page total
-    const [menuVisible, setMenuVisible] = useState(false); //ensures menu management defaults to not visable unless pressed
+    const [searchQuery, setSearchQuery] = useState('');
+    const { tickets = [] } = route.params || {};
+    const ticketsPerPage = 8;
+    const [currentPage, setCurrentPage] = useState(0);
+    const totalPages = Math.ceil(tickets.length / ticketsPerPage);
+    const [menuVisible, setMenuVisible] = useState(false);
 
-    //show current page number
     const currentTickets = tickets.slice(
         currentPage * ticketsPerPage,
         (currentPage + 1) * ticketsPerPage
     );
 
-    //makes menu management appear
     const toggleMenu = () => {
         setMenuVisible(!menuVisible);
     };
 
-    //menu mangage search 
     const searchMenu = DummyMenu
         .filter(item =>
             item.title.toLowerCase().includes(searchQuery.toLowerCase())
         )
         .sort((a, b) => a.title.localeCompare(b.title));
 
-
-        return (
-            <View style={styles.container}>
-                <Text style={styles.title}>Active Tickets</Text>
-                {/* shows all current tickets with its menu items and their comments*/}
-                {tickets.length === 0 ? (
-                    <Text>No active tickets</Text>
-                ) : (
-                    <FlatList
-                        data={currentTickets}
-                        renderItem={({ item, index }) => (
-                            <View style={styles.ticketItem}>
-                                <Text style={styles.ticketTitle}>
-                                    Ticket #{currentPage * ticketsPerPage + index + 1}
+    return (
+        <View style={styles.container}>
+            <Text style={styles.title}>Active Tickets</Text>
+            {tickets.length === 0 ? (
+                <Text>No active tickets</Text>
+            ) : (
+                <FlatList
+                    data={currentTickets}
+                    renderItem={({ item, index }) => (
+                        <View style={styles.ticketItem}>
+                            <Text style={styles.ticketTitle}>
+                                Ticket #{currentPage * ticketsPerPage + index + 1}
+                            </Text>
+                            {item.map((orderItem, itemIndex) => (
+                                <Text style={styles.ticketText} key={itemIndex}>
+                                    {orderItem.item}
+                                    {orderItem.comment ? `\n - ${orderItem.comment}` : ''}
                                 </Text>
-                                {item.map((orderItem, itemIndex) => (
-                                    <Text style={styles.ticketText} key={itemIndex}>
-                                        {orderItem.item}
-                                        {orderItem.comment ? `\n - ${orderItem.comment}` : ''}
-                                    </Text>
-                                ))}
-                                <View style={styles.ticketButton}>
-                                    <Button title="Complete" /> {/* complete ticket function will be called here */}
-                                    <Button title="Delete" /> {/* delete ticket function will be called here */}
-                                </View>
+                            ))}
+                            <View style={styles.ticketButton}>
+                                <CustomButton title="Complete" />
+                                <CustomButton title="Delete" />
                             </View>
-                        )}
-                        keyExtractor={(item, index) => index.toString()}
-                        numColumns={4}
-                        columnWrapperStyle={styles.columnWrapper}
-                    />
-                )}
-                {/* page navigation and menu management */}
-                <View style={styles.pagination}>
-                    <Button
-                        title="Previous"
-                        onPress={() => setCurrentPage((prevPage) => Math.max(prevPage - 1, 0))}
-                        disabled={currentPage === 0}
-                    />
-                    <Text style={styles.pageIndicator}>
-                        {currentPage + 1} / {totalPages}
-                    </Text>
-                    <Button
-                        title="Next"
-                        onPress={() => setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages - 1))}
-                        disabled={currentPage === totalPages - 1}
-                    />
-                    <TouchableOpacity style={styles.buttonMenuMangage} onPress={toggleMenu}>
-                        <Text style={styles.buttonText}>Manage Menu</Text>
-                    </TouchableOpacity>
-                    <Modal
-                        transparent={true}
-                        visible={menuVisible}
-                        animationType="fade"
-                        onRequestClose={toggleMenu}
-                    >
-                        <View style={styles.menuOverlay}>
-                            <View style={styles.menuContainer}>
-                                {/*Menu management search bar*/}
-                                <TextInput
-                                    style={styles.searchBar}
-                                    placeholder="Search menu items..."
-                                    value={searchQuery}
-                                    onChangeText={text => setSearchQuery(text)}
-                                />
-                                <FlatList
-                                    data={searchMenu}
-                                    renderItem={({ item }) => (
-                                        <Item
-                                            title={item.title}
-                                        />
-                                    )}
-                                    keyExtractor={item => item.id}
-                                />
-                                <TouchableOpacity onPress={toggleMenu}>
-                                    <Text style={styles.closeText}>Close Menu</Text>
-                                </TouchableOpacity>
                         </View>
-                    </View>
+                    )}
+                    keyExtractor={(item, index) => index.toString()}
+                    numColumns={4}
+                    columnWrapperStyle={styles.columnWrapper}
+                />
+            )}
+            <View style={styles.pagination}>
+                <Button
+                    title="Previous"
+                    onPress={() => setCurrentPage((prevPage) => Math.max(prevPage - 1, 0))}
+                    disabled={currentPage === 0}
+                />
+                <Text style={styles.pageIndicator}>
+                    {currentPage + 1} / {totalPages}
+                </Text>
+                <CustomButton
+                    title="Next"
+                    onPress={() => setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages - 1))}
+                    disabled={currentPage === totalPages - 1}
+                />
+                <TouchableOpacity style={styles.buttonMenuMangage} onPress={toggleMenu}>
+                    <Text style={styles.buttonText}>Manage Menu</Text>
+                </TouchableOpacity>
+                <Modal
+                    transparent={true}
+                    visible={menuVisible}
+                    animationType="fade"
+                    onRequestClose={toggleMenu}
+                >
+                    <TouchableOpacity style={styles.menuOverlay} onPress={toggleMenu}>
+                        <View style={styles.menuContainer} onTouchStart={(e) => e.stopPropagation()}>
+                            <TextInput
+                                style={styles.searchBar}
+                                placeholder="Search menu items..."
+                                value={searchQuery}
+                                onChangeText={text => setSearchQuery(text)}
+                            />
+                            <FlatList
+                                data={searchMenu}
+                                renderItem={({ item }) => (
+                                    <Item
+                                        title={item.title}
+                                    />
+                                )}
+                                keyExtractor={item => item.id}
+                            />
+                        </View>
+                    </TouchableOpacity>
                 </Modal>
-            </View >
-        </View >
+            </View>
+        </View>
     );
 };
 

@@ -61,13 +61,13 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     button: {
-        backgroundColor: '#007BFF',
+        backgroundColor: '#43766C',
         padding: 15,
         marginVertical: 10,
         borderRadius: 5,
     },
     buttonText: {
-        color: '#FFFFFF',
+        color: '#F8FAE5',
         fontSize: 20,
         textAlign: 'center',
         fontWeight: 'bold',
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textAlign: 'center',
         fontWeight: 'bold',
-        color: '#007BFF',
+        color: '#251605',
     },
 });
 

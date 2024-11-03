@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, TextInput, Button } from 'react-native';
 import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
+import CustomButton from '../CustomButton.js';
 
 const AdminScreen = ({ navigation }) => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -27,11 +28,11 @@ const AdminScreen = ({ navigation }) => {
             doesnt properly work atm
             */}
             <View style={styles.buttonRow}>
-                <Button title="Beverages" onPress={() => filterMenu('Drinks')} />
-                <Button title="Breakfast" onPress={() => filterMenu('Breakfast')} />
-                <Button title="Lunch" onPress={() => filterMenu('Lunch')} />
-                <Button title="Dinner" onPress={() => filterMenu('Dinner')} />
-                <Button title="Cafe/Dessert" onPress={() => filterMenu('Dessert' || 'Cafe')} />
+                <CustomButton title="Beverages" onPress={() => filterMenu('Drinks')} />
+                <CustomButton title="Breakfast" onPress={() => filterMenu('Breakfast')} />
+                <CustomButton title="Lunch" onPress={() => filterMenu('Lunch')} />
+                <CustomButton title="Dinner" onPress={() => filterMenu('Dinner')} />
+                <CustomButton title="Cafe/Dessert" onPress={() => filterMenu('Dessert' || 'Cafe')} />
             </View>
             <FlatList
                 data={searchMenu} // currently using menu filter for search
