@@ -36,7 +36,7 @@ const CustomerCheckoutScreen = ({ navigation, route }) => {
                         order.map((orderItem, index) => (
                             <View key={index} style={styles.buttonRow}>
                                 <Text style={styles.orderItem}>
-                                    {orderItem.item} - ${orderItem.price.toFixed(2)}
+                                    <b>{orderItem.title}</b> - ${orderItem.price.toFixed(2)}
                                 </Text>
                                 {orderItem.comment ? (
                                     <Text style={styles.orderComment}> - {orderItem.comment}</Text>
