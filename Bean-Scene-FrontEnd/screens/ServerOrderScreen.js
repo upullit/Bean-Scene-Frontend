@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Button, TextInput, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Button, TextInput, Image, Alert } from 'react-native';
 import { getMenuItems } from '../crud/menuitems';
 import { createTicket } from '../crud/ticket';
 import CustomButton from '../CustomButton.js';
@@ -74,8 +74,10 @@ const ServerOrderScreen = ({ navigation }) => {
                 setTickets((prevTickets) => [...prevTickets, savedTicket]);
                 // Clear the order for a new entry
                 clearOrder();
+                Alert.alert("Ticket created successfully"); //success popup
                 console.log('Ticket created successfully:', savedTicket);
             } catch (error) {
+                Alert.alert("Failed to create ticket.", error);
                 console.error('Error creating ticket:', error);
             }
         } else {
@@ -246,9 +248,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 20,
         marginBottom: 10,
-        borderWidth: 1, // Add border width
-        borderColor: '#B19470 ', // Set border color
-        borderRadius: 5, // Round the corners
+        borderWidth: 1,
+        borderColor: '#B19470 ',
+        borderRadius: 5,
         backgroundColor: '#F8FAE5', 
     },
     itemContent: {
