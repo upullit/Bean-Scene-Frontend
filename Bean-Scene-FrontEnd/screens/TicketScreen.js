@@ -83,8 +83,8 @@ const TicketsScreen = () => {
                             ))}
                             <Text style={styles.totalPrice}>Total: ${item.totalPrice.toFixed(2)}</Text>
                             <View style={styles.bottomButton}>
-                                <Button title="Complete" onPress={() => markAsComplete(item._id)} />
-                                <Button title="Delete" onPress={() => removeTicket(item._id)} />
+                                <CustomButton title="Complete" onPress={() => markAsComplete(item._id)} />
+                                <CustomButton title="Delete" onPress={() => removeTicket(item._id)} />
                             </View>
                         </View>
                     )}
