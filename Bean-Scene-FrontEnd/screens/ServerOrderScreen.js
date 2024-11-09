@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Button, TextInput, Image } from 'react-native';
-import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
+import { View, Text, StyleSheet, FlatList, Button, TextInput, Image, Alert, Modal } from 'react-native';
+import { getMenuItems } from '../crud/menuitems';
+import { createTicket } from '../crud/ticket';
 import CustomButton from '../CustomButton.js';
 
 //displays each menu item
@@ -23,12 +24,36 @@ const ServerOrderScreen = ({ navigation }) => {
     const [totalPrice, setTotalPrice] = useState(0);
     const [selectedItem, setSelectedItem] = useState(null);
     const [comment, setComment] = useState(''); // To store the custom comment
-    const [filteredMenu, setFilteredMenu] = useState(DummyMenu); // State for filtered menu items
+    const [menuItems, setMenuItems] = useState([]);
+    const [filteredMenu, setFilteredMenu] = useState([]);  // State for filtered menu items
     const [tickets, setTickets] = useState([]);
 
+    // Fetch the menu items from database calling the function
+    useEffect(() => {
+        const fetchMenuItems = async () => {
+            const items = await getMenuItems(); // Fetch items using API function
+            setMenuItems(items); // Set fetched items to state
+            setFilteredMenu(items);
+        };
+        fetchMenuItems();
+    }, []);
+
+    // Function to filter the menu by category
+    const filterMenu = (category) => {
+        const filtered = menuItems.filter(item => item.category === category);
+        setFilteredMenu(filtered);
+    };
+
+    // Function to show all items
+    const showAllItems = () => {
+        setFilteredMenu(menuItems); // Reset filteredMenu to the original menuItems
+    }; 
+
     //adds selected item to order preview
-    const addToOrder = (item, price, comment) => {
-        setOrder((prevOrder) => [...prevOrder, { item, price, comment }]);
+    const addToOrder = (item, comment) => {
+        const price = Number(item.price);
+        const title = item.name;
+        setOrder((prevOrder) => [...prevOrder, { menuItemId: item._id, title, comment, price }]);
         setTotalPrice((prevTotal) => prevTotal + price);
         setComment(''); // Clear the input field after adding to the order
     };
@@ -37,14 +62,48 @@ const ServerOrderScreen = ({ navigation }) => {
     const clearOrder = () => {
         setOrder([]);
         setTotalPrice(0);
+        Alert.alert('Order cleared');
     };
 
-    //turns order into ticket - wip
-    const createNewTicket = () => {
+    //turns order into ticket
+    const createNewTicket = async (paymentMethod) => {
         if (order.length > 0) {
-            setTickets((prevTickets) => [...prevTickets, order]); // Add current order to tickets
-            clearOrder(); // Clear the current order to start a new one
+            // Prepare the new ticket object with required fieldsw
+            const newTicket = {
+                items: order.map((orderItem) => ({
+                    menuItem: orderItem.menuItemId, // Ensure this is a valid MenuItem ID
+                    quantity: orderItem.quantity || 1, // Default quantity to 1 if not specified
+                    specialInstructions: orderItem.comment || '' // Add any special instructions or default to an empty string
+                })),
+                totalPrice: totalPrice,
+                paymentMethod: paymentMethod,
+                CustomerId: "60b8b22d7b9e4b00156a5c3b" // Replace with a valid Customer ID if needed
+            };
+    
+            try {
+                // Call the createTicket function to save the ticket to the database
+                const savedTicket = await createTicket(newTicket);
+                // Update local state with the new ticket
+                setTickets((prevTickets) => [...prevTickets, savedTicket]);
+                // Clear the order for a new entry
+                clearOrder();
+                Alert.alert("Ticket created successfully"); //success popup
+                console.log('Ticket created successfully:', savedTicket);
+            } catch (error) {
+                Alert.alert("Failed to create ticket.", error);
+                console.error('Error creating ticket:', error);
+            }
+        } else {
+            console.warn('No items in order to create a ticket.');
         }
+    };
+
+    // Function to delete an item from the order
+    const deleteItem = (index) => {
+        const updatedOrder = [...order]; // Create a copy of the current order
+        const removedItem = updatedOrder.splice(index, 1)[0]; // Remove the item at the specified index
+        setOrder(updatedOrder); // Update the order state with the new array
+        setTotalPrice((prevTotal) => prevTotal - removedItem.price); // Adjust the total price
     };
 
     //returns back to menu list
@@ -52,21 +111,20 @@ const ServerOrderScreen = ({ navigation }) => {
         setSelectedItem(null); // remove selected item to return to list
     };
 
-    //filters menu based on category
-    const filterMenu = (category) => {
-        const filtered = DummyMenu.filter(item => item.category === category);
-        setFilteredMenu(filtered);
-    };
+    // //filters menu based on category
+    // const filterMenu = (category) => {
+    //     const filtered = DummyMenu.filter(item => item.category === category);
+    //     setFilteredMenu(filtered);
+    // };
 
     return (
         <View style={styles.container}>
             <View style={styles.column}>
                 {/* ticket management */}
                 <View style={styles.buttonRow}>
-                    <CustomButton title="New Ticket" />
+                    <CustomButton title="New Ticket" onPress={() => clearOrder()} />
                     <CustomButton title="View Tickets" onPress={() => navigation.navigate('Ticket', { tickets })} />
                     <CustomButton title="Change Table" />
-                    <CustomButton title="Clear Order - remove later" onPress={clearOrder} />
                 </View>
                 {/* shows menu list and details view */}
                 <View style={styles.orderContainer}>
@@ -78,13 +136,13 @@ const ServerOrderScreen = ({ navigation }) => {
                             <View key={index}>
                                 <View style={styles.orderItemRow}>
                                     <Text style={styles.orderItem}>
-                                        {orderItem.item} - ${orderItem.price.toFixed(2)}
+                                    {orderItem.title} - ${Number(orderItem.price).toFixed(2)}
                                     </Text>
                                     <View style={styles.actionButtons}>
                                         {/* edit select item function will be called here */}
-                                        <CustomButton title="Edit" />
+                                        
                                         {/* delete item function will be called here */}
-                                        <CustomButton title="Delete" />
+                                        <CustomButton title="Delete" onPress={() => deleteItem(index)} />
                                     </View>
                                 </View>
                                 {/* adds order comment below item */}
@@ -104,15 +162,16 @@ const ServerOrderScreen = ({ navigation }) => {
                 </View>
                 {/* processes "payment" and creates ticket */}
                 <View style={styles.buttonRow}>
-                    <CustomButton title="Cash" onPress={createNewTicket} />
-                    <CustomButton title="Card" onPress={createNewTicket} />
-                    <CustomButton title="Split" onPress={createNewTicket} />
-                    <CustomButton title="Refund" />
+                    <CustomButton title="Cash" onPress={() => createNewTicket('Cash')}/>
+                    <CustomButton title="Card" onPress={() => createNewTicket('Card')}/>
+                    <CustomButton title="Split" onPress={() => createNewTicket('Split')}/>
+                    <CustomButton title="Refund"/>
                 </View>
             </View>
             <View style={styles.column}>
                 {/*menu filter*/}
                 <View style={styles.buttonRow}>
+                    <CustomButton title="All Items" onPress={showAllItems} />
                     <CustomButton title="Beverages" onPress={() => filterMenu('Drinks')} />
                     <CustomButton title="Breakfast" onPress={() => filterMenu('Breakfast')} />
                     <CustomButton title="Lunch" onPress={() => filterMenu('Lunch')} />
@@ -147,14 +206,14 @@ const ServerOrderScreen = ({ navigation }) => {
                             data={filteredMenu}
                             renderItem={({ item }) => (
                                 <Item
-                                    title={item.title}
+                                    title={item.name}
                                     price={item.price}
                                     image={item.image}
                                     onSelect={() => setSelectedItem(item)} // Show details when "View Details" is pressed
-                                    onAddToOrder={() => addToOrder(item.title, item.price)} // Add item to order when "Add to Order" is pressed
+                                    onAddToOrder={() => addToOrder(item, comment)} // Add item to order when "Add to Order" is pressed
                                 />
                             )}
-                            keyExtractor={item => item.id}
+                            keyExtractor={item => item._id}
                         />
                     </View>
                 )}
@@ -210,9 +269,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 20,
         marginBottom: 10,
-        borderWidth: 1, // Add border width
-        borderColor: '#B19470 ', // Set border color
-        borderRadius: 5, // Round the corners
+        borderWidth: 1,
+        borderColor: '#B19470 ',
+        borderRadius: 5,
         backgroundColor: '#F8FAE5', 
     },
     itemContent: {

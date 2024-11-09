@@ -42,6 +42,7 @@ const CustomerOrderScreen = ({ navigation }) => {
     const clearOrder = () => {
         setOrder([]);
         setTotalPrice(0);
+        Alert.alert('Order cleared');
     };
 
     //turns order into ticket - wip
@@ -51,6 +52,7 @@ const CustomerOrderScreen = ({ navigation }) => {
             clearOrder(); // Clear the current order to start a new one
         }
     };
+
 
     //returns back to menu list
     const goBackToList = () => {

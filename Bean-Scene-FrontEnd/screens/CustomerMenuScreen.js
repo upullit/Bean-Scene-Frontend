@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, FlatList, StyleSheet, Alert, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-import RNHTMLtoPDF from 'react-native-html-to-pdf';
+import * as Print from 'expo-print';
+import { shareAsync } from 'expo-sharing';
 import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
 import CustomButton from '../CustomButton.js';
 
@@ -11,6 +12,7 @@ const categorizedMenu = {
     Desserts: DummyMenu.filter(item => item.category === 'Dessert'),
     Drinks: DummyMenu.filter(item => item.category === 'Drink'),
 };
+
 
 const MenuItem = ({ item }) => (
     <View style={styles.menuItem}>
@@ -36,26 +38,47 @@ const Category = ({ title, items }) => (
 );
 
 const exportMenuToPDF = async () => {
-    //PDF export logic here
+    try {
+        const htmlContent = `
+            <html>
+                <body style="font-family: Arial, sans-serif;">
+                    <h1 style="text-align: center;">Bean Scene Menu</h1>
+                    <ul>
+                        ${DummyMenu.map(item => `
+                            <li style="margin-bottom: 10px;">
+                                <strong>${item.title}</strong><br />
+                                <em>${item.description}</em><br />
+                                Price: ${item.price}
+                            </li>
+                        `).join('')}
+                    </ul>
+                </body>
+            </html>
+        `;
+
+        // Generate the PDF file
+        const { uri } = await Print.printToFileAsync({ html: htmlContent });
+
+        // Share the PDF file (if needed)
+        await shareAsync(uri);
+        Alert.alert('PDF created', `File now available for sharing.`);
+    } catch (error) {
+        Alert.alert('Error', 'Failed to create PDF: ' + error.message);
+    }
 };
 
 const CustomerMenuScreen = () => {
     return (
-        <KeyboardAvoidingView
-            style={styles.container}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'} // Adjust behavior for keyboard
-            keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 0} // Offset for keyboard
-        >
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
-                <Text style={styles.title}>Menu</Text>
-                <View style={styles.gridContainer}>
-                    {Object.entries(categorizedMenu).map(([category, items]) => (
-                        <Category key={category} title={category} items={items} />
-                    ))}
-                </View>
-                <CustomButton title="Export Menu to PDF" onPress={exportMenuToPDF} />
-            </ScrollView>
-        </KeyboardAvoidingView>
+        <View style={styles.container}>
+            <Text style={styles.title}>Bean Scene Menu</Text>
+            <CustomButton title="Export Menu to PDF" onPress={exportMenuToPDF} />
+            <FlatList
+                data={DummyMenu} // Use imported DummyMenu here
+                renderItem={({ item }) => <MenuItem item={item} />}
+                keyExtractor={item => item.id}
+                contentContainerStyle={styles.menuList}
+            />
+        </View>
     );
 };
 

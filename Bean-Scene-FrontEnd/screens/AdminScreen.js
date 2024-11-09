@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, TextInput, Button } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, TextInput, Button, Alert } from 'react-native';
 import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
 import CustomButton from '../CustomButton.js';
 
@@ -15,15 +15,17 @@ const AdminScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Manage Menu</Text>
-            {/*Search Bar
-            the search is a bit weird sometimes*/}
-            <TextInput
-                style={styles.searchBar}
-                placeholder="Search menu items..."
-                value={searchQuery}
-                onChangeText={text => setSearchQuery(text)}
-            />
+            <View style={styles.buttonRow}>
+                <Text style={styles.title}>Manage Menu</Text>
+                {/*Search Bar - the search is a bit weird sometimes*/}
+                <TextInput
+                    style={styles.searchBar}
+                    placeholder="Search menu items..."
+                    value={searchQuery}
+                    onChangeText={text => setSearchQuery(text)}
+                />
+                <CustomButton title="New Item" onPress={() => navigation.navigate('AdminNewItemScreen')}/>
+            </View>
             {/*Menu filter
             doesnt properly work atm
             */}
