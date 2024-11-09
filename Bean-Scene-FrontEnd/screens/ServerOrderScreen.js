@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Button, TextInput, Image, Alert, Modal } from 'react-native';
 import { getMenuItems } from '../crud/menuitems';
 import { createTicket } from '../crud/ticket';
+import { DummyMenu } from '../Media-TempData/dummyMenu.js';
 import CustomButton from '../CustomButton.js';
 
 //displays each menu item
@@ -227,7 +228,7 @@ const styles = StyleSheet.create({
         borderColor: 'grey',
         borderRadius: 5,
         overflow: 'hidden',
-        height: 580,
+        height: 600,
         width: '100%',
     },
     orderContainer: {
@@ -235,7 +236,7 @@ const styles = StyleSheet.create({
         borderColor: 'grey',
         borderRadius: 5,
         overflow: 'hidden',
-        height: 470,
+        height: 490,
         width: '100%',
         padding: 10,
     },

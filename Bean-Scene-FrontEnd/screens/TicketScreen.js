@@ -19,7 +19,7 @@ const TicketsScreen = ({ route }) => {
             <Text style={styles.title}>Active Tickets</Text>
             {/* shows all current tickets with its menu items and their comments*/}
             {tickets.length === 0 ? (
-                <Text>No active tickets</Text>
+                <Text style>No active tickets</Text>
             ) : (
                 <FlatList
                     data={currentTickets}
@@ -73,6 +73,12 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     title: {
+        fontSize: 30,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        textAlign: 'center',
+    },
+    text: {
         fontSize: 20,
         fontWeight: 'bold',
         marginBottom: 10,

@@ -5,13 +5,13 @@ import { shareAsync } from 'expo-sharing';
 import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
 import CustomButton from '../CustomButton.js';
 
-const categorizedMenu = {
-    Breakfast: DummyMenu.filter(item => item.category === 'Breakfast'),
-    Lunch: DummyMenu.filter(item => item.category === 'Lunch'),
-    Dinner: DummyMenu.filter(item => item.category === 'Dinner'),
-    Desserts: DummyMenu.filter(item => item.category === 'Dessert'),
-    Drinks: DummyMenu.filter(item => item.category === 'Drink'),
-};
+//const categorizedMenu = {
+   // Breakfast: DummyMenu.filter(item => item.category === 'Breakfast'),
+  //  Lunch: DummyMenu.filter(item => item.category === 'Lunch'),
+  //  Dinner: DummyMenu.filter(item => item.category === 'Dinner'),
+   // Desserts: DummyMenu.filter(item => item.category === 'Dessert'),
+    //Drinks: DummyMenu.filter(item => item.category === 'Drink'),
+//};
 
 
 const MenuItem = ({ item }) => (
