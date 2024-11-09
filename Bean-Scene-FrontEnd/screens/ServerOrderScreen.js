@@ -62,6 +62,7 @@ const ServerOrderScreen = ({ navigation }) => {
     const clearOrder = () => {
         setOrder([]);
         setTotalPrice(0);
+        Alert.alert('Order cleared');
     };
 
     //turns order into ticket

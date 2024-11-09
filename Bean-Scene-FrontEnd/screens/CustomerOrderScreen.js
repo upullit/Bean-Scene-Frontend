@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Button, TextInput, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Button, TextInput, Image, Alert } from 'react-native';
 import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
 import { getMenuItems } from '../crud/menuitems.js';
 import { createTicket } from '../crud/ticket.js';
@@ -56,6 +56,7 @@ const CustomerOrderScreen = ({ navigation }) => {
     const clearOrder = () => {
         setOrder([]);
         setTotalPrice(0);
+        Alert.alert('Order cleared');
     };
 
     //turns order into ticket
@@ -80,8 +81,10 @@ const CustomerOrderScreen = ({ navigation }) => {
                 setTickets((prevTickets) => [...prevTickets, savedTicket]);
                 // Clear the order for a new entry
                 clearOrder();
+                Alert.alert('Ticket created successfully');
                 console.log('Ticket created successfully:', savedTicket);
             } catch (error) {
+                Alert.alert('Error creating ticket');
                 console.error('Error creating ticket:', error);
             }
         } else {

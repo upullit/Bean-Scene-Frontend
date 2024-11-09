@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
+import CustomButton from '../CustomButton';
 
 const HomeScreen = ({ navigation }) => {
     //holds app at landscape
@@ -61,7 +62,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     button: {
-        backgroundColor: '#43766C',
+        backgroundColor: '#76453B',
         padding: 15,
         marginVertical: 10,
         borderRadius: 5,

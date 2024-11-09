@@ -39,7 +39,7 @@ const exportMenuToPDF = async () => {
 
         // Share the PDF file (if needed)
         await shareAsync(uri);
-        Alert.alert('PDF created', `File available for sharing.`);
+        Alert.alert('PDF created', `File now available for sharing.`);
     } catch (error) {
         Alert.alert('Error', 'Failed to create PDF: ' + error.message);
     }

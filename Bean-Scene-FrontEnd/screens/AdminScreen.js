@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, TextInput, Button } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, TextInput, Button, Alert } from 'react-native';
 import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
 import { getMenuItems } from '../crud/menuitems.js';
 import CustomButton from '../CustomButton.js';
@@ -18,6 +18,7 @@ const AdminScreen = ({ navigation }) => {
                 setMenuItems(items);
                 setFilteredMenuItems(items);
             } catch (error) {
+                Alert.alert('Error fetching menu items:', error);
                 console.error('Error fetching menu items:', error);
             }
         }
@@ -38,15 +39,17 @@ const AdminScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Manage Menu</Text>
-            {/*Search Bar
-            the search is a bit weird sometimes*/}
-            <TextInput
-                style={styles.searchBar}
-                placeholder="Search menu items..."
-                value={searchQuery}
-                onChangeText={text => setSearchQuery(text)}
-            />
+            <View style={styles.buttonRow}>
+                <Text style={styles.title}>Manage Menu</Text>
+                {/*Search Bar - the search is a bit weird sometimes*/}
+                <TextInput
+                    style={styles.searchBar}
+                    placeholder="Search menu items..."
+                    value={searchQuery}
+                    onChangeText={text => setSearchQuery(text)}
+                />
+                <CustomButton title="New Item" onPress={() => navigation.navigate('AdminNewItemScreen')}/>
+            </View>
             {/*Menu filter
             doesnt properly work atm
             */}
@@ -63,14 +66,14 @@ const AdminScreen = ({ navigation }) => {
                     <TouchableOpacity
                         style={styles.item}
                         onPress={() => navigation.navigate('AdminMenuView', { item })} // takes item data to view page
-                        >
+                    >
                         <Image source={item.image ? { uri: item.image }
                             : require('../Media-TempData/Images/Menu/Breakfast/Acai.jpg')}
-                        style={styles.image}/>
+                            style={styles.image} />
                         <Text style={styles.itemText}>{item.name}</Text>
                     </TouchableOpacity>
                 )}
-                keyExtractor={item => (item._id ? item._id.toString() 
+                keyExtractor={item => (item._id ? item._id.toString()
                     // _id might be undefined fallback to random value if does not exist
                     : Math.random().toString())}
                 numColumns={4} // displays items in a grid format

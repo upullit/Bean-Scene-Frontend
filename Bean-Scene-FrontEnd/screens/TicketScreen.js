@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Button } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Button, Alert } from 'react-native';
 import { updateTicket, deleteTicket , getTickets} from '../crud/ticket';
 import CustomButton from '../CustomButton.js';
 
@@ -17,6 +17,7 @@ const TicketsScreen = () => {
                 const fetchedTickets = await getTickets(); // Fetch all tickets
                 setTickets(fetchedTickets);
             } catch (error) {
+                Alert.alert('Error fetching tickets:', error);
                 console.error('Error fetching tickets:', error);
             } finally {
                 setLoading(false);
@@ -37,7 +38,9 @@ const TicketsScreen = () => {
             await updateTicket(ticketId, { status: 'Completed' });
             const updatedTickets = await getTickets(); // Fetch the updated list of tickets
             setTickets(updatedTickets); // Update the state with the latest tickets
+            Alert.alert('Ticket marked as complete!');
         } catch (error) {
+            Alert.alert('Error marking ticket as complete:', error);
             console.error('Error marking ticket as complete:', error);
         }
     };
@@ -47,7 +50,9 @@ const TicketsScreen = () => {
         try {
             await deleteTicket(ticketId);
             setTickets(prevTickets => prevTickets.filter(ticket => ticket._id !== ticketId));
+            Alert.alert('Ticket deleted sucessfuly!');
         } catch (error) {
+            Alert.alert('Error deleting ticket:', error);
             console.error('Error deleting ticket:', error);
         }
     };

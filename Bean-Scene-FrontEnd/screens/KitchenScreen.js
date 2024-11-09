@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, Modal, TouchableOpacity, FlatList, Switch, TextInput } from 'react-native';
+import { View, Text, Button, StyleSheet, Modal, TouchableOpacity, FlatList, Switch, TextInput, Alert } from 'react-native';
 import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
 import { updateTicket, deleteTicket , getTickets} from '../crud/ticket';
 import CustomButton from '../CustomButton.js';
@@ -36,6 +36,7 @@ const KitchenScreen = ({ route }) => {
                 const fetchedTickets = await getTickets();
                 setTickets(fetchedTickets);
             } catch (error) {
+                Alert.alert('Error fetching tickets:', error);
                 console.error('Error fetching tickets:', error);
             } finally {
                 setLoading(false);
@@ -53,7 +54,9 @@ const KitchenScreen = ({ route }) => {
             await updateTicket(ticketId, { status: 'Completed' });
             const updatedTickets = await getTickets();
             setTickets(updatedTickets);
+            Alert.alert('Ticket marked as complete!');
         } catch (error) {
+            Alert.alert('Error marking ticket as complete:', error);
             console.error('Error marking ticket as complete:', error);
         }
     };
