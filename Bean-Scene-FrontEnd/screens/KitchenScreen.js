@@ -4,22 +4,6 @@ import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud
 import { updateTicket, deleteTicket , getTickets} from '../crud/ticket';
 import CustomButton from '../CustomButton.js';
 
-const Item = ({ title }) => {
-    const [isEnabled, setIsEnabled] = useState(false);
-    const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
-
-    return (
-        <View style={styles.menuItems}>
-            <Text style={styles.menuText}>{title}</Text>
-            <Switch
-                trackColor={{ false: '#ba2d2d', true: '#168226' }}
-                onValueChange={toggleSwitch}
-                value={isEnabled}
-            />
-        </View>
-    );
-};
-
 const KitchenScreen = ({ route }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [tickets, setTickets] = useState([]);
@@ -123,39 +107,7 @@ const KitchenScreen = ({ route }) => {
                     onPress={() => setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages - 1))}
                     disabled={currentPage === totalPages - 1}
                 />
-                <TouchableOpacity style={styles.buttonMenuMangage} onPress={toggleMenu}>
-                    <Text style={styles.buttonText}>Manage Menu</Text>
-                </TouchableOpacity>
             </View>
-            <Modal
-                transparent={true}
-                visible={menuVisible}
-                animationType="fade"
-                onRequestClose={toggleMenu}
-            >
-                <View style={styles.menuOverlay}>
-                    <View style={styles.menuContainer}>
-                        <TextInput
-                            style={styles.searchBar}
-                            placeholder="Search menu items..."
-                            value={searchQuery}
-                            onChangeText={text => setSearchQuery(text)}
-                        />
-                        <FlatList
-                            data={searchMenu}
-                            renderItem={({ item }) => (
-                                <Item
-                                    title={item.title}
-                                />
-                            )}
-                            keyExtractor={item => item.id}
-                        />
-                        <TouchableOpacity onPress={toggleMenu}>
-                            <Text style={styles.closeText}>Close Menu</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </Modal>
         </View>
     );
 };
@@ -241,37 +193,11 @@ const styles = StyleSheet.create({
         marginVertical: 5,
         fontWeight: 'bold',
     },
-    closeText: {
-        color: '#007AFF',
-        marginTop: 10,
-    },
-    buttonMenuMangage: {
-        position: 'absolute',
-        bottom: 20,  
-        right: 20, 
-        backgroundColor: '#43766C',
-        paddingVertical: 12,
-        paddingHorizontal: 18,
-        borderRadius: 30,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.3,
-        shadowRadius: 4,
-        elevation: 5,
-    },
     buttonText: {
         color: '#F8FAE5',
         fontSize: 16,
         fontWeight: 'bold',
         textAlign: 'center',
-    },
-    searchBar: {
-        height: 40,
-        borderColor: '#ccc',
-        borderWidth: 1,
-        borderRadius: 5,
-        marginBottom: 10,
-        paddingHorizontal: 10,
     },
     totalPrice: {
         fontSize: 18,
