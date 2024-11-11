@@ -1,61 +1,61 @@
-import React from "react";
-import { View, Text, FlatList, StyleSheet, Alert } from 'react-native';
-import * as Print from 'expo-print';
-import { shareAsync } from 'expo-sharing';
-import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
-import CustomButton from '../CustomButton.js';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import DownloadPDFButton from '../DownloadPDFButton';
 
-const MenuItem = ({ item }) => (
-    <View style={styles.menuItem}>
-        <View style={styles.details}>
-            <Text style={styles.itemName}>{item.title}</Text>
-            <Text style={styles.itemDescription}>{item.description}</Text>
-        </View>
-        <Text style={styles.itemPrice}>{item.price}</Text>
-    </View>
-);
+const MenuScreen = () => {
+    const [menuItemsByCategory, setMenuItemsByCategory] = useState({});
+    const [loading, setLoading] = useState(true);
 
-const exportMenuToPDF = async () => {
-    try {
-        const htmlContent = `
-            <html>
-                <body style="font-family: Arial, sans-serif;">
-                    <h1 style="text-align: center;">Bean Scene Menu</h1>
-                    <ul>
-                        ${DummyMenu.map(item => `
-                            <li style="margin-bottom: 10px;">
-                                <strong>${item.title}</strong><br />
-                                <em>${item.description}</em><br />
-                                Price: ${item.price}
-                            </li>
-                        `).join('')}
-                    </ul>
-                </body>
-            </html>
-        `;
+    useEffect(() => {
+        const fetchMenuItems = async () => {
+            try {
+                const response = await fetch('http://localhost:3000/api/menuitems'); // Adjust URL if deployed
+                const data = await response.json();
 
-        // Generate the PDF file
-        const { uri } = await Print.printToFileAsync({ html: htmlContent });
+                // Group items by category
+                const groupedItems = data.reduce((acc, item) => {
+                    if (!acc[item.category]) acc[item.category] = [];
+                    acc[item.category].push(item);
+                    return acc;
+                }, {});
 
-        // Share the PDF file (if needed)
-        await shareAsync(uri);
-        Alert.alert('PDF created', `File now available for sharing.`);
-    } catch (error) {
-        Alert.alert('Error', 'Failed to create PDF: ' + error.message);
+                setMenuItemsByCategory(groupedItems);
+                setLoading(false);
+            } catch (error) {
+                Alert.alert('Error', 'Failed to load menu items');
+                setLoading(false);
+            }
+        };
+
+        fetchMenuItems();
+    }, []);
+
+    if (loading) {
+        return <ActivityIndicator size="large" color="#0000ff" />;
     }
-};
 
-const CustomerMenuScreen = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Bean Scene Menu</Text>
-            <CustomButton title="Export Menu to PDF" onPress={exportMenuToPDF} />
-            <FlatList
-                data={DummyMenu} // Use imported DummyMenu here
-                renderItem={({ item }) => <MenuItem item={item} />}
-                keyExtractor={item => item.id}
-                contentContainerStyle={styles.menuList}
-            />
+            <DownloadPDFButton />
+
+            {/* Render menu items by category */}
+            {Object.keys(menuItemsByCategory).map((category) => (
+                <View key={category}>
+                    <Text style={styles.categoryTitle}>{category}</Text>
+                    <FlatList
+                        data={menuItemsByCategory[category]}
+                        keyExtractor={(item) => item._id} // Assuming MongoDB ID as unique key
+                        renderItem={({ item }) => (
+                            <View style={styles.menuItem}>
+                                <Text style={styles.itemName}>{item.name}</Text>
+                                <Text style={styles.itemDescription}>{item.description}</Text>
+                                <Text style={styles.itemPrice}>${item.price.toFixed(2)}</Text>
+                            </View>
+                        )}
+                    />
+                </View>
+            ))}
         </View>
     );
 };
@@ -63,46 +63,39 @@ const CustomerMenuScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FAF4E4', // Light, neutral background
-        padding: 20,
+        padding: 16,
+        backgroundColor: '#FAF4E4',
     },
-    menuList: {
-        paddingBottom: 20,
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 16,
+        textAlign: 'center',
     },
-    menuItem: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingVertical: 15,
-        borderBottomWidth: 1,
-        borderColor: '#DDD',
-    },
-    details: {
-        flex: 1,
-        paddingRight: 10,
-    },
-    itemName: {
+    categoryTitle: {
         fontSize: 20,
         fontWeight: 'bold',
+        marginVertical: 10,
         color: '#333',
+    },
+    menuItem: {
+        padding: 8,
+        borderBottomWidth: 1,
+        borderBottomColor: '#DDD',
+    },
+    itemName: {
+        fontSize: 18,
+        fontWeight: 'bold',
     },
     itemDescription: {
         fontSize: 14,
-        fontStyle: 'italic',
         color: '#666',
-        marginTop: 4,
     },
     itemPrice: {
-        fontSize: 18,
-        fontWeight: '600',
+        fontSize: 16,
         color: '#76453B',
-    },
-    title: {
-        fontSize: 30,
-        fontWeight: 'bold',
-        color: '#333',
-        alignContent: 'center',
+        marginTop: 4,
     },
 });
 
-export default CustomerMenuScreen;
+export default MenuScreen;
