@@ -48,7 +48,7 @@ const AdminScreen = ({ navigation }) => {
                     value={searchQuery}
                     onChangeText={text => setSearchQuery(text)}
                 />
-                <CustomButton title="New Item" onPress={() => navigation.navigate('AdminNewItemScreen')}/>
+                <CustomButton title="New Item" onPress={() => navigation.navigate('AdminNewItem')}/>
             </View>
             {/*Menu filter
             doesnt properly work atm

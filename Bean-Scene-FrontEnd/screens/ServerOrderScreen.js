@@ -27,6 +27,8 @@ const ServerOrderScreen = ({ navigation }) => {
     const [menuItems, setMenuItems] = useState([]);
     const [filteredMenu, setFilteredMenu] = useState([]);  // State for filtered menu items
     const [tickets, setTickets] = useState([]);
+    const [tableNumber, setTableNumber] = useState(''); // State for table number
+    const [isTableModalVisible, setIsTableModalVisible] = useState(false);
 
     // Fetch the menu items from database calling the function
     useEffect(() => {
@@ -42,6 +44,10 @@ const ServerOrderScreen = ({ navigation }) => {
     const filterMenu = (category) => {
         const filtered = menuItems.filter(item => item.category === category);
         setFilteredMenu(filtered);
+    };
+
+    const toggleTableModal = () => {
+        setIsTableModalVisible(!isTableModalVisible);
     };
 
     // Function to show all items
@@ -67,6 +73,11 @@ const ServerOrderScreen = ({ navigation }) => {
 
     //turns order into ticket
     const createNewTicket = async (paymentMethod) => {
+        if (!tableNumber){
+            Alert.alert("Please select a table number.")
+            return;
+        }
+
         if (order.length > 0) {
             // Prepare the new ticket object with required fieldsw
             const newTicket = {
@@ -77,7 +88,8 @@ const ServerOrderScreen = ({ navigation }) => {
                 })),
                 totalPrice: totalPrice,
                 paymentMethod: paymentMethod,
-                CustomerId: "60b8b22d7b9e4b00156a5c3b" // Replace with a valid Customer ID if needed
+                CustomerId: "60b8b22d7b9e4b00156a5c3b", // Replace with a valid Customer ID if needed
+                tableNumber: tableNumber
             };
     
             try {
@@ -115,16 +127,21 @@ const ServerOrderScreen = ({ navigation }) => {
     // const filterMenu = (category) => {
     //     const filtered = DummyMenu.filter(item => item.category === category);
     //     setFilteredMenu(filtered);
-    // };
+    // };  
 
     return (
-        <View style={styles.container}>
+        <View style={styles.container}>    
             <View style={styles.column}>
                 {/* ticket management */}
                 <View style={styles.buttonRow}>
                     <CustomButton title="New Ticket" onPress={() => clearOrder()} />
                     <CustomButton title="View Tickets" onPress={() => navigation.navigate('Ticket', { tickets })} />
-                    <CustomButton title="Change Table" />
+                    {/* Table number input */}
+                    <TextInput
+                        style={styles.tableInput}
+                        placeholder="Enter Table (e.g. A1)"
+                        value={tableNumber}
+                        onChangeText={setTableNumber}/>
                 </View>
                 {/* shows menu list and details view */}
                 <View style={styles.orderContainer}>
@@ -234,6 +251,19 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 10,
         height: '100%',
+    },
+    tableInput: {
+        width: 120, // Adjust width as needed
+        height: 50, // Adjust height as needed
+        backgroundColor: '#76453B',
+        borderWidth: 1,
+        borderRadius: 5,
+        padding: 10,
+        textAlign: 'center', // Center-align text for consistency
+        marginVertical: 5,
+        color: '#F8FAE5', // Button text color
+        fontSize: 18,
+        fontWeight: 'bold',
     },
     buttonRow: {
         flexDirection: 'row',
