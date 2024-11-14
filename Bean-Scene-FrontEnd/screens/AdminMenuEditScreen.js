@@ -1,24 +1,19 @@
-import React, { useState } from "react";
-import { Button, View, StyleSheet, Text, TextInput, Modal } from "react-native";
+import React from "react";
+import { Button, View, StyleSheet, Text, TextInput } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Checkbox } from 'react-native-paper';
 import CustomButton from '../CustomButton.js';
 
+
 const AdminMenuEditScreen = ({ route }) => {
     const { item } = route.params;
     const [checked, setChecked] = React.useState(false);
-    const [modalVisible, setModalVisible] = useState(false);  // State for modal visibility
-
-    const handleSave = () => {
-        // Add your save logic here
-        console.log("Dish saved:", item);
-        setModalVisible(false);  // Close modal after save
-    };
 
     return (
-        <View style={styles.container}>
+        //menu edit form
+        <View style={styles.container} >
             <Text>Edit Dish</Text>
-            {/* Dish input fields */}
+            {/*ingridents to be added*/}
             <View style={styles.column}>
                 <Text style={styles.subheading}>Dish Name</Text>
                 <TextInput
@@ -41,7 +36,7 @@ const AdminMenuEditScreen = ({ route }) => {
                 />
             </View>
             <View style={styles.column}>
-                {/* Image insert and diet tags */}
+                {/*image insert and diet tags to be added*/}
                 <Text style={styles.subheading}>Upload Image</Text>
                 <View style={styles.insertImage}></View>
                 <Text style={styles.subheading}>Diet Tags</Text>
@@ -84,26 +79,8 @@ const AdminMenuEditScreen = ({ route }) => {
                     <Picker.Item label="Cafe/Dessert" value="" />
                     <Picker.Item label="Beverage" value="" />
                 </Picker>
-                <CustomButton title="Save" onPress={() => setModalVisible(true)}>Save</CustomButton>  {/* Open modal on press */}
+                <CustomButton title="Save">Save</CustomButton>
             </View>
-
-            {/* Modal for confirmation */}
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => setModalVisible(false)}
-            >
-                <View style={styles.modalBackground}>
-                    <View style={styles.modalContainer}>
-                        <Text style={styles.modalText}>Are you sure you want to save changes?</Text>
-                        <View style={styles.modalButtons}>
-                            <CustomButton title="Cancel" onPress={() => setModalVisible(false)} />
-                            <CustomButton title="Confirm" onPress={handleSave} />
-                        </View>
-                    </View>
-                </View>
-            </Modal>
         </View>
     );
 };
@@ -163,28 +140,5 @@ const styles = StyleSheet.create({
         width: '80%',
         padding: 10,
     },
-    // Modal styles
-    modalBackground: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0,0,0,0.5)',
-    },
-    modalContainer: {
-        backgroundColor: '#F8FAE5',
-        padding: 20,
-        borderRadius: 8,
-        alignItems: 'center',
-    },
-    modalText: {
-        fontSize: 18,
-        marginBottom: 20,
-    },
-    modalButtons: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        width: '100%',
-    },
 });
-
 export default AdminMenuEditScreen;

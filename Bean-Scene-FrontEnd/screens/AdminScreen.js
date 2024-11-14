@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, TextInput, Alert } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, TextInput, Button, Alert } from 'react-native';
+import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
 import { getMenuItems } from '../crud/menuitems.js';
 import CustomButton from '../CustomButton.js';
 
@@ -38,19 +39,20 @@ const AdminScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Manage Menu</Text>
-            <View style={styles.searchContainer}>
-                {/* Search bar that spans the width of the page */}
+            <View style={styles.buttonRow}>
+                <Text style={styles.title}>Manage Menu</Text>
+                {/*Search Bar - the search is a bit weird sometimes*/}
                 <TextInput
                     style={styles.searchBar}
                     placeholder="Search menu items..."
                     value={searchQuery}
                     onChangeText={text => setSearchQuery(text)}
                 />
-                {/* New Item button aligned to the right */}
-                <CustomButton title="New Item" onPress={() => navigation.navigate('AdminNewItemScreen')} />
+                <CustomButton title="New Item" onPress={() => navigation.navigate('AdminNewItemScreen')}/>
             </View>
-            {/* Menu filter */}
+            {/*Menu filter
+            doesnt properly work atm
+            */}
             <View style={styles.buttonRow}>
                 <CustomButton title="Beverages" onPress={() => filterMenu('Drinks')} />
                 <CustomButton title="Breakfast" onPress={() => filterMenu('Breakfast')} />
@@ -60,7 +62,6 @@ const AdminScreen = ({ navigation }) => {
             </View>
             <FlatList
                 data={searchMenu} // currently using menu filter for search
-                style={{ maxHeight: '70vh' }}
                 renderItem={({ item }) => (
                     <TouchableOpacity
                         style={styles.item}
@@ -72,7 +73,9 @@ const AdminScreen = ({ navigation }) => {
                         <Text style={styles.itemText}>{item.name}</Text>
                     </TouchableOpacity>
                 )}
-                keyExtractor={item => (item._id ? item._id.toString() : Math.random().toString())}
+                keyExtractor={item => (item._id ? item._id.toString()
+                    // _id might be undefined fallback to random value if does not exist
+                    : Math.random().toString())}
                 numColumns={4} // displays items in a grid format
                 columnWrapperStyle={styles.columnWrapper}
             />
@@ -85,11 +88,10 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 20,
     },
-    searchContainer: {
+    buttonRow: {
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginBottom: 20,
+        marginTop: 10,
+        width: '100%',
     },
     title: {
         fontSize: 24,
@@ -97,19 +99,12 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     searchBar: {
-        flex: 1,
         height: 40,
         borderColor: '#ddd',
         borderWidth: 1,
         borderRadius: 8,
         paddingHorizontal: 10,
-        marginRight: 10,
-    },
-    buttonRow: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        gap: 15,
-        marginBottom: 10,
+        marginBottom: 20,
     },
     item: {
         flex: 1,
