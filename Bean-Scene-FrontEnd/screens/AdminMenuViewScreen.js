@@ -9,6 +9,7 @@ const AdminMenuViewScreen = ({ route, navigation }) => {
     // Seperated alert from handle delete as alert does not work with async function
 
     const deleteMenuItem = () => {
+        console.log("Delete button pressed, showing alert");
         Alert.alert(
             "Confirm deletion",
             "Are you sure you want to delete this item?",
@@ -54,7 +55,7 @@ const AdminMenuViewScreen = ({ route, navigation }) => {
             <View style={styles.actionButton}>
                 {/* takes item data to edit page */}
                 <CustomButton title="Edit" onPress={() => navigation.navigate('AdminMenuEdit', { item })} /> 
-                <CustomButton title="Delete" />
+                <CustomButton title="Delete" onPress={deleteMenuItem}/>
             </View>
         </View>
     );

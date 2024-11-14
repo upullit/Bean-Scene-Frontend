@@ -1,12 +1,52 @@
 import React from "react";
-import { Button, View, StyleSheet, Text, TextInput } from "react-native";
+import { View, StyleSheet, Text, TextInput, Alert } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Checkbox } from 'react-native-paper';
+import {createItem } from '../crud/menuitems.js'
 import CustomButton from '../CustomButton.js';
 
 
 const AdminNewItemScreen = ({ navigation }) => {
-    const [checked, setChecked] = React.useState(false);
+    const [name, setName] = useState("");
+    const [price, setPrice] = useState("");
+    const [description, setDescription] = useState("");
+    const [ingredients, setIngredients] = useState("");
+    const [category, setCategory] = useState("");
+    const [dietTags, setDietTags] = useState({
+        gf: false,
+        vegan: false,
+        vege: false,
+    });
+
+    // Toggle diet tags
+    const toggleDietTag = (tag) => {
+        setDietTags((prevTags) => ({
+            ...prevTags,
+            [tag]: !prevTags[tag],
+        }));
+    };
+
+    // Form submission handler
+    const handleSubmit = async () => {
+        // Format data
+        const newItem = {
+            name,
+            price: parseFloat(price),
+            description,
+            ingredients,
+            category,
+            tags: Object.keys(dietTags).filter(tag => dietTags[tag]), // Only selected tags
+        };
+
+        try {
+            await createItem(newItem); // Call the createItem API function
+            Alert.alert("Success", "Menu item created successfully");
+            navigation.goBack(); // Navigate back after successful creation
+        } catch (error) {
+            Alert.alert("Error", "Failed to create menu item");
+            console.error(error);
+        }
+    };
 
     return (
         //menu edit form

@@ -80,6 +80,7 @@ const TicketsScreen = () => {
                             <Text style={styles.ticketTitle}>
                                 Ticket #{currentPage * ticketsPerPage + index + 1}
                             </Text>
+                            <Text style={styles.tableNumber}>Table: {item.tableNumber}</Text>
                             {item.items.map((orderItem, itemIndex) => (
                                 <Text style={styles.ticketText} key={itemIndex}>
                                     {orderItem.menuItem.name} - Quantity: {orderItem.quantity}
