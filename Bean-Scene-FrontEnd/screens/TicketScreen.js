@@ -83,12 +83,12 @@ const TicketsScreen = () => {
                             <Text style={styles.tableNumber}>Table: {item.tableNumber}</Text>
                             {item.items.map((orderItem, itemIndex) => (
                                 <Text style={styles.ticketText} key={itemIndex}>
-                                    {orderItem.menuItem.name} - Quantity: {orderItem.quantity}
+                                    {orderItem.quantity} x {orderItem.menuItem.name}
                                     {orderItem.specialInstructions ? `\n - ${orderItem.specialInstructions}` : ''}
                                 </Text>
                             ))}
                             <Text style={styles.totalPrice}>Total: ${item.totalPrice.toFixed(2)}</Text>
-                            <View style={styles.bottomButton}>
+                            <View style={styles.ticketButton}>
                                 <CustomButton title="Complete" onPress={() => markAsComplete(item._id)} />
                                 <CustomButton title="Delete" onPress={() => removeTicket(item._id)} />
                             </View>
@@ -121,8 +121,9 @@ const TicketsScreen = () => {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 10,
+        padding: 20,
         height: '100%',
+        flex: 1,
     },
     title: {
         fontSize: 20,
@@ -131,7 +132,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     columnWrapper: {
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
     },
     ticketItem: {
         padding: 10,
@@ -139,7 +140,11 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#ccc',
         borderRadius: 5,
-        width: 300,
+        width: 400,
+        minHeight: 300,
+        maxHeight: 350,
+        flexDirection: 'column', // Arrange children vertically
+        justifyContent: 'space-between', // Push button to the bottom
     },
     ticketTitle: {
         fontSize: 24,
@@ -147,13 +152,19 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     ticketText: {
+        fontSize: 20,
+        padding: 5,
+    },
+    totalPrice: {
         fontSize: 18,
         padding: 10,
+        fontWeight: 'bold',
     },
     ticketButton: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 10,
+        marginTop: 'auto',
+        justifyContent: 'center',
+        gap: 15,
     },
     pagination: {
         flexDirection: 'row',

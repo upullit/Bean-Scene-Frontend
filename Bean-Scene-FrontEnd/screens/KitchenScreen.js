@@ -75,14 +75,14 @@ const KitchenScreen = ({ route }) => {
                                 <Text style={styles.ticketTitle}>
                                     Ticket #{currentPage * ticketsPerPage + index + 1}
                                 </Text>
+                                <Text style={styles.tableNumber}>Table: {item.tableNumber}</Text>
                                 {item.items.map((orderItem, itemIndex) => (
                                     <Text style={styles.ticketText} key={itemIndex}>
-                                        {orderItem.menuItem.name} - Quantity: {orderItem.quantity}
+                                    {orderItem.quantity} x {orderItem.menuItem.name}
                                         {orderItem.specialInstructions ? `\n - ${orderItem.specialInstructions}` : ''}
                                     </Text>
                                 ))}
-                                <Text style={styles.totalPrice}>Total: ${item.totalPrice.toFixed(2)}</Text>
-                                <View style={styles.bottomButton}>
+                                <View style={styles.ticketButton}>
                                     <CustomButton title="Complete" onPress={() => markAsComplete(item._id)} />
                                     <CustomButton title="Delete" onPress={() => removeTicket(item._id)} />
                                 </View>
@@ -116,11 +116,7 @@ const styles = StyleSheet.create({
     container: {
         padding: 10,
         height: '100%',
-    },
-    menuItems: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: 10,
+        flex: 1,
     },
     title: {
         fontSize: 20,
@@ -129,7 +125,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     columnWrapper: {
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
     },
     ticketItem: {
         padding: 10,
@@ -137,7 +133,11 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#ccc',
         borderRadius: 5,
-        width: 300,
+        width: 400,
+        minHeight: 300,
+        maxHeight: 350,
+        flexDirection: 'column', // Arrange children vertically
+        justifyContent: 'space-between', // Push button to the bottom
     },
     ticketTitle: {
         fontSize: 24,
@@ -145,13 +145,14 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     ticketText: {
-        fontSize: 18,
-        padding: 10,
+        fontSize: 20,
+        padding: 5,
     },
     ticketButton: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 10, 
+        marginTop: 'auto',
+        justifyContent: 'center',
+        gap: 15,
     },
     pagination: {
         flexDirection: 'row',
@@ -166,47 +167,6 @@ const styles = StyleSheet.create({
     pageIndicator: {
         marginHorizontal: 20,
         fontSize: 16,
-    },
-    menuOverlay: {
-        flex: 1,
-        justifyContent: 'flex-end',
-        alignItems: 'flex-end',
-    },
-    menuContainer: {
-        width: 250,
-        height: 400,
-        padding: 20,
-        backgroundColor: '#F8FAE5',
-        borderRadius: 8,
-        alignItems: 'left',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.3,
-        shadowRadius: 4,
-        elevation: 5,
-        marginBottom: 80, 
-        marginRight: 40,
-        overflow: 'hidden',
-    },
-    menuText: {
-        fontSize: 16,
-        marginVertical: 5,
-        fontWeight: 'bold',
-    },
-    buttonText: {
-        color: '#F8FAE5',
-        fontSize: 16,
-        fontWeight: 'bold',
-        textAlign: 'center',
-    },
-    totalPrice: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginTop: 10,
-    },
-    bottomButton: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
     },
 });
 
