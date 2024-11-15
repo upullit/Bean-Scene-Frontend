@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Button, TextInput, Image, Alert, Modal } from 'react-native';
 import { getMenuItems } from '../crud/menuitems';
 import { createTicket } from '../crud/ticket';
-import CustomButton from '../CustomButton.js';
+import CustomButton from '../CustomComponents/CustomButton.js';
 
 //displays each menu item
 const Item = ({ title, price, image, onSelect, onAddToOrder }) => (

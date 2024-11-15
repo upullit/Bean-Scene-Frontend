@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Button, StyleSheet, Modal, TouchableOpacity, FlatList, Switch, TextInput, Alert } from 'react-native';
 import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
 import { updateTicket, deleteTicket , getTickets} from '../crud/ticket';
-import CustomButton from '../CustomButton.js';
+import CustomButton from '../CustomComponents/CustomButton.js';
 
 const KitchenScreen = ({ route }) => {
     const [searchQuery, setSearchQuery] = useState('');

@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, View, StyleSheet, Image, Text, Alert } from "react-native";
 import { deleteItem } from "../crud/menuitems";
-import CustomButton from '../CustomButton.js';
+import CustomButton from '../CustomComponents/CustomButton.js';
 
 const AdminMenuViewScreen = ({ route, navigation }) => {
     const { item } = route.params;

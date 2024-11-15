@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Button, Alert } from 'react-native';
 import { updateTicket, deleteTicket , getTickets} from '../crud/ticket';
-import CustomButton from '../CustomButton.js';
+import CustomButton from '../CustomComponents/CustomButton.js';
 
 const TicketsScreen = () => {
     const [tickets, setTickets] = useState([]);

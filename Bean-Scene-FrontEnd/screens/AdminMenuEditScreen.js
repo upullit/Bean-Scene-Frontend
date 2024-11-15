@@ -2,7 +2,7 @@ import React from "react";
 import { Button, View, StyleSheet, Text, TextInput } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Checkbox } from 'react-native-paper';
-import CustomButton from '../CustomButton.js';
+import CustomButton from '../CustomComponents/CustomButton.js';
 
 
 const AdminMenuEditScreen = ({ route }) => {
