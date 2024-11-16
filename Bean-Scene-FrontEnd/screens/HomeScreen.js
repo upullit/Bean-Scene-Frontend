@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
-import CustomButton from '../CustomComponents/CustomButton';
 
 const HomeScreen = ({ navigation }) => {
     //holds app at landscape

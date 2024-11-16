@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, ActivityIndicator, Alert } from 'react-native';
-import DownloadPDFButton from '../CustomComponents/DownloadPDFButton';
+import DownloadPDFButton from '../DownloadPDFButton';
 
 const MenuScreen = () => {
     const [menuItemsByCategory, setMenuItemsByCategory] = useState({});

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, TextInput, Button, Alert } from 'react-native';
 import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
 import { getMenuItems } from '../crud/menuitems.js';
-import CustomButton from '../CustomComponents/CustomButton.js';
+import CustomButton from '../CustomButton.js';
 
 const AdminScreen = ({ navigation }) => {
     const [menuItems, setMenuItems] = useState([]);

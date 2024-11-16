@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, FlatList, Button, TextInput, Image, Alert } fro
 import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
 import { getMenuItems } from '../crud/menuitems.js';
 import { createTicket } from '../crud/ticket.js';
-import CustomButton from '../CustomComponents/CustomButton.js';
+import CustomButton from '../CustomButton.js';
 
 //displays each menu item
 const Item = ({ title, price, image, onSelect, onAddToOrder }) => (

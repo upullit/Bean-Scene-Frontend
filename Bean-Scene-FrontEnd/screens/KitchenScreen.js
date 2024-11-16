@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Button, StyleSheet, Modal, TouchableOpacity, FlatList, Switch, TextInput, Alert } from 'react-native';
 import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
-import { updateTicket, deleteTicket , getTickets} from '../crud/ticket';
-import CustomButton from '../CustomComponents/CustomButton.js';
+import { updateTicket, deleteTicket, getTickets } from '../crud/ticket';
+import CustomButton from '../CustomButton.js';
+import CustomModal from '../CustomModal.js';
 
 const KitchenScreen = ({ route }) => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -13,6 +14,8 @@ const KitchenScreen = ({ route }) => {
     const [currentPage, setCurrentPage] = useState(0);
     const totalPages = Math.ceil(tickets.length / ticketsPerPage);
     const [menuVisible, setMenuVisible] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalContent, setModalContent] = useState({ title: '', message: '', onConfirm: null });
 
     useEffect(() => {
         const fetchTickets = async () => {
@@ -33,18 +36,44 @@ const KitchenScreen = ({ route }) => {
         setPendingTickets(tickets.filter(ticket => ticket.status === 'Pending'));
     }, [tickets]);
 
-    const markAsComplete = async (ticketId) => {
-        try {
-            await updateTicket(ticketId, { status: 'Completed' });
-            const updatedTickets = await getTickets();
-            setTickets(updatedTickets);
-            Alert.alert('Ticket marked as complete!');
-        } catch (error) {
-            Alert.alert('Error marking ticket as complete:', error);
-            console.error('Error marking ticket as complete:', error);
-        }
+    const showModal = (title, message, onConfirm) => {
+        setModalContent({ title, message, onConfirm });
+        setModalVisible(true);
     };
 
+    // Function to mark ticket as complete
+    const markAsComplete = async (ticketId) => {
+        showModal(
+            'Mark as Complete',
+            'Are you sure you want to mark this ticket as complete?',
+            async () => {
+                try {
+                    await updateTicket(ticketId, { status: 'Completed' });
+                    const updatedTickets = await getTickets(); // Fetch updated tickets
+                    setTickets(updatedTickets); // Update the state
+                    setModalVisible(false); // Close the modal
+                } catch (error) {
+                    console.error('Error marking ticket as complete:', error);
+                }
+            }
+        );
+    };
+
+    const removeTicket = async (ticketId) => {
+        showModal(
+            'Delete Ticket',
+            'Are you sure you want to delete this ticket?',
+            async () => {
+                try {
+                    await deleteTicket(ticketId);
+                    setTickets((prevTickets) => prevTickets.filter((ticket) => ticket._id !== ticketId));
+                    setModalVisible(false); // Close the modal
+                } catch (error) {
+                    console.error('Error deleting ticket:', error);
+                }
+            }
+        );
+    };
     const currentTickets = pendingTickets.slice(
         currentPage * ticketsPerPage,
         (currentPage + 1) * ticketsPerPage
@@ -63,8 +92,8 @@ const KitchenScreen = ({ route }) => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Active Tickets</Text>
-            {loading ? 
-                <Text>Loading tickets...</Text> 
+            {loading ?
+                <Text>Loading tickets...</Text>
                 : pendingTickets.length === 0 ? (
                     <Text>No active tickets</Text>
                 ) : (
@@ -78,7 +107,7 @@ const KitchenScreen = ({ route }) => {
                                 <Text style={styles.tableNumber}>Table: {item.tableNumber}</Text>
                                 {item.items.map((orderItem, itemIndex) => (
                                     <Text style={styles.ticketText} key={itemIndex}>
-                                    {orderItem.quantity} x {orderItem.menuItem.name}
+                                        {orderItem.quantity} x {orderItem.menuItem.name}
                                         {orderItem.specialInstructions ? `\n - ${orderItem.specialInstructions}` : ''}
                                     </Text>
                                 ))}
@@ -108,6 +137,13 @@ const KitchenScreen = ({ route }) => {
                     disabled={currentPage === totalPages - 1}
                 />
             </View>
+            <CustomModal
+                visible={modalVisible}
+                title={modalContent.title}
+                message={modalContent.message}
+                onConfirm={modalContent.onConfirm}
+                onCancel={() => setModalVisible(false)}
+            />
         </View>
     );
 };

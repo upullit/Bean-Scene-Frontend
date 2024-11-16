@@ -1,44 +1,56 @@
-import React from "react";
-import { Button, View, StyleSheet, Text, TextInput } from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet, Text, TextInput } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Checkbox } from 'react-native-paper';
-import CustomButton from '../CustomComponents/CustomButton.js';
-
+import CustomButton from '../CustomButton.js';
+import CustomModal from '../CustomModal';  // Import your custom modal component
 
 const AdminMenuEditScreen = ({ route }) => {
     const { item } = route.params;
-    const [checked, setChecked] = React.useState(false);
+    const [checked, setChecked] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false); // State for controlling modal visibility
+    const [modalContent, setModalContent] = useState({ title: '', message: '' }); // Modal content
+
+    // Form submission handler
+    const handleSave = () => {
+        // Update logic here, e.g., send edited item to the server or update local state
+        setModalContent({
+            title: 'Success',
+            message: 'Dish updated successfully!',
+        });
+        setModalVisible(true); // Show success modal
+    };
 
     return (
-        //menu edit form
-        <View style={styles.container} >
+        <View style={styles.container}>
             <Text>Edit Dish</Text>
-            {/*ingridents to be added*/}
             <View style={styles.column}>
                 <Text style={styles.subheading}>Dish Name</Text>
                 <TextInput
                     style={styles.textInputShort}
-                    placeholder={item.title}
+                    defaultValue={item.title}
                 />
                 <Text style={styles.subheading}>Price</Text>
                 <TextInput
                     style={styles.textInputShort}
-                    placeholder={item.Price}
+                    defaultValue={item.Price}
+                    keyboardType="numeric"
                 />
                 <Text style={styles.subheading}>Description</Text>
                 <TextInput
                     style={styles.textInputLong}
-                    placeholder={item.description}
+                    defaultValue={item.description}
                 />
                 <Text style={styles.subheading}>Ingredients</Text>
                 <TextInput
                     style={styles.textInputLong}
                 />
             </View>
+
             <View style={styles.column}>
-                {/*image insert and diet tags to be added*/}
                 <Text style={styles.subheading}>Upload Image</Text>
                 <View style={styles.insertImage}></View>
+
                 <Text style={styles.subheading}>Diet Tags</Text>
                 <View style={styles.checkbox}>
                     <Checkbox
@@ -70,17 +82,26 @@ const AdminMenuEditScreen = ({ route }) => {
 
                 <Text style={styles.subheading}>Category</Text>
                 <Picker
-                    placeholder={item.category}
+                    selectedValue={item.category}
                     style={styles.picker}
                 >
-                    <Picker.Item label="Breakfast" value="" />
-                    <Picker.Item label="Lunch" value="" />
-                    <Picker.Item label="Dinner" value="" />
-                    <Picker.Item label="Cafe/Dessert" value="" />
-                    <Picker.Item label="Beverage" value="" />
+                    <Picker.Item label="Breakfast" value="Breakfast" />
+                    <Picker.Item label="Lunch" value="Lunch" />
+                    <Picker.Item label="Dinner" value="Dinner" />
+                    <Picker.Item label="Cafe/Dessert" value="Cafe/Dessert" />
+                    <Picker.Item label="Beverage" value="Beverage" />
                 </Picker>
-                <CustomButton title="Save">Save</CustomButton>
+
+                <CustomButton title="Save" onPress={handleSave} />
             </View>
+
+            {/* Custom Modal for displaying success message */}
+            <CustomModal
+                visible={modalVisible}
+                title={modalContent.title}
+                message={modalContent.message}
+                onConfirm={() => setModalVisible(false)} // Close the modal on confirm
+            />
         </View>
     );
 };

@@ -3,7 +3,7 @@ import { View, StyleSheet, Text, TextInput, Alert } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Checkbox } from 'react-native-paper';
 import {createItem } from '../crud/menuitems.js'
-import CustomButton from '../CustomComponents/CustomButton.js';
+import CustomButton from '../CustomButton.js';
 
 
 const AdminNewItemScreen = ({ navigation }) => {
@@ -17,6 +17,9 @@ const AdminNewItemScreen = ({ navigation }) => {
         vegan: false,
         vege: false,
     });
+
+    const [modalVisible, setModalVisible] = useState(false); // State for controlling modal visibility
+    const [modalContent, setModalContent] = useState({ title: '', message: '' }); // Modal content
 
     // Toggle diet tags
     const toggleDietTag = (tag) => {
@@ -40,10 +43,18 @@ const AdminNewItemScreen = ({ navigation }) => {
 
         try {
             await createItem(newItem); // Call the createItem API function
-            Alert.alert("Success", "Menu item created successfully");
+            setModalContent({
+                title: 'Success',
+                message: 'Menu item created successfully',
+            });
+            setModalVisible(true); // Show success message
             navigation.goBack(); // Navigate back after successful creation
         } catch (error) {
-            Alert.alert("Error", "Failed to create menu item");
+            setModalContent({
+                title: 'Error',
+                message: 'Failed to create menu item',
+            });
+            setModalVisible(true); // Show error message
             console.error(error);
         }
     };
@@ -117,6 +128,12 @@ const AdminNewItemScreen = ({ navigation }) => {
                 </Picker>
                 <CustomButton title="Save">Save</CustomButton>
             </View>
+            <CustomModal
+                visible={modalVisible}
+                title={modalContent.title}
+                message={modalContent.message}
+                onConfirm={() => setModalVisible(false)}
+            />
         </View>
     );
 };

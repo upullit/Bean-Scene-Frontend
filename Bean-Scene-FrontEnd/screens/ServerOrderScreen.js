@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Button, TextInput, Image, Alert, Modal } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TextInput, Image } from 'react-native';
 import { getMenuItems } from '../crud/menuitems';
 import { createTicket } from '../crud/ticket';
-import CustomButton from '../CustomComponents/CustomButton.js';
+import CustomButton from '../CustomButton.js';
+import CustomModal from '../CustomModal'; // Assuming the modal is in a file CustomModal.js
 
 //displays each menu item
 const Item = ({ title, price, image, onSelect, onAddToOrder }) => (
@@ -30,6 +31,10 @@ const ServerOrderScreen = ({ navigation }) => {
     const [tableNumber, setTableNumber] = useState(''); // State for table number
     const [isTableModalVisible, setIsTableModalVisible] = useState(false);
 
+    // Modal states
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalContent, setModalContent] = useState({ title: '', message: '', onConfirm: null });
+
     // Fetch the menu items from database calling the function
     useEffect(() => {
         const fetchMenuItems = async () => {
@@ -53,7 +58,7 @@ const ServerOrderScreen = ({ navigation }) => {
     // Function to show all items
     const showAllItems = () => {
         setFilteredMenu(menuItems); // Reset filteredMenu to the original menuItems
-    }; 
+    };
 
     //adds selected item to order preview
     const addToOrder = (item, comment) => {
@@ -68,18 +73,21 @@ const ServerOrderScreen = ({ navigation }) => {
     const clearOrder = () => {
         setOrder([]);
         setTotalPrice(0);
-        Alert.alert('Order cleared');
     };
 
     //turns order into ticket
     const createNewTicket = async (paymentMethod) => {
-        if (!tableNumber){
-            Alert.alert("Please select a table number.")
+        if (!tableNumber) {
+            setModalContent({
+                title: 'Error',
+                message: 'Please select a table number.',
+            });
+            setModalVisible(true);
             return;
         }
 
         if (order.length > 0) {
-            // Prepare the new ticket object with required fieldsw
+            // Prepare the new ticket object with required fields
             const newTicket = {
                 items: order.map((orderItem) => ({
                     menuItem: orderItem.menuItemId, // Ensure this is a valid MenuItem ID
@@ -91,7 +99,7 @@ const ServerOrderScreen = ({ navigation }) => {
                 CustomerId: "60b8b22d7b9e4b00156a5c3b", // Replace with a valid Customer ID if needed
                 tableNumber: tableNumber
             };
-    
+
             try {
                 // Call the createTicket function to save the ticket to the database
                 const savedTicket = await createTicket(newTicket);
@@ -99,14 +107,26 @@ const ServerOrderScreen = ({ navigation }) => {
                 setTickets((prevTickets) => [...prevTickets, savedTicket]);
                 // Clear the order for a new entry
                 clearOrder();
-                Alert.alert("Ticket created successfully"); //success popup
+                setModalContent({
+                    title: "Ticket created successfully",
+                    message: "Your ticket has been created successfully."
+                });
+                setModalVisible(true); // Show success message in modal
                 console.log('Ticket created successfully:', savedTicket);
             } catch (error) {
-                Alert.alert("Failed to create ticket.", error);
+                setModalContent({
+                    title: 'Error',
+                    message: 'Failed to create ticket.',
+                });
+                setModalVisible(true);
                 console.error('Error creating ticket:', error);
             }
         } else {
-            console.warn('No items in order to create a ticket.');
+            setModalContent({
+                title: 'Error',
+                message: 'No items in order to create a ticket.',
+            });
+            setModalVisible(true);
         }
     };
 
@@ -123,14 +143,8 @@ const ServerOrderScreen = ({ navigation }) => {
         setSelectedItem(null); // remove selected item to return to list
     };
 
-    // //filters menu based on category
-    // const filterMenu = (category) => {
-    //     const filtered = DummyMenu.filter(item => item.category === category);
-    //     setFilteredMenu(filtered);
-    // };  
-
     return (
-        <View style={styles.container}>    
+        <View style={styles.container}>
             <View style={styles.column}>
                 {/* ticket management */}
                 <View style={styles.buttonRow}>
@@ -141,7 +155,7 @@ const ServerOrderScreen = ({ navigation }) => {
                         style={styles.tableInput}
                         placeholder="Enter Table (e.g. A1)"
                         value={tableNumber}
-                        onChangeText={setTableNumber}/>
+                        onChangeText={setTableNumber} />
                 </View>
                 {/* shows menu list and details view */}
                 <View style={styles.orderContainer}>
@@ -153,11 +167,9 @@ const ServerOrderScreen = ({ navigation }) => {
                             <View key={index}>
                                 <View style={styles.orderItemRow}>
                                     <Text style={styles.orderItem}>
-                                    {orderItem.title} - ${Number(orderItem.price).toFixed(2)}
+                                        {orderItem.title} - ${Number(orderItem.price).toFixed(2)}
                                     </Text>
                                     <View style={styles.actionButtons}>
-                                        {/* edit select item function will be called here */}
-                                        
                                         {/* delete item function will be called here */}
                                         <CustomButton title="Delete" onPress={() => deleteItem(index)} />
                                     </View>
@@ -179,10 +191,10 @@ const ServerOrderScreen = ({ navigation }) => {
                 </View>
                 {/* processes "payment" and creates ticket */}
                 <View style={styles.buttonRow}>
-                    <CustomButton title="Cash" onPress={() => createNewTicket('Cash')}/>
-                    <CustomButton title="Card" onPress={() => createNewTicket('Card')}/>
-                    <CustomButton title="Split" onPress={() => createNewTicket('Split')}/>
-                    <CustomButton title="Refund"/>
+                    <CustomButton title="Cash" onPress={() => createNewTicket('Cash')} />
+                    <CustomButton title="Card" onPress={() => createNewTicket('Card')} />
+                    <CustomButton title="Split" onPress={() => createNewTicket('Split')} />
+                    <CustomButton title="Refund" />
                 </View>
             </View>
             <View style={styles.column}>
@@ -199,43 +211,35 @@ const ServerOrderScreen = ({ navigation }) => {
                 {selectedItem ? (
                     <View style={styles.detailsContainer}>
                         <Image source={selectedItem.image} style={styles.detailImage} />
-                        <Text style={styles.detailsTitle}>{selectedItem.title}</Text>
-                        <Text style={styles.detailsText}>Price: ${selectedItem.price.toFixed(2)}</Text>
-                        <Text style={styles.detailsText}>Description: {selectedItem.description}</Text>
-                        <TextInput
-                            style={styles.commentInput}
-                            placeholder="Add a comment or special request"
-                            value={comment}
-                            onChangeText={setComment}
-                        />
-                        <View style={styles.buttonRow}>
-                            {/* navigates back to list */}
-                            <CustomButton title="Back" onPress={goBackToList} />
-                            <CustomButton
-                                title="Add to Order"
-                                onPress={() => addToOrder(selectedItem.title, selectedItem.price, comment)} // Pass the comment to the order
-                            />
-                        </View>
+                        <Text style={styles.dishTitle}>{selectedItem.title}</Text>
+                        <Text>{selectedItem.description}</Text>
+                        <CustomButton title="Back" onPress={goBackToList} />
                     </View>
                 ) : (
-                    <View style={styles.flatContainer}>
-                        <FlatList
-                            data={filteredMenu}
-                            renderItem={({ item }) => (
-                                <Item
-                                    title={item.name}
-                                    price={item.price}
-                                    image={item.image}
-                                    onSelect={() => setSelectedItem(item)} // Show details when "View Details" is pressed
-                                    onAddToOrder={() => addToOrder(item, comment)} // Add item to order when "Add to Order" is pressed
-                                />
-                            )}
-                            keyExtractor={item => item._id}
-                        />
-                    </View>
+                    <FlatList
+                        data={filteredMenu}
+                        renderItem={({ item }) => (
+                            <Item
+                                title={item.name}
+                                price={item.price}
+                                image={{ uri: item.image }}
+                                onSelect={() => setSelectedItem(item)}
+                                onAddToOrder={() => addToOrder(item, comment)}
+                            />
+                        )}
+                        keyExtractor={(item) => item._id}
+                    />
                 )}
             </View>
+            {/* Custom Modal for alerts */}
+            <CustomModal
+                visible={modalVisible}
+                title={modalContent.title}
+                message={modalContent.message}
+                onConfirm={() => setModalVisible(false)}
+            />
         </View>
+
     );
 };
 
@@ -302,7 +306,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#B19470 ',
         borderRadius: 5,
-        backgroundColor: '#F8FAE5', 
+        backgroundColor: '#F8FAE5',
     },
     itemContent: {
         flex: 1,
@@ -361,7 +365,7 @@ const styles = StyleSheet.create({
     detailsText: {
         fontSize: 16,
         marginVertical: 5,
-        
+
     },
     commentInput: {
         borderColor: 'grey',
