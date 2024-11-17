@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TextInput, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TextInput, Image, Modal, TouchableOpacity } from 'react-native';
 import { getMenuItems } from '../crud/menuitems';
 import { createTicket } from '../crud/ticket';
 import CustomButton from '../CustomButton.js';
@@ -150,12 +150,41 @@ const ServerOrderScreen = ({ navigation }) => {
                 <View style={styles.buttonRow}>
                     <CustomButton title="New Ticket" onPress={() => clearOrder()} />
                     <CustomButton title="View Tickets" onPress={() => navigation.navigate('Ticket', { tickets })} />
-                    {/* Table number input */}
-                    <TextInput
-                        style={styles.tableInput}
-                        placeholder="Enter Table (e.g. A1)"
-                        value={tableNumber}
-                        onChangeText={setTableNumber} />
+                    <Modal
+                        visible={isTableModalVisible}
+                        animationType="slide"
+                        transparent={true}
+                        onRequestClose={toggleTableModal}>
+                        <View style={styles.modalOverlay}>
+                            <View style={styles.modalContent}>
+                                <Text style={styles.modalTitle}>Enter Table Number</Text>
+                                <TextInput
+                                    style={styles.modalInput}
+                                    placeholder="Table (e.g., A1)"
+                                    value={tableNumber}
+                                    onChangeText={setTableNumber}
+                                />
+                                <View style={styles.modalButtons}>
+                                    <TouchableOpacity onPress={toggleTableModal}>
+                                        <Text style={styles.cancelButton}>Cancel</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            toggleTableModal();
+                                            if (!tableNumber.trim()) {
+                                                // Add validation or alert if table number is empty
+                                                alert('Table number cannot be empty.');
+                                                return;
+                                            }
+                                        }}>
+                                        <Text style={styles.confirmButton}>Confirm</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </View>
+                    </Modal>
+
+                    <CustomButton title="Enter Table Number" onPress={toggleTableModal} />
                 </View>
                 {/* shows menu list and details view */}
                 <View style={styles.orderContainer}>
@@ -238,7 +267,7 @@ const ServerOrderScreen = ({ navigation }) => {
                 message={modalContent.message}
                 onConfirm={() => setModalVisible(false)}
             />
-        </View>
+        </View >
 
     );
 };
@@ -274,6 +303,16 @@ const styles = StyleSheet.create({
         width: '100%',
         gap: 15,
         justifyContent: 'center',
+    },
+    modalInput: {
+        borderWidth: 1,
+        borderColor: '#B19470',
+        borderRadius: 5,
+        padding: 10,
+        marginVertical: 10,
+        textAlign: 'center',
+        color: '#251605',
+        fontSize: 16,
     },
     orderComment: {
         fontSize: 18,
@@ -387,6 +426,49 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         alignContent: 'center',
         justifyContent: 'center',
+    },
+    modalOverlay: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+        backgroundColor: '#F8FAE5',
+        padding: 20,
+        borderRadius: 10,
+        width: '80%',
+        alignItems: 'center',
+    },
+    modalTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+    modalInput: {
+        width: '100%',
+        height: 50,
+        borderWidth: 1,
+        borderRadius: 5,
+        borderColor: '#B19470',
+        paddingHorizontal: 10,
+        marginBottom: 20,
+        color: '#76453B',
+    },
+    modalButtons: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+    },
+    cancelButton: {
+        color: '#76453B',
+        fontWeight: 'bold',
+        marginHorizontal: 10,
+    },
+    confirmButton: {
+        color: '#43766C',
+        fontWeight: 'bold',
+        marginHorizontal: 10,
     },
 });
 

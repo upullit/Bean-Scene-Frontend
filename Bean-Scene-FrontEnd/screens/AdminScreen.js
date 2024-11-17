@@ -39,8 +39,8 @@ const AdminScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
+            <Text style={styles.title}>Manage Menu</Text>
             <View style={styles.buttonRow}>
-                <Text style={styles.title}>Manage Menu</Text>
                 {/*Search Bar - the search is a bit weird sometimes*/}
                 <TextInput
                     style={styles.searchBar}
@@ -48,7 +48,7 @@ const AdminScreen = ({ navigation }) => {
                     value={searchQuery}
                     onChangeText={text => setSearchQuery(text)}
                 />
-                <CustomButton title="New Item" onPress={() => navigation.navigate('AdminNewItem')}/>
+                <CustomButton title="New Item" style={{ paddingHorizontal: 10 }} onPress={() => navigation.navigate('AdminNewItem')} />
             </View>
             {/*Menu filter
             doesnt properly work atm
@@ -90,8 +90,9 @@ const styles = StyleSheet.create({
     },
     buttonRow: {
         flexDirection: 'row',
-        marginTop: 10,
         width: '100%',
+        alignItems: 'center',  // Align items vertically centered
+        gap: 15,
     },
     title: {
         fontSize: 24,
@@ -105,6 +106,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         paddingHorizontal: 10,
         marginBottom: 20,
+        flex: 1,  // Allow TextInput to take up the remaining space
     },
     item: {
         flex: 1,
