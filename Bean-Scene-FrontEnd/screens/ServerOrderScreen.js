@@ -245,9 +245,22 @@ const ServerOrderScreen = ({ navigation }) => {
                 {selectedItem ? (
                     <View style={styles.detailsContainer}>
                         <Image source={selectedItem.image} style={styles.detailImage} />
-                        <Text style={styles.dishTitle}>{selectedItem.title}</Text>
-                        <Text>{selectedItem.description}</Text>
-                        <CustomButton title="Back" onPress={goBackToList} />
+                        <Text style={styles.detailsTitle}>{selectedItem.title}</Text>
+                        <Text style={styles.detailsText}>Price: ${selectedItem.price.toFixed(2)}</Text>
+                        <Text style={styles.detailsText}>Description: {selectedItem.description}</Text>
+                        <TextInput
+                            style={styles.commentInput}
+                            placeholder="Add a comment or special request"
+                            value={comment}
+                            onChangeText={setComment}
+                        />
+                        <View style={styles.buttonRow}>
+                            <CustomButton title="Back" onPress={goBackToList} />
+                            <CustomButton
+                                title="Add to Order"
+                                onPress={() => addToOrder(selectedItem, comment)}
+                            />
+                        </View>
                     </View>
                 ) : (
                     <View style={styles.flatContainer}>

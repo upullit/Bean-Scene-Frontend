@@ -38,26 +38,31 @@ const MenuScreen = () => {
         <ScrollView style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.title}>Bean Scene Menu</Text>
-                <DownloadPDFButton />
             </View>
 
-            {/* Render menu items by category */}
-            {Object.keys(menuItemsByCategory).map((category) => (
-                <View key={category}>
-                    <Text style={styles.categoryTitle}>{category}</Text>
-                    <FlatList
-                        data={menuItemsByCategory[category]}
-                        keyExtractor={(item) => item._id} // Assuming MongoDB ID as unique key
-                        renderItem={({ item }) => (
-                            <View style={styles.menuItem}>
-                                <Text style={styles.itemName}>{item.name}</Text>
-                                <Text style={styles.itemDescription}>{item.description}</Text>
-                                <Text style={styles.itemPrice}>${item.price.toFixed(2)}</Text>
-                            </View>
-                        )}
-                    />
-                </View>
-            ))}
+            {/* Wrapper div for the scrollable content */}
+            <View style={styles.scrollableContent}>
+                {/* Render menu items by category */}
+                {Object.keys(menuItemsByCategory).map((category) => (
+                    <View key={category}>
+                        <Text style={styles.categoryTitle}>{category}</Text>
+                        <FlatList
+                            data={menuItemsByCategory[category]}
+                            keyExtractor={(item) => item._id} // Assuming MongoDB ID as unique key
+                            renderItem={({ item }) => (
+                                <View style={styles.menuItem}>
+                                    <Text style={styles.itemName}>{item.name}</Text>
+                                    <Text style={styles.itemDescription}>{item.description}</Text>
+                                    <Text style={styles.itemPrice}>${item.price.toFixed(2)}</Text>
+                                </View>
+                            )}
+                        />
+                    </View>
+                ))}
+            </View>
+
+            {/* Fixed position for the download button */}
+            <DownloadPDFButton style={styles.downloadButton} />
         </ScrollView>
     );
 };
@@ -67,32 +72,34 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 16,
         backgroundColor: '#FAF4E4',
-        overflow: 'scroll',
+        position: 'relative', // To ensure the download button stays in position
     },
     title: {
-        fontSize: 24,
+        fontSize: 28,
         fontWeight: 'bold',
         marginBottom: 16,
         textAlign: 'center',
         flex: 1,
     },
     categoryTitle: {
-        fontSize: 20,
+        fontSize: 24,
         fontWeight: 'bold',
         marginVertical: 10,
         color: '#333',
+        textDecorationLine: 'underline',
+        textAlign: 'center',
     },
     menuItem: {
-        padding: 8,
+        padding: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#DDD',
     },
     itemName: {
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: 'bold',
     },
     itemDescription: {
-        fontSize: 14,
+        fontSize: 16,
         color: '#666',
     },
     itemPrice: {
@@ -105,6 +112,17 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between', // Space out items: title in the center and button to the right
         alignItems: 'center', // Vertically align items
         marginBottom: 16,
+    },
+    scrollableContent: {
+        maxHeight: 'calc(100vh - 200px)', // Adjust max height to fit screen size and make it scrollable
+        overflowY: 'auto', // Enable vertical scrolling
+        paddingHorizontal: 250,
+    },
+    downloadButton: {
+        position: 'absolute',
+        bottom: 20, // Adjust this value to position the button
+        right: 20,  // Keeps it in the bottom right corner
+        zIndex: 999, // Ensure it stays above other content
     },
 });
 
