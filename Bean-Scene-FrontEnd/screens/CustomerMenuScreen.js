@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, Alert, ScrollView } from 'react-native';
 import DownloadPDFButton from '../DownloadPDFButton';
 
 const MenuScreen = () => {
@@ -35,9 +35,11 @@ const MenuScreen = () => {
     }
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Bean Scene Menu</Text>
-            <DownloadPDFButton />
+        <ScrollView style={styles.container}>
+            <View style={styles.header}>
+                <Text style={styles.title}>Bean Scene Menu</Text>
+                <DownloadPDFButton />
+            </View>
 
             {/* Render menu items by category */}
             {Object.keys(menuItemsByCategory).map((category) => (
@@ -56,7 +58,7 @@ const MenuScreen = () => {
                     />
                 </View>
             ))}
-        </View>
+        </ScrollView>
     );
 };
 
@@ -65,12 +67,14 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 16,
         backgroundColor: '#FAF4E4',
+        overflow: 'scroll',
     },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 16,
         textAlign: 'center',
+        flex: 1,
     },
     categoryTitle: {
         fontSize: 20,
@@ -95,6 +99,12 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#76453B',
         marginTop: 4,
+    },
+    header: {
+        flexDirection: 'row', // Arrange title and button in a row
+        justifyContent: 'space-between', // Space out items: title in the center and button to the right
+        alignItems: 'center', // Vertically align items
+        marginBottom: 16,
     },
 });
 

@@ -60,6 +60,7 @@ const AdminScreen = ({ navigation }) => {
                 <CustomButton title="Dinner" onPress={() => filterMenu('Dinner')} />
                 <CustomButton title="Cafe/Dessert" onPress={() => filterMenu('Dessert' || 'Cafe')} />
             </View>
+            <View style={styles.flatContainer}>
             <FlatList
                 data={searchMenu} // currently using menu filter for search
                 renderItem={({ item }) => (
@@ -79,6 +80,7 @@ const AdminScreen = ({ navigation }) => {
                 numColumns={4} // displays items in a grid format
                 columnWrapperStyle={styles.columnWrapper}
             />
+            </View>
         </View>
     );
 };
@@ -131,6 +133,13 @@ const styles = StyleSheet.create({
     },
     columnWrapper: {
         justifyContent: 'space-between',
+    },
+    flatContainer: {
+        borderWidth: 0.5,
+        borderColor: '#F8FAE5',
+        overflow: 'hidden',
+        maxHeight: 620,
+        width: '100%',
     },
 });
 

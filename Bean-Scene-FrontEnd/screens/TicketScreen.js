@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Button, Alert } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Button, Alert, TouchableOpacity } from 'react-native';
 import { updateTicket, deleteTicket, getTickets } from '../crud/ticket';
 import CustomButton from '../CustomButton.js';
 import CustomModal from '../CustomModal.js';
@@ -118,19 +118,38 @@ const TicketsScreen = () => {
                 )}
             {/* page navigation */}
             <View style={styles.pagination}>
-                <Button
-                    title="Previous"
+                {/* Previous Button */}
+                <TouchableOpacity
                     onPress={() => setCurrentPage((prevPage) => Math.max(prevPage - 1, 0))}
                     disabled={currentPage === 0}
-                />
+                    style={[
+                        styles.button,
+                        currentPage === 0 && styles.disabledButton,
+                    ]}
+                >
+                    <Text style={[styles.buttonText, currentPage === 0 && styles.disabledText]}>
+                        Previous
+                    </Text>
+                </TouchableOpacity>
+
+                {/* Page Indicator */}
                 <Text style={styles.pageIndicator}>
                     {currentPage + 1} / {totalPages}
                 </Text>
-                <Button
-                    title="Next"
+
+                {/* Next Button */}
+                <TouchableOpacity
                     onPress={() => setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages - 1))}
                     disabled={currentPage === totalPages - 1}
-                />
+                    style={[
+                        styles.button,
+                        currentPage === totalPages - 1 && styles.disabledButton,
+                    ]}
+                >
+                    <Text style={[styles.buttonText, currentPage === totalPages - 1 && styles.disabledText]}>
+                        Next
+                    </Text>
+                </TouchableOpacity>
             </View>
             <CustomModal
                 visible={modalVisible}
@@ -203,6 +222,23 @@ const styles = StyleSheet.create({
     pageIndicator: {
         marginHorizontal: 20,
         fontSize: 16,
+    },
+    button: {
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        borderRadius: 5,
+        backgroundColor: '#43766C',
+    },
+    buttonText: {
+        color: '#F8FAE5',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    disabledButton: {
+        backgroundColor: '#DDD', // Disabled button background color
+    },
+    disabledText: {
+        color: '#999', // Disabled text color
     },
 });
 

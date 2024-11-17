@@ -4,21 +4,50 @@ import { Picker } from "@react-native-picker/picker";
 import { Checkbox } from 'react-native-paper';
 import CustomButton from '../CustomButton.js';
 import CustomModal from '../CustomModal';  // Import your custom modal component
+import { updateMenuItem } from '../crud/menuitems.js'; // Import the API functions
 
 const AdminMenuEditScreen = ({ route }) => {
     const { item } = route.params;
-    const [checked, setChecked] = useState(false);
+
+    // State for form fields
+    const [name, setName] = useState(item.name);
+    const [price, setPrice] = useState(item.price.toString());
+    const [description, setDescription] = useState(item.description || '');
+    const [ingredients, setIngredients] = useState(item.ingredients.join(', '));
+    const [category, setCategory] = useState(item.category);
+    const [isVegan, setIsVegan] = useState(item.isVegan);
+    const [isVegetarian, setIsVegetarian] = useState(item.isVegetarian);
+    const [available, setAvailable] = useState(item.available);
+
     const [modalVisible, setModalVisible] = useState(false); // State for controlling modal visibility
     const [modalContent, setModalContent] = useState({ title: '', message: '' }); // Modal content
 
     // Form submission handler
-    const handleSave = () => {
-        // Update logic here, e.g., send edited item to the server or update local state
-        setModalContent({
-            title: 'Success',
-            message: 'Dish updated successfully!',
-        });
-        setModalVisible(true); // Show success modal
+    const handleSave = async () => {
+        const updatedItem = {
+            name,
+            price: parseFloat(price), // Convert price to a number
+            description,
+            ingredients: ingredients.split(',').map(ing => ing.trim()), // Convert to array
+            category,
+            isVegan,
+            isVegetarian,
+            available,
+        };
+
+        try {
+            await updateMenuItem(item._id, updatedItem); // Call API to update
+            setModalContent({
+                title: 'Success',
+                message: 'Dish updated successfully!',
+            });
+        } catch (error) {
+            setModalContent({
+                title: 'Error',
+                message: 'Failed to update dish. Please try again.',
+            });
+        }
+        setModalVisible(true); // Show modal
     };
 
     return (
@@ -28,62 +57,52 @@ const AdminMenuEditScreen = ({ route }) => {
                 <Text style={styles.subheading}>Dish Name</Text>
                 <TextInput
                     style={styles.textInputShort}
-                    defaultValue={item.title}
+                    value={name}
+                    onChangeText={setName}
                 />
                 <Text style={styles.subheading}>Price</Text>
                 <TextInput
                     style={styles.textInputShort}
-                    defaultValue={item.Price}
+                    value={price}
                     keyboardType="numeric"
+                    onChangeText={setPrice}
                 />
                 <Text style={styles.subheading}>Description</Text>
                 <TextInput
                     style={styles.textInputLong}
-                    defaultValue={item.description}
+                    value={description}
+                    onChangeText={setDescription}
                 />
                 <Text style={styles.subheading}>Ingredients</Text>
                 <TextInput
                     style={styles.textInputLong}
+                    value={ingredients}
+                    onChangeText={setIngredients}
                 />
             </View>
 
             <View style={styles.column}>
-                <Text style={styles.subheading}>Upload Image</Text>
-                <View style={styles.insertImage}></View>
-
                 <Text style={styles.subheading}>Diet Tags</Text>
                 <View style={styles.checkbox}>
                     <Checkbox
-                        status={checked ? 'checked' : 'unchecked'}
-                        onPress={() => {
-                            setChecked(!checked);
-                        }}
-                    />
-                    <Text style={styles.checkboxText}>GF</Text>
-                </View>
-                <View style={styles.checkbox}>
-                    <Checkbox
-                        status={checked ? 'checked' : 'unchecked'}
-                        onPress={() => {
-                            setChecked(!checked);
-                        }}
+                        status={isVegan ? 'checked' : 'unchecked'}
+                        onPress={() => setIsVegan(!isVegan)}
                     />
                     <Text style={styles.checkboxText}>Vegan</Text>
                 </View>
                 <View style={styles.checkbox}>
                     <Checkbox
-                        status={checked ? 'checked' : 'unchecked'}
-                        onPress={() => {
-                            setChecked(!checked);
-                        }}
+                        status={isVegetarian ? 'checked' : 'unchecked'}
+                        onPress={() => setIsVegetarian(!isVegetarian)}
                     />
-                    <Text style={styles.checkboxText}>Vege</Text>
+                    <Text style={styles.checkboxText}>Vegetarian</Text>
                 </View>
 
                 <Text style={styles.subheading}>Category</Text>
                 <Picker
-                    selectedValue={item.category}
+                    selectedValue={category}
                     style={styles.picker}
+                    onValueChange={(value) => setCategory(value)}
                 >
                     <Picker.Item label="Breakfast" value="Breakfast" />
                     <Picker.Item label="Lunch" value="Lunch" />
@@ -95,7 +114,7 @@ const AdminMenuEditScreen = ({ route }) => {
                 <CustomButton title="Save" onPress={handleSave} />
             </View>
 
-            {/* Custom Modal for displaying success message */}
+            {/* Custom Modal for displaying success or error message */}
             <CustomModal
                 visible={modalVisible}
                 title={modalContent.title}

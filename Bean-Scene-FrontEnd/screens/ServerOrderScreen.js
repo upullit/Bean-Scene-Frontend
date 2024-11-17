@@ -73,6 +73,7 @@ const ServerOrderScreen = ({ navigation }) => {
     const clearOrder = () => {
         setOrder([]);
         setTotalPrice(0);
+        setTableNumber('');
     };
 
     //turns order into ticket
@@ -165,10 +166,11 @@ const ServerOrderScreen = ({ navigation }) => {
                                     onChangeText={setTableNumber}
                                 />
                                 <View style={styles.modalButtons}>
-                                    <TouchableOpacity onPress={toggleTableModal}>
-                                        <Text style={styles.cancelButton}>Cancel</Text>
+                                    <TouchableOpacity onPress={toggleTableModal} style={styles.cancelButton}>
+                                        <Text style={styles.buttonText}>Cancel</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
+                                        style={styles.confirmButton}
                                         onPress={() => {
                                             toggleTableModal();
                                             if (!tableNumber.trim()) {
@@ -177,7 +179,7 @@ const ServerOrderScreen = ({ navigation }) => {
                                                 return;
                                             }
                                         }}>
-                                        <Text style={styles.confirmButton}>Confirm</Text>
+                                        <Text style={styles.buttonText}>Confirm</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -189,6 +191,9 @@ const ServerOrderScreen = ({ navigation }) => {
                 {/* shows menu list and details view */}
                 <View style={styles.orderContainer}>
                     <Text style={styles.orderTitle}>Order Details:</Text>
+                    {tableNumber ? (
+                        <Text style={styles.tableNumber}>Table: {tableNumber}</Text>
+                    ) : null}
                     {order.length === 0 ? (
                         <Text>No items in order</Text>
                     ) : (
@@ -245,19 +250,21 @@ const ServerOrderScreen = ({ navigation }) => {
                         <CustomButton title="Back" onPress={goBackToList} />
                     </View>
                 ) : (
-                    <FlatList
-                        data={filteredMenu}
-                        renderItem={({ item }) => (
-                            <Item
-                                title={item.name}
-                                price={item.price}
-                                image={{ uri: item.image }}
-                                onSelect={() => setSelectedItem(item)}
-                                onAddToOrder={() => addToOrder(item, comment)}
-                            />
-                        )}
-                        keyExtractor={(item) => item._id}
-                    />
+                    <View style={styles.flatContainer}>
+                        <FlatList
+                            data={filteredMenu}
+                            renderItem={({ item }) => (
+                                <Item
+                                    title={item.name}
+                                    price={item.price}
+                                    image={{ uri: item.image }}
+                                    onSelect={() => setSelectedItem(item)}
+                                    onAddToOrder={() => addToOrder(item, comment)}
+                                />
+                            )}
+                            keyExtractor={(item) => item._id}
+                        />
+                    </View>
                 )}
             </View>
             {/* Custom Modal for alerts */}
@@ -286,7 +293,7 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     tableInput: {
-        width: 120, // Adjust width as needed
+        width: 50, // Adjust width as needed
         height: 50, // Adjust height as needed
         backgroundColor: '#76453B',
         borderWidth: 1,
@@ -303,16 +310,6 @@ const styles = StyleSheet.create({
         width: '100%',
         gap: 15,
         justifyContent: 'center',
-    },
-    modalInput: {
-        borderWidth: 1,
-        borderColor: '#B19470',
-        borderRadius: 5,
-        padding: 10,
-        marginVertical: 10,
-        textAlign: 'center',
-        color: '#251605',
-        fontSize: 16,
     },
     orderComment: {
         fontSize: 18,
@@ -358,7 +355,7 @@ const styles = StyleSheet.create({
         borderColor: 'grey',
         borderRadius: 5,
         overflow: 'hidden',
-        height: 580,
+        maxHeight: 580,
         width: '100%',
     },
     orderContainer: {
@@ -437,8 +434,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#F8FAE5',
         padding: 20,
         borderRadius: 10,
-        width: '80%',
         alignItems: 'center',
+        width: 250,
     },
     modalTitle: {
         fontSize: 18,
@@ -446,7 +443,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     modalInput: {
-        width: '100%',
+        width: 120,
         height: 50,
         borderWidth: 1,
         borderRadius: 5,
@@ -457,18 +454,32 @@ const styles = StyleSheet.create({
     },
     modalButtons: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         width: '100%',
+        gap: 15,
     },
     cancelButton: {
-        color: '#76453B',
-        fontWeight: 'bold',
-        marginHorizontal: 10,
+        flex: 1,
+        alignItems: "center",
+        backgroundColor: '#76453B',
+        padding: 10,
+        borderRadius: 5,
     },
     confirmButton: {
-        color: '#43766C',
+        flex: 1,
+        alignItems: "center",
+        backgroundColor: '#43766C',
+        padding: 10,
+        borderRadius: 5,
+    },
+    buttonText: {
+        color: '#F8FAE5',
+        fontSize: 16,
+    },
+    tableNumber: {
+        fontSize: 18,
         fontWeight: 'bold',
-        marginHorizontal: 10,
+        marginBottom: 10,
     },
 });
 

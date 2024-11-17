@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, StyleSheet, Text, TextInput, Alert } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Checkbox } from 'react-native-paper';
-import {createItem } from '../crud/menuitems.js'
+import { createItem } from '../crud/menuitems.js';
 import CustomButton from '../CustomButton.js';
-
+import CustomModal from '../CustomModal.js'; // Import CustomModal
 
 const AdminNewItemScreen = ({ navigation }) => {
     const [name, setName] = useState("");
@@ -13,11 +13,9 @@ const AdminNewItemScreen = ({ navigation }) => {
     const [ingredients, setIngredients] = useState("");
     const [category, setCategory] = useState("");
     const [dietTags, setDietTags] = useState({
-        gf: false,
         vegan: false,
         vege: false,
     });
-
     const [modalVisible, setModalVisible] = useState(false); // State for controlling modal visibility
     const [modalContent, setModalContent] = useState({ title: '', message: '' }); // Modal content
 
@@ -31,14 +29,15 @@ const AdminNewItemScreen = ({ navigation }) => {
 
     // Form submission handler
     const handleSubmit = async () => {
-        // Format data
+        const ingredientsArray = ingredients.split(',').map((item) => item.trim()); // Convert ingredients to an array
         const newItem = {
             name,
             price: parseFloat(price),
             description,
-            ingredients,
+            ingredients: ingredientsArray,
+            available: true,
             category,
-            tags: Object.keys(dietTags).filter(tag => dietTags[tag]), // Only selected tags
+            tags: Object.keys(dietTags).filter((tag) => dietTags[tag]), // Only selected tags
         };
 
         try {
@@ -47,105 +46,108 @@ const AdminNewItemScreen = ({ navigation }) => {
                 title: 'Success',
                 message: 'Menu item created successfully',
             });
-            setModalVisible(true); // Show success message
-            navigation.goBack(); // Navigate back after successful creation
+            setModalVisible(true); // Show success modal
         } catch (error) {
             setModalContent({
                 title: 'Error',
                 message: 'Failed to create menu item',
             });
-            setModalVisible(true); // Show error message
+            setModalVisible(true); // Show error modal
             console.error(error);
         }
     };
 
     return (
-        //menu edit form
-        <View style={styles.container} >
-            <Text>New Dish</Text>
-            {/*ingridents to be added*/}
+        <View style={styles.container}>
+            <Text style={styles.heading}>New Dish</Text>
             <View style={styles.column}>
                 <Text style={styles.subheading}>Dish Name</Text>
                 <TextInput
                     style={styles.textInputShort}
+                    value={name}
+                    onChangeText={setName}
                 />
                 <Text style={styles.subheading}>Price</Text>
                 <TextInput
                     style={styles.textInputShort}
+                    value={price}
+                    onChangeText={setPrice}
+                    keyboardType="numeric"
                 />
                 <Text style={styles.subheading}>Description</Text>
                 <TextInput
                     style={styles.textInputLong}
+                    value={description}
+                    onChangeText={setDescription}
                 />
-                <Text style={styles.subheading}>Ingredients</Text>
+                <Text style={styles.subheading}>Ingredients (comma-separated)</Text>
                 <TextInput
                     style={styles.textInputLong}
+                    value={ingredients}
+                    onChangeText={setIngredients}
                 />
             </View>
             <View style={styles.column}>
-                {/*image insert and diet tags to be added*/}
-                <Text style={styles.subheading}>Upload Image</Text>
-                <View style={styles.insertImage}></View>
+                <Text style={styles.subheading}>Category</Text>
+                <Picker
+                    selectedValue={category}
+                    onValueChange={setCategory}
+                    style={styles.picker}
+                >
+                    <Picker.Item label="Select Category" value="" />
+                    <Picker.Item label="Breakfast" value="Breakfast" />
+                    <Picker.Item label="Lunch" value="Lunch" />
+                    <Picker.Item label="Dinner" value="Dinner" />
+                    <Picker.Item label="Cafe/Dessert" value="Cafe/Dessert" />
+                    <Picker.Item label="Beverage" value="Beverage" />
+                </Picker>
                 <Text style={styles.subheading}>Diet Tags</Text>
                 <View style={styles.checkbox}>
                     <Checkbox
-                        status={checked ? 'checked' : 'unchecked'}
-                        onPress={() => {
-                            setChecked(!checked);
-                        }}
-                    />
-                    <Text style={styles.checkboxText}>GF</Text>
-                </View>
-                <View style={styles.checkbox}>
-                    <Checkbox
-                        status={checked ? 'checked' : 'unchecked'}
-                        onPress={() => {
-                            setChecked(!checked);
-                        }}
+                        status={dietTags.vegan ? 'checked' : 'unchecked'}
+                        onPress={() => toggleDietTag('vegan')}
                     />
                     <Text style={styles.checkboxText}>Vegan</Text>
                 </View>
                 <View style={styles.checkbox}>
                     <Checkbox
-                        status={checked ? 'checked' : 'unchecked'}
-                        onPress={() => {
-                            setChecked(!checked);
-                        }}
+                        status={dietTags.vege ? 'checked' : 'unchecked'}
+                        onPress={() => toggleDietTag('vege')}
                     />
                     <Text style={styles.checkboxText}>Vege</Text>
                 </View>
-
-                <Text style={styles.subheading}>Category</Text>
-                <Picker
-                    placeholder={item.category}
-                    style={styles.picker}
-                >
-                    <Picker.Item label="Breakfast" value="" />
-                    <Picker.Item label="Lunch" value="" />
-                    <Picker.Item label="Dinner" value="" />
-                    <Picker.Item label="Cafe/Dessert" value="" />
-                    <Picker.Item label="Beverage" value="" />
-                </Picker>
-                <CustomButton title="Save">Save</CustomButton>
+                <CustomButton title="Save" onPress={handleSubmit} />
             </View>
+
+            {/* Modal for success or error messages */}
             <CustomModal
                 visible={modalVisible}
                 title={modalContent.title}
                 message={modalContent.message}
-                onConfirm={() => setModalVisible(false)}
+                onConfirm={() => {
+                    setModalVisible(false);
+                    if (modalContent.title === 'Success') {
+                        navigation.goBack(); // Navigate back on success
+                    }
+                }}
             />
         </View>
     );
 };
 
 const styles = StyleSheet.create({
+    heading: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
+        textAlign: 'center',
+    },
     textInputShort: {
         height: 40,
         borderWidth: 1,
         borderRadius: 8,
         paddingHorizontal: 10,
         marginBottom: 15,
-        borderWidth: 2,
     },
     textInputLong: {
         height: 110,
@@ -153,7 +155,6 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         paddingHorizontal: 10,
         marginBottom: 15,
-        borderWidth: 2,
     },
     container: {
         flexDirection: 'row',
@@ -165,7 +166,6 @@ const styles = StyleSheet.create({
     column: {
         flex: 1,
         padding: 30,
-        height: '100%',
     },
     picker: {
         height: 50,
@@ -174,24 +174,16 @@ const styles = StyleSheet.create({
     },
     checkbox: {
         flexDirection: 'row',
-        padding: 8,
-        width: '100%',
+        alignItems: 'center',
+        marginBottom: 10,
     },
     checkboxText: {
         fontSize: 18,
     },
     subheading: {
-        paddingBottom: 10,
-        paddingTop: 10,
         fontSize: 20,
-    },
-    insertImage: {
-        borderWidth: 2,
-        borderColor: 'black',
-        borderRadius: 8,
-        height: 180,
-        width: '80%',
-        padding: 10,
+        marginBottom: 10,
     },
 });
+
 export default AdminNewItemScreen;

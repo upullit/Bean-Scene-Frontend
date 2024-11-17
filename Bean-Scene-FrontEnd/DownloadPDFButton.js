@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button, Linking, Alert } from 'react-native';
+import { Linking, Alert, StyleSheet, View } from 'react-native';
+import CustomButton from './CustomButton';
 
 const DownloadPDFButton = () => {
     const downloadPDF = async () => {
@@ -11,7 +12,22 @@ const DownloadPDFButton = () => {
         }
     };
 
-    return <Button title="Download Menu as PDF" onPress={downloadPDF} />;
+    return (
+        <View style={styles.buttonContainer}>
+            <CustomButton title="Download Menu as PDF" onPress={downloadPDF} />
+        </View>
+    );
 };
+
+const styles = StyleSheet.create({
+    buttonContainer: {
+        alignItems: 'flex-end', // Align the button to the right
+        marginBottom: 16, // Add spacing from other components
+    },
+    button: {
+        width: 'auto', // Prevent the button from stretching
+        paddingHorizontal: 10, // Adjust padding if needed
+    },
+});
 
 export default DownloadPDFButton;
