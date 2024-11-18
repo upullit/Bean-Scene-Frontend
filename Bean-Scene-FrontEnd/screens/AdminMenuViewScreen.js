@@ -43,7 +43,7 @@ const AdminMenuViewScreen = ({ route, navigation }) => {
                 confirmAction: () => setModalVisible(false),
             });
             setModalVisible(true);
-        }
+        } 
     };
 
     return (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Button, TextInput, Image, Alert } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TextInput, Image, Alert } from 'react-native';
 import { getMenuItems } from '../crud/menuitems.js';
 import { createTicket } from '../crud/ticket.js';
 import CustomButton from '../CustomButton.js';

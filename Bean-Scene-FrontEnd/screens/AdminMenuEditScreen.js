@@ -171,13 +171,5 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         fontSize: 20,
     },
-    insertImage: {
-        borderWidth: 2,
-        borderColor: 'black',
-        borderRadius: 8,
-        height: 180,
-        width: '80%',
-        padding: 10,
-    },
 });
 export default AdminMenuEditScreen;

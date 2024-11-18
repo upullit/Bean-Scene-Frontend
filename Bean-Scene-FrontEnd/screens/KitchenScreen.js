@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, Modal, TouchableOpacity, FlatList, Switch, TextInput, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Alert } from 'react-native';
 import { updateTicket, deleteTicket, getTickets } from '../crud/ticket';
 import CustomButton from '../CustomButton.js';
 import CustomModal from '../CustomModal.js';

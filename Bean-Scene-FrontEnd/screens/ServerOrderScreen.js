@@ -305,19 +305,6 @@ const styles = StyleSheet.create({
         padding: 10,
         height: '100%',
     },
-    tableInput: {
-        width: 50, 
-        height: 50, 
-        backgroundColor: '#76453B',
-        borderWidth: 1,
-        borderRadius: 5,
-        padding: 10,
-        textAlign: 'center',
-        marginVertical: 5,
-        color: '#F8FAE5',
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
     buttonRow: {
         flexDirection: 'row',
         width: '100%',
@@ -422,12 +409,6 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 10,
         marginBottom: 10,
-    },
-    listImage: {
-        width: 50,
-        height: 50,
-        marginRight: 10,
-        borderRadius: 5,
     },
     detailImage: {
         width: 200,

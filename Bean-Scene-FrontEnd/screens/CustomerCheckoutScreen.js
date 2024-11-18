@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Button, StyleSheet, TextInput } from "react-native";
+import { View, Text, StyleSheet, TextInput } from "react-native";
 import { RadioButton } from 'react-native-paper';
 import CustomButton from '../CustomButton.js';
 
