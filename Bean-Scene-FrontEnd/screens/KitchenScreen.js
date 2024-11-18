@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
         minHeight: 300,
         maxHeight: 350,
         flexDirection: 'column',
-        justifyContent: 'space-between', 
+        justifyContent: 'space-between',
     },
     ticketTitle: {
         fontSize: 24,

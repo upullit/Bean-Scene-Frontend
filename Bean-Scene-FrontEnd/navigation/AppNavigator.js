@@ -18,18 +18,18 @@ const Stack = createStackNavigator()
 const AppNavigator = () => {
     return (
         <NavigationContainer theme={{ colors: { background: '#F8FAE5' } }}>
-        <Stack.Navigator
-            initialRouteName='Home'
-            screenOptions={{
-                headerStyle: {
-                    backgroundColor: '#43766C', 
-                },
-                headerTintColor: '#F8FAE5', 
-                headerTitleStyle: {
-                    fontWeight: 'bold', 
-                },
-            }}
-        >
+            <Stack.Navigator
+                initialRouteName='Home'
+                screenOptions={{
+                    headerStyle: {
+                        backgroundColor: '#43766C',
+                    },
+                    headerTintColor: '#F8FAE5',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                }}
+            >
                 <Stack.Screen name='Home' component={HomeScreen} />
                 <Stack.Screen name='ServerOrder' component={ServerOrderScreen} />
                 <Stack.Screen name='Ticket' component={TicketScreen} />
@@ -38,7 +38,7 @@ const AppNavigator = () => {
                 <Stack.Screen name='AdminMenuView' component={AdminMenuViewScreen} />
                 <Stack.Screen name='AdminMenuEdit' component={AdminMenuEditScreen} />
                 <Stack.Screen name='CustomerOrder' component={CustomerOrderScreen} />
-                <Stack.Screen name='CustomerCheckout' component={CustomerCheckoutScreen}/>
+                <Stack.Screen name='CustomerCheckout' component={CustomerCheckoutScreen} />
                 <Stack.Screen name='CustomerMenu' component={CustomerMenuScreen} />
                 <Stack.Screen name='AdminNewItem' component={AdminNewItemScreen} />
             </Stack.Navigator>

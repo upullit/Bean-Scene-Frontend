@@ -185,7 +185,6 @@ const ServerOrderScreen = ({ navigation }) => {
                             </View>
                         </View>
                     </Modal>
-
                     <CustomButton title="Enter Table Number" onPress={toggleTableModal} />
                 </View>
                 {/* shows menu list and details view */}
@@ -288,7 +287,6 @@ const ServerOrderScreen = ({ navigation }) => {
                 onConfirm={() => setModalVisible(false)}
             />
         </View >
-
     );
 };
 
@@ -476,6 +474,5 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
 });
-
 
 export default ServerOrderScreen;

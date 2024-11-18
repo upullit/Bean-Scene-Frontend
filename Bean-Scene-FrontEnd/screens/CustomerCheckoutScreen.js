@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, TextInput } from "react-native";
 import { RadioButton } from 'react-native-paper';
 import CustomButton from '../CustomButton.js';
 
-
 const CustomerCheckoutScreen = ({ navigation, route }) => {
     const { order, totalPrice } = route.params; //holds order from previous page
     const [checked, setChecked] = React.useState('first');
@@ -44,22 +43,26 @@ const CustomerCheckoutScreen = ({ navigation, route }) => {
                         ))
                     )}
                 </View>
+
                 <View style={styles.totalContainer}>
                     <Text style={styles.totalPrice}>
                         Total Price: ${totalPrice.toFixed(2)}
                     </Text>
                 </View>
+
                 <View style={styles.button}>
                     {/* return to ordering page */}
                     <CustomButton title="Back" onPress={() => navigation.navigate('CustomerOrder')} />
                 </View>
             </View>
+
             <View style={styles.menuColumn}>
                 {/* checkout form - radio buttons need to implimented */}
                 <View style={styles.flatContainer}>
                     <View style={styles.titleContainer}>
                         <Text style={styles.title}>Checkout</Text>
                     </View>
+
                     <View style={styles.formContaier}>
                         <Text style={styles.subheading}>Order Name:</Text>
                         <TextInput style={styles.input}></TextInput>
@@ -73,6 +76,7 @@ const CustomerCheckoutScreen = ({ navigation, route }) => {
                                 />
                                 <Text style={styles.radioText}>Online Payment</Text>
                             </View>
+
                             <View style={styles.radio}>
                                 <RadioButton
                                     value="second"
@@ -81,6 +85,7 @@ const CustomerCheckoutScreen = ({ navigation, route }) => {
                                 />
                                 <Text style={styles.radioText}>Card</Text>
                             </View>
+
                             <View style={styles.radio}>
                                 <RadioButton
                                     value="third"
@@ -94,6 +99,7 @@ const CustomerCheckoutScreen = ({ navigation, route }) => {
                         <Text style={styles.subheading}>Enter Promo or Discount Code:</Text>
                         <TextInput style={styles.input}></TextInput>
                     </View>
+
                     <View style={styles.payButton}>
                         {/* create ticket function will be called here */}
                         <CustomButton title="Pay" />

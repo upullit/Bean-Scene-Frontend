@@ -29,7 +29,6 @@ const TicketsScreen = () => {
         fetchTickets();
     }, []);
 
-
     // Sync pendingTickets whenever tickets change
     useEffect(() => {
         setPendingTickets(tickets.filter(ticket => ticket.status === 'Pending'));
@@ -186,8 +185,8 @@ const styles = StyleSheet.create({
         width: 400,
         minHeight: 300,
         maxHeight: 350,
-        flexDirection: 'column', 
-        justifyContent: 'space-between', 
+        flexDirection: 'column',
+        justifyContent: 'space-between',
     },
     ticketTitle: {
         fontSize: 24,

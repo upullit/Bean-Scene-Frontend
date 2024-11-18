@@ -18,7 +18,7 @@ const HomeScreen = ({ navigation }) => {
         <View>
             {/* temporary navigation buttons */}
             <View style={styles.container}>
-            <Text style={styles.title}>Bean Scene Ordering App</Text>
+                <Text style={styles.title}>Bean Scene Ordering App</Text>
                 <Text style={styles.text}>Hi, this is the Bean Scene menu ordering app</Text>
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ServerOrder')}>
                     <Text style={styles.buttonText}>Server Ordering</Text>

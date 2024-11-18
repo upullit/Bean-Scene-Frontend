@@ -19,7 +19,7 @@ const AdminMenuEditScreen = ({ route }) => {
     const [isVegetarian, setIsVegetarian] = useState(item.isVegetarian);
     const [available, setAvailable] = useState(item.available);
     const [modalVisible, setModalVisible] = useState(false);
-    const [modalContent, setModalContent] = useState({ title: '', message: '' }); 
+    const [modalContent, setModalContent] = useState({ title: '', message: '' });
 
     // Form submission handler
     const handleSave = async () => {
@@ -89,6 +89,7 @@ const AdminMenuEditScreen = ({ route }) => {
                     />
                     <Text style={styles.checkboxText}>Vegan</Text>
                 </View>
+
                 <View style={styles.checkbox}>
                     <Checkbox
                         status={isVegetarian ? 'checked' : 'unchecked'}
@@ -109,10 +110,9 @@ const AdminMenuEditScreen = ({ route }) => {
                     <Picker.Item label="Cafe/Dessert" value="Cafe/Dessert" />
                     <Picker.Item label="Beverage" value="Beverage" />
                 </Picker>
-
                 <CustomButton title="Save" onPress={handleSave} />
             </View>
-
+            
             {/* Custom Modal for displaying success or error message */}
             <CustomModal
                 visible={modalVisible}

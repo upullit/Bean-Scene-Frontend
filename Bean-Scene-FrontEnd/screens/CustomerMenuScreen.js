@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     downloadButton: {
         position: 'absolute',
         bottom: 20,
-        right: 20,  
+        right: 20,
         zIndex: 999, // Ensure it stays above other content
     },
 });

@@ -87,6 +87,7 @@ const AdminNewItemScreen = ({ navigation }) => {
                     onChangeText={setIngredients}
                 />
             </View>
+
             <View style={styles.column}>
                 <Text style={styles.subheading}>Category</Text>
                 <Picker
@@ -109,6 +110,7 @@ const AdminNewItemScreen = ({ navigation }) => {
                     />
                     <Text style={styles.checkboxText}>Vegan</Text>
                 </View>
+
                 <View style={styles.checkbox}>
                     <Checkbox
                         status={dietTags.vege ? 'checked' : 'unchecked'}
@@ -116,6 +118,7 @@ const AdminNewItemScreen = ({ navigation }) => {
                     />
                     <Text style={styles.checkboxText}>Vege</Text>
                 </View>
+                
                 <CustomButton title="Save" onPress={handleSubmit} />
             </View>
 

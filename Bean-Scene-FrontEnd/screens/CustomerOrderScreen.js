@@ -72,7 +72,7 @@ const CustomerOrderScreen = ({ navigation }) => {
                 paymentMethod: paymentMethod,
                 CustomerId: "60b8b22d7b9e4b00156a5c3b" // Replace with a valid Customer ID if needed
             };
-    
+
             try {
                 // Call the createTicket function to save the ticket to the database
                 const savedTicket = await createTicket(newTicket);
@@ -115,7 +115,7 @@ const CustomerOrderScreen = ({ navigation }) => {
                             <View key={index}>
                                 <View style={styles.orderItemRow}>
                                     <Text style={styles.orderItem}>
-                                    {orderItem.title} - ${Number(orderItem.price).toFixed(2)}
+                                        {orderItem.title} - ${Number(orderItem.price).toFixed(2)}
                                     </Text>
                                     <View style={styles.actionButtons}>
                                         <CustomButton title="Edit" onPress={() => { }} />
