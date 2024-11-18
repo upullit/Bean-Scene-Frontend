@@ -91,7 +91,6 @@ const CustomerOrderScreen = ({ navigation }) => {
         }
     };
 
-
     //returns back to menu list
     const goBackToList = () => {
         setSelectedItem(null); // remove selected item to return to list
@@ -192,9 +191,6 @@ const CustomerOrderScreen = ({ navigation }) => {
         </View>
     );
 };
-
-
-
 
 const styles = StyleSheet.create({
     container: {
