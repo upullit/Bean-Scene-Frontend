@@ -66,7 +66,7 @@ const TicketsScreen = () => {
                 try {
                     await deleteTicket(ticketId);
                     setTickets((prevTickets) => prevTickets.filter((ticket) => ticket._id !== ticketId));
-                    setModalVisible(false); // Close the modal
+                    setModalVisible(false);
                 } catch (error) {
                     console.error('Error deleting ticket:', error);
                 }
@@ -186,8 +186,8 @@ const styles = StyleSheet.create({
         width: 400,
         minHeight: 300,
         maxHeight: 350,
-        flexDirection: 'column', // Arrange children vertically
-        justifyContent: 'space-between', // Push button to the bottom
+        flexDirection: 'column', 
+        justifyContent: 'space-between', 
     },
     ticketTitle: {
         fontSize: 24,
@@ -235,10 +235,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     disabledButton: {
-        backgroundColor: '#DDD', // Disabled button background color
+        backgroundColor: '#DDD',
     },
     disabledText: {
-        color: '#999', // Disabled text color
+        color: '#999',
     },
 });
 

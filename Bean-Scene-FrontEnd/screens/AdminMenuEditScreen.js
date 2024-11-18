@@ -3,8 +3,8 @@ import { View, StyleSheet, Text, TextInput } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Checkbox } from 'react-native-paper';
 import CustomButton from '../CustomButton.js';
-import CustomModal from '../CustomModal';  // Import your custom modal component
-import { updateMenuItem } from '../crud/menuitems.js'; // Import the API functions
+import CustomModal from '../CustomModal';
+import { updateMenuItem } from '../crud/menuitems.js';
 
 const AdminMenuEditScreen = ({ route }) => {
     const { item } = route.params;
@@ -18,9 +18,8 @@ const AdminMenuEditScreen = ({ route }) => {
     const [isVegan, setIsVegan] = useState(item.isVegan);
     const [isVegetarian, setIsVegetarian] = useState(item.isVegetarian);
     const [available, setAvailable] = useState(item.available);
-
-    const [modalVisible, setModalVisible] = useState(false); // State for controlling modal visibility
-    const [modalContent, setModalContent] = useState({ title: '', message: '' }); // Modal content
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalContent, setModalContent] = useState({ title: '', message: '' }); 
 
     // Form submission handler
     const handleSave = async () => {
@@ -47,7 +46,7 @@ const AdminMenuEditScreen = ({ route }) => {
                 message: 'Failed to update dish. Please try again.',
             });
         }
-        setModalVisible(true); // Show modal
+        setModalVisible(true);
     };
 
     return (
@@ -119,7 +118,7 @@ const AdminMenuEditScreen = ({ route }) => {
                 visible={modalVisible}
                 title={modalContent.title}
                 message={modalContent.message}
-                onConfirm={() => setModalVisible(false)} // Close the modal on confirm
+                onConfirm={() => setModalVisible(false)}
             />
         </View>
     );

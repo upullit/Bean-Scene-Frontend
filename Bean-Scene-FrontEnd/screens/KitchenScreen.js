@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Button, StyleSheet, Modal, TouchableOpacity, FlatList, Switch, TextInput, Alert } from 'react-native';
-import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
 import { updateTicket, deleteTicket, getTickets } from '../crud/ticket';
 import CustomButton from '../CustomButton.js';
 import CustomModal from '../CustomModal.js';
@@ -191,8 +190,8 @@ const styles = StyleSheet.create({
         width: 400,
         minHeight: 300,
         maxHeight: 350,
-        flexDirection: 'column', // Arrange children vertically
-        justifyContent: 'space-between', // Push button to the bottom
+        flexDirection: 'column',
+        justifyContent: 'space-between', 
     },
     ticketTitle: {
         fontSize: 24,
@@ -235,10 +234,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     disabledButton: {
-        backgroundColor: '#DDD', // Disabled button background color
+        backgroundColor: '#DDD',
     },
     disabledText: {
-        color: '#999', // Disabled text color
+        color: '#999',
     },
 });
 

@@ -48,7 +48,7 @@ const MenuScreen = () => {
                         <Text style={styles.categoryTitle}>{category}</Text>
                         <FlatList
                             data={menuItemsByCategory[category]}
-                            keyExtractor={(item) => item._id} // Assuming MongoDB ID as unique key
+                            keyExtractor={(item) => item._id}
                             renderItem={({ item }) => (
                                 <View style={styles.menuItem}>
                                     <Text style={styles.itemName}>{item.name}</Text>
@@ -108,9 +108,9 @@ const styles = StyleSheet.create({
         marginTop: 4,
     },
     header: {
-        flexDirection: 'row', // Arrange title and button in a row
-        justifyContent: 'space-between', // Space out items: title in the center and button to the right
-        alignItems: 'center', // Vertically align items
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         marginBottom: 16,
     },
     scrollableContent: {
@@ -120,8 +120,8 @@ const styles = StyleSheet.create({
     },
     downloadButton: {
         position: 'absolute',
-        bottom: 20, // Adjust this value to position the button
-        right: 20,  // Keeps it in the bottom right corner
+        bottom: 20,
+        right: 20,  
         zIndex: 999, // Ensure it stays above other content
     },
 });

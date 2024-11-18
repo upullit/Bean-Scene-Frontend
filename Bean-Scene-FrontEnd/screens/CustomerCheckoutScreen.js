@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, Button, StyleSheet, TextInput } from "react-native";
 import { RadioButton } from 'react-native-paper';
-import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
 import CustomButton from '../CustomButton.js';
 
 

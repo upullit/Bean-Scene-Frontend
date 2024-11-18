@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, StyleSheet, Image, Text } from "react-native";
 import { deleteItem } from "../crud/menuitems";
 import CustomButton from '../CustomButton.js';
-import CustomModal from '../CustomModal'; // Import your custom modal
+import CustomModal from '../CustomModal';
 
 const AdminMenuViewScreen = ({ route, navigation }) => {
     const { item } = route.params;
@@ -15,14 +15,14 @@ const AdminMenuViewScreen = ({ route, navigation }) => {
         confirmAction: null,
     });
 
-    // Show the confirmation modal
+    // Confirmation modal for deletion
     const showDeleteConfirmation = () => {
         setModalContent({
             title: "Confirm Deletion",
             message: "Are you sure you want to delete this item?",
             confirmAction: handleDelete,
         });
-        setModalVisible(true); // Show modal
+        setModalVisible(true);
     };
 
     // Handle the deletion of the item
@@ -32,7 +32,7 @@ const AdminMenuViewScreen = ({ route, navigation }) => {
             setModalContent({
                 title: 'Deleted',
                 message: 'Item has been deleted successfully.',
-                confirmAction: () => navigation.goBack(), // Go back after deletion
+                confirmAction: () => navigation.goBack(),
             });
             setModalVisible(true); // Show success modal
         } catch (error) {
@@ -40,9 +40,9 @@ const AdminMenuViewScreen = ({ route, navigation }) => {
             setModalContent({
                 title: 'Error',
                 message: 'An error occurred while deleting the item.',
-                confirmAction: () => setModalVisible(false), // Close modal on error
+                confirmAction: () => setModalVisible(false),
             });
-            setModalVisible(true); // Show error modal
+            setModalVisible(true);
         }
     };
 
@@ -68,7 +68,7 @@ const AdminMenuViewScreen = ({ route, navigation }) => {
                 title={modalContent.title}
                 message={modalContent.message}
                 onConfirm={() => {
-                    setModalVisible(false); // Close modal after confirmation
+                    setModalVisible(false);
                     modalContent.confirmAction && modalContent.confirmAction();
                 }}
                 onCancel={() => setModalVisible(false)}

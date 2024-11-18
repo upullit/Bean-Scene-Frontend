@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, TextInput, Button, Alert } from 'react-native';
-import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
 import { getMenuItems } from '../crud/menuitems.js';
 import CustomButton from '../CustomButton.js';
 
@@ -93,7 +92,7 @@ const styles = StyleSheet.create({
     buttonRow: {
         flexDirection: 'row',
         width: '100%',
-        alignItems: 'center',  // Align items vertically centered
+        alignItems: 'center', 
         gap: 15,
     },
     title: {
@@ -108,7 +107,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         paddingHorizontal: 10,
         marginBottom: 20,
-        flex: 1,  // Allow TextInput to take up the remaining space
+        flex: 1, 
     },
     item: {
         flex: 1,

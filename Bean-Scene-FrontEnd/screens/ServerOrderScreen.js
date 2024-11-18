@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, FlatList, TextInput, Image, Modal, TouchableOpa
 import { getMenuItems } from '../crud/menuitems';
 import { createTicket } from '../crud/ticket';
 import CustomButton from '../CustomButton.js';
-import CustomModal from '../CustomModal'; // Assuming the modal is in a file CustomModal.js
+import CustomModal from '../CustomModal';
 
 //displays each menu item
 const Item = ({ title, price, image, onSelect, onAddToOrder }) => (
@@ -112,7 +112,7 @@ const ServerOrderScreen = ({ navigation }) => {
                     title: "Ticket created successfully",
                     message: "Your ticket has been created successfully."
                 });
-                setModalVisible(true); // Show success message in modal
+                setModalVisible(true);
                 console.log('Ticket created successfully:', savedTicket);
             } catch (error) {
                 setModalContent({
@@ -306,15 +306,15 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     tableInput: {
-        width: 50, // Adjust width as needed
-        height: 50, // Adjust height as needed
+        width: 50, 
+        height: 50, 
         backgroundColor: '#76453B',
         borderWidth: 1,
         borderRadius: 5,
         padding: 10,
-        textAlign: 'center', // Center-align text for consistency
+        textAlign: 'center',
         marginVertical: 5,
-        color: '#F8FAE5', // Button text color
+        color: '#F8FAE5',
         fontSize: 18,
         fontWeight: 'bold',
     },

@@ -4,7 +4,7 @@ import { Picker } from "@react-native-picker/picker";
 import { Checkbox } from 'react-native-paper';
 import { createItem } from '../crud/menuitems.js';
 import CustomButton from '../CustomButton.js';
-import CustomModal from '../CustomModal.js'; // Import CustomModal
+import CustomModal from '../CustomModal.js';
 
 const AdminNewItemScreen = ({ navigation }) => {
     const [name, setName] = useState("");
@@ -16,8 +16,8 @@ const AdminNewItemScreen = ({ navigation }) => {
         vegan: false,
         vege: false,
     });
-    const [modalVisible, setModalVisible] = useState(false); // State for controlling modal visibility
-    const [modalContent, setModalContent] = useState({ title: '', message: '' }); // Modal content
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalContent, setModalContent] = useState({ title: '', message: '' });
 
     // Toggle diet tags
     const toggleDietTag = (tag) => {
@@ -46,13 +46,13 @@ const AdminNewItemScreen = ({ navigation }) => {
                 title: 'Success',
                 message: 'Menu item created successfully',
             });
-            setModalVisible(true); // Show success modal
+            setModalVisible(true);
         } catch (error) {
             setModalContent({
                 title: 'Error',
                 message: 'Failed to create menu item',
             });
-            setModalVisible(true); // Show error modal
+            setModalVisible(true);
             console.error(error);
         }
     };
@@ -127,7 +127,7 @@ const AdminNewItemScreen = ({ navigation }) => {
                 onConfirm={() => {
                     setModalVisible(false);
                     if (modalContent.title === 'Success') {
-                        navigation.goBack(); // Navigate back on success
+                        navigation.goBack();
                     }
                 }}
             />

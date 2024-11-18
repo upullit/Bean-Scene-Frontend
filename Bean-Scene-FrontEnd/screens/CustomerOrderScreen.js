@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Button, TextInput, Image, Alert } from 'react-native';
-import { DummyMenu } from '../Media-TempData/dummyMenu.js'; // Replace with crud menu
 import { getMenuItems } from '../crud/menuitems.js';
 import { createTicket } from '../crud/ticket.js';
 import CustomButton from '../CustomButton.js';
@@ -29,7 +28,7 @@ const CustomerOrderScreen = ({ navigation }) => {
     const [order, setOrder] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
     const [selectedItem, setSelectedItem] = useState(null);
-    const [comment, setComment] = useState(''); // so store the comment
+    const [comment, setComment] = useState(''); // To store the comment
     const [menuItems, setMenuItems] = useState([]);
     // const [filteredMenu, setFilteredMenu] = useState(DummyMenu); // state for filtered menu items
     const [tickets, setTickets] = useState([]);
@@ -62,10 +61,10 @@ const CustomerOrderScreen = ({ navigation }) => {
     //turns order into ticket
     const createNewTicket = async (paymentMethod) => {
         if (order.length > 0) {
-            // Prepare the new ticket object with required fieldsw
+            // Prepare the new ticket object with required fields
             const newTicket = {
                 items: order.map((orderItem) => ({
-                    menuItem: orderItem.menuItemId, // Ensure this is a valid MenuItem ID
+                    menuItem: orderItem.menuItemId,
                     quantity: orderItem.quantity || 1, // Default quantity to 1 if not specified
                     specialInstructions: orderItem.comment || '' // Add any special instructions or default to an empty string
                 })),
