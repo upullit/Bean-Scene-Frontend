@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Image, Text } from "react-native";
 import { deleteItem } from "../crud/menuitems";
 import CustomButton from '../CustomButton.js';
 import CustomModal from '../CustomModal';
 
 const AdminMenuViewScreen = ({ route, navigation }) => {
-    const { item } = route.params;
+    const { item, refreshMenu } = route.params;  // Get the refreshMenu function
 
     // State for modal visibility and content
     const [modalVisible, setModalVisible] = useState(false);
@@ -29,6 +29,7 @@ const AdminMenuViewScreen = ({ route, navigation }) => {
     const handleDelete = async () => {
         try {
             await deleteItem(item._id); // Call the delete API function
+            refreshMenu();  // Call refreshMenu to refresh the menu in AdminScreen
             setModalContent({
                 title: 'Deleted',
                 message: 'Item has been deleted successfully.',

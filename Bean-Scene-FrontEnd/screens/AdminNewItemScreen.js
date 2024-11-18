@@ -6,7 +6,8 @@ import { createItem } from '../crud/menuitems.js';
 import CustomButton from '../CustomButton.js';
 import CustomModal from '../CustomModal.js';
 
-const AdminNewItemScreen = ({ navigation }) => {
+const AdminNewItemScreen = ({ route, navigation }) => {
+    const { refreshMenu } = route.params;
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
     const [description, setDescription] = useState("");
@@ -47,6 +48,7 @@ const AdminNewItemScreen = ({ navigation }) => {
                 message: 'Menu item created successfully',
             });
             setModalVisible(true);
+            refreshMenu();
         } catch (error) {
             setModalContent({
                 title: 'Error',
@@ -118,7 +120,7 @@ const AdminNewItemScreen = ({ navigation }) => {
                     />
                     <Text style={styles.checkboxText}>Vege</Text>
                 </View>
-                
+
                 <CustomButton title="Save" onPress={handleSubmit} />
             </View>
 

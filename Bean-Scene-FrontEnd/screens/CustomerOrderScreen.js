@@ -30,7 +30,7 @@ const CustomerOrderScreen = ({ navigation }) => {
     const [selectedItem, setSelectedItem] = useState(null);
     const [comment, setComment] = useState(''); // To store the comment
     const [menuItems, setMenuItems] = useState([]);
-    // const [filteredMenu, setFilteredMenu] = useState(DummyMenu); // state for filtered menu items
+    // const [filteredMenu, setFilteredMenu] = useState([]); // state for filtered menu items
     const [tickets, setTickets] = useState([]);
 
     // Fetch the menu items from database calling the function
@@ -98,7 +98,7 @@ const CustomerOrderScreen = ({ navigation }) => {
 
     // //filters menu based on category
     // const filterMenu = (category) => {
-    //     const filtered = DummyMenu.filter(item => item.category === category);
+    //     const filtered = menuitems.filter(item => item.category === category);
     //     setFilteredMenu(filtered);
     // };
 
