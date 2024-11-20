@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     description: {
-        fontSize: 18,
+        fontSize: 20,
         marginVertical: 10,
     },
     actionButton: {
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 5,
         borderRadius: 15,
-        fontSize: 14,
+        fontSize: 18,
         fontWeight: 'bold',
         marginRight: 10,
     },

@@ -149,7 +149,7 @@ const ServerOrderScreen = ({ navigation }) => {
             <View style={styles.column}>
                 {/* ticket management */}
                 <View style={styles.buttonRow}>
-                    <CustomButton title="New Ticket" onPress={() => clearOrder()} />
+                    <CustomButton title="Clear Order" onPress={() => clearOrder()} />
                     <CustomButton title="View Tickets" onPress={() => navigation.navigate('Ticket', { tickets })} />
                     <Modal
                         visible={isTableModalVisible}
