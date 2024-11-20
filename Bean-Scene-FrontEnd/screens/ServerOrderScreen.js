@@ -244,16 +244,23 @@ const ServerOrderScreen = ({ navigation }) => {
                 {selectedItem ? (
                     <View style={styles.detailsContainer}>
                         <Image source={selectedItem.imageUrl} style={styles.detailImage} />
-                        <Text style={styles.detailsTitle}>{selectedItem.title}</Text>
-                        <Text style={styles.detailsText}>Price: ${selectedItem.price.toFixed(2)}</Text>
-                        <Text style={styles.detailsText}>Description: {selectedItem.description}</Text>
+                        <Text style={styles.detailsTitle}>{selectedItem.name}</Text>
+                        <Text style={styles.detailsText}><b>Price: </b>${selectedItem.price.toFixed(2)}</Text>
+                        <Text style={styles.detailsText}><b>Description: </b>{selectedItem.description}</Text>
+                        <Text style={styles.detailsText}>
+                            <b>Ingredients:</b> {selectedItem.ingredients.join(', ')}
+                        </Text>
+                        <View style={styles.tagsContainer}>
+                            {selectedItem.isVegan && <Text style={[styles.tag, styles.veganTag]}>Vegan</Text>}
+                            {selectedItem.isVegetarian && <Text style={[styles.tag, styles.vegetarianTag]}>Vegetarian</Text>}
+                        </View>
                         <TextInput
                             style={styles.commentInput}
                             placeholder="Add a comment or special request"
                             value={comment}
                             onChangeText={setComment}
                         />
-                        <View style={styles.buttonRow}>
+                        <View style={styles.buttonRow2}>
                             <CustomButton title="Back" onPress={goBackToList} />
                             <CustomButton
                                 title="Add to Order"
@@ -409,12 +416,10 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     detailImage: {
-        width: 200,
-        height: 120,
-        marginRight: 10,
-        borderRadius: 5,
-        alignContent: 'center',
-        justifyContent: 'center',
+        width: '100%',
+        height: 200,
+        borderRadius: 8,
+        marginBottom: 10,
     },
     modalOverlay: {
         flex: 1,
@@ -472,6 +477,34 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         marginBottom: 10,
+    },
+    tagsContainer: {
+        flexDirection: 'row',
+        padding: 15,
+    },
+    tag: {
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        borderRadius: 15,
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginRight: 10,
+    },
+    veganTag: {
+        backgroundColor: '#DFF2BF',
+        color: '#4F8A10', 
+    },
+    vegetarianTag: {
+        backgroundColor: '#FFECB3',
+        color: '#FFA000', 
+    },
+    buttonRow2: {
+        flexDirection: 'row',
+        width: '100%',
+        gap: 15,
+        justifyContent: 'center',
+        position: 'absolute',
+        bottom: 20,
     },
 });
 

@@ -58,6 +58,13 @@ const AdminMenuViewScreen = ({ route, navigation }) => {
             <Text style={styles.description}><b>Price: </b>{item.price}</Text>
             <Text style={styles.description}><b>Description: </b>{item.description}</Text>
             <Text style={styles.description}><b>Category: </b>{item.category}</Text>
+            <Text style={styles.description}>
+                <b>Ingredients:</b> {item.ingredients.join(', ')}
+            </Text>
+            <View style={styles.tagsContainer}>
+                {item.isVegan && <Text style={[styles.tag, styles.veganTag]}>Vegan</Text>}
+                {item.isVegetarian && <Text style={[styles.tag, styles.vegetarianTag]}>Vegetarian</Text>}
+            </View>
             <View style={styles.actionButton}>
                 <CustomButton title="Edit" onPress={() => navigation.navigate('AdminMenuEdit', { item })} />
                 <CustomButton title="Delete" onPress={showDeleteConfirmation} />
@@ -101,10 +108,31 @@ const styles = StyleSheet.create({
     actionButton: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        gap: 15,
         marginTop: 10,
         position: 'absolute',
         bottom: 20,
         right: 20,
+    },
+    tagsContainer: {
+        flexDirection: 'row',
+        marginTop: 10,
+    },
+    tag: {
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        borderRadius: 15,
+        fontSize: 14,
+        fontWeight: 'bold',
+        marginRight: 10,
+    },
+    veganTag: {
+        backgroundColor: '#DFF2BF',
+        color: '#4F8A10', 
+    },
+    vegetarianTag: {
+        backgroundColor: '#FFECB3',
+        color: '#FFA000', 
     },
 });
 

@@ -78,16 +78,6 @@ const KitchenScreen = ({ route }) => {
         (currentPage + 1) * ticketsPerPage
     );
 
-    const toggleMenu = () => {
-        setMenuVisible(!menuVisible);
-    };
-
-    const searchMenu = DummyMenu
-        .filter(item =>
-            item.title.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-        .sort((a, b) => a.title.localeCompare(b.title));
-
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Active Tickets</Text>

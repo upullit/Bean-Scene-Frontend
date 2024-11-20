@@ -26,17 +26,17 @@ const HomeScreen = ({ navigation }) => {
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Ticket')}>
                     <Text style={styles.buttonText}>Tickets</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Admin')}>
-                    <Text style={styles.buttonText}>Admin</Text>
-                </TouchableOpacity>
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Kitchen')}>
                     <Text style={styles.buttonText}>Kitchen Ticket</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('CustomerOrder')}>
-                    <Text style={styles.buttonText}>Customer Order</Text>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Admin')}>
+                    <Text style={styles.buttonText}>Admin</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('CustomerMenu')}>
                     <Text style={styles.buttonText}>Customer Menu</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('CustomerOrder')}>
+                    <Text style={styles.buttonText}>Customer Order</Text>
                 </TouchableOpacity>
             </View>
         </View>

@@ -51,7 +51,7 @@ const AdminMenuEditScreen = ({ route }) => {
 
     return (
         <View style={styles.container}>
-            <Text>Edit Dish</Text>
+            <Text style={styles.heading}>Edit Dish</Text>
             <View style={styles.column}>
                 <Text style={styles.subheading}>Dish Name</Text>
                 <TextInput
@@ -125,6 +125,12 @@ const AdminMenuEditScreen = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
+    heading: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
+        textAlign: 'center',
+    },
     textInputShort: {
         height: 40,
         borderWidth: 1,
