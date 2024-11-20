@@ -31,6 +31,12 @@ const AdminScreen = ({ navigation }) => {
         setSelectedCategory(category); // Set the category
     };
 
+    // Function to show all items
+    const showAllItems = () => {
+        setSelectedCategory(null); // Reset the selected category
+        setSearchQuery(''); // Clear the search query if you want to reset all filters
+    };
+
     // Filter the menu based on the selected category and search query
     const filteredAndSearchedMenu = menuItems
         .filter(item => {
@@ -59,6 +65,7 @@ const AdminScreen = ({ navigation }) => {
 
             {/* Menu filter */}
             <View style={styles.buttonRow}>
+                <CustomButton title="All Items" onPress={showAllItems} />
                 <CustomButton title="Beverages" onPress={() => filterMenu('Drinks')} />
                 <CustomButton title="Breakfast" onPress={() => filterMenu('Breakfast')} />
                 <CustomButton title="Lunch" onPress={() => filterMenu('Lunch')} />
@@ -74,7 +81,7 @@ const AdminScreen = ({ navigation }) => {
                             style={styles.item}
                             onPress={() => navigation.navigate('AdminMenuView', { item, refreshMenu: fetchMenuItems })} // Pass item data and refreshMenu function
                         >
-                            <Image source={item.image ? { uri: item.image } : require('../Media-TempData/Images/Menu/Breakfast/Acai.jpg')} style={styles.image} />
+                            <Image source={item.imageUrl ? { uri: item.imageUrl } : require('../Images/Temp.jpg')} style={styles.image} />
                             <Text style={styles.itemText}>{item.name}</Text>
                         </TouchableOpacity>
                     )}

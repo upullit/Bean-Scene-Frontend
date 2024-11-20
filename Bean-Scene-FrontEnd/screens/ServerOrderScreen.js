@@ -243,7 +243,7 @@ const ServerOrderScreen = ({ navigation }) => {
                 {/* shows menu list and details view */}
                 {selectedItem ? (
                     <View style={styles.detailsContainer}>
-                        <Image source={selectedItem.image} style={styles.detailImage} />
+                        <Image source={selectedItem.imageUrl} style={styles.detailImage} />
                         <Text style={styles.detailsTitle}>{selectedItem.title}</Text>
                         <Text style={styles.detailsText}>Price: ${selectedItem.price.toFixed(2)}</Text>
                         <Text style={styles.detailsText}>Description: {selectedItem.description}</Text>
@@ -269,7 +269,7 @@ const ServerOrderScreen = ({ navigation }) => {
                                 <Item
                                     title={item.name}
                                     price={item.price}
-                                    image={{ uri: item.image }}
+                                    image={{ uri: item.imageUrl }}
                                     onSelect={() => setSelectedItem(item)}
                                     onAddToOrder={() => addToOrder(item, comment)}
                                 />

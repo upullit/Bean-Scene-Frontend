@@ -50,7 +50,7 @@ const AdminMenuViewScreen = ({ route, navigation }) => {
     return (
         <View style={styles.container}>
             <Image
-                source={item.image ? { uri: item.image } : require('../Media-TempData/Images/Menu/Breakfast/Acai.jpg')}
+                source={item.imageUrl ? { uri: item.imageUrl } : require('../Images/Temp.jpg')}
                 style={styles.image}
             />
             <Text style={styles.title}>{item.title}</Text>
