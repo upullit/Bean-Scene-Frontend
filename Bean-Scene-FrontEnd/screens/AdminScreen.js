@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, TextInput, Alert } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { getMenuItems } from '../crud/menuitems.js';
 import CustomButton from '../CustomButton.js';
 
@@ -9,10 +10,12 @@ const AdminScreen = ({ navigation }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState(null);
 
-    // Fetch menu items when the component mounts
-    useEffect(() => {
-        fetchMenuItems();
-    }, []);
+    // Refresh menu items every time the screen is focused
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchMenuItems();
+        }, [])
+    );
 
     // Fetch the menu items from the backend
     const fetchMenuItems = async () => {
@@ -79,7 +82,7 @@ const AdminScreen = ({ navigation }) => {
                     renderItem={({ item }) => (
                         <TouchableOpacity
                             style={styles.item}
-                            onPress={() => navigation.navigate('AdminMenuView', { item, refreshMenu: fetchMenuItems })} // Pass item data and refreshMenu function
+                            onPress={() => navigation.navigate('AdminMenuView', { item })} // Pass item data and refreshMenu function
                         >
                             <Image source={item.imageUrl ? { uri: item.imageUrl } : require('../Images/Temp.jpg')} style={styles.image} />
                             <Text style={styles.itemText}>{item.name}</Text>

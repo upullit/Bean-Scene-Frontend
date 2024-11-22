@@ -5,7 +5,7 @@ import CustomButton from '../CustomButton.js';
 import CustomModal from '../CustomModal';
 
 const AdminMenuViewScreen = ({ route, navigation }) => {
-    const { item, refreshMenu } = route.params;  // Get the refreshMenu function
+    const { item } = route.params;
 
     // State for modal visibility and content
     const [modalVisible, setModalVisible] = useState(false);
@@ -28,19 +28,18 @@ const AdminMenuViewScreen = ({ route, navigation }) => {
     // Handle the deletion of the item
     const handleDelete = async () => {
         try {
-            await deleteItem(item._id); // Call the delete API function
-            refreshMenu();  // Call refreshMenu to refresh the menu in AdminScreen
+            // Ensure that the item._id is passed as the correct ID
+            await deleteItem(item._id);
             setModalContent({
                 title: 'Deleted',
                 message: 'Item has been deleted successfully.',
                 confirmAction: () => navigation.goBack(),
             });
-            setModalVisible(true); // Show success modal
+            setModalVisible(true);
         } catch (error) {
-            console.error("Error deleting item:", error);
             setModalContent({
                 title: 'Error',
-                message: 'An error occurred while deleting the item.',
+                message: error.message,
                 confirmAction: () => setModalVisible(false),
             });
             setModalVisible(true);

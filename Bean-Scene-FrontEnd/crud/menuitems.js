@@ -55,7 +55,7 @@ const updateMenuItem = async (id, updatedItem) => {
     catch (error) {
         console.error('Error creaing item', error)
     }
-}
+};
 
 // function to Delete menu items
 const deleteItem = async (id) => {
@@ -65,13 +65,15 @@ const deleteItem = async (id) => {
         });
 
         if (!response.ok) {
-            throw new Error('Failed to delete item');
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to delete item');
         }
 
         console.log('Item deleted');
     } catch (error) {
-        console.error('Error deleting item', error);
+        console.error('Error deleting item', error.message);
+        throw error; // Re-throw to handle it in the calling function
     }
-}
+};
 
 export { createItem, getMenuItems, getSingleItem, updateMenuItem, deleteItem };

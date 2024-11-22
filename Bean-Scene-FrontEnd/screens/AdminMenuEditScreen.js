@@ -17,6 +17,7 @@ const AdminMenuEditScreen = ({ route }) => {
     const [category, setCategory] = useState(item.category);
     const [isVegan, setIsVegan] = useState(item.isVegan);
     const [isVegetarian, setIsVegetarian] = useState(item.isVegetarian);
+    const [imageUrl, setImageUrl] = useState(item.imageUrl);
     const [available, setAvailable] = useState(item.available);
     const [modalVisible, setModalVisible] = useState(false);
     const [modalContent, setModalContent] = useState({ title: '', message: '' });
@@ -32,6 +33,7 @@ const AdminMenuEditScreen = ({ route }) => {
             isVegan,
             isVegetarian,
             available,
+            imageUrl,
         };
 
         try {
@@ -81,6 +83,25 @@ const AdminMenuEditScreen = ({ route }) => {
             </View>
 
             <View style={styles.column}>
+                <Text style={styles.subheading}>Image</Text>
+                <TextInput
+                    style={styles.textInputShort}
+                    value={imageUrl}
+                    onChangeText={setImageUrl}
+                />
+
+                <Text style={styles.subheading}>Category</Text>
+                <Picker
+                    selectedValue={category}
+                    style={styles.picker}
+                    onValueChange={(value) => setCategory(value)}
+                >
+                    <Picker.Item label="Breakfast" value="Breakfast" />
+                    <Picker.Item label="Lunch" value="Lunch" />
+                    <Picker.Item label="Dinner" value="Dinner" />
+                    <Picker.Item label="Cafe/Dessert" value="Cafe/Dessert" />
+                    <Picker.Item label="Beverage" value="Beverage" />
+                </Picker>
                 <Text style={styles.subheading}>Diet Tags</Text>
                 <View style={styles.checkbox}>
                     <Checkbox
@@ -97,22 +118,12 @@ const AdminMenuEditScreen = ({ route }) => {
                     />
                     <Text style={styles.checkboxText}>Vegetarian</Text>
                 </View>
-
-                <Text style={styles.subheading}>Category</Text>
-                <Picker
-                    selectedValue={category}
-                    style={styles.picker}
-                    onValueChange={(value) => setCategory(value)}
-                >
-                    <Picker.Item label="Breakfast" value="Breakfast" />
-                    <Picker.Item label="Lunch" value="Lunch" />
-                    <Picker.Item label="Dinner" value="Dinner" />
-                    <Picker.Item label="Cafe/Dessert" value="Cafe/Dessert" />
-                    <Picker.Item label="Beverage" value="Beverage" />
-                </Picker>
-                <CustomButton title="Save" onPress={handleSave} />
+                <CustomButton title="Save" onPress={() => {
+                    handleSave();
+                    navigation.goBack();
+                }} />
             </View>
-            
+
             {/* Custom Modal for displaying success or error message */}
             <CustomModal
                 visible={modalVisible}
