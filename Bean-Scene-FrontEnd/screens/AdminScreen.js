@@ -42,15 +42,19 @@ const AdminScreen = ({ navigation }) => {
 
     // Filter the menu based on the selected category and search query
     const filteredAndSearchedMenu = menuItems
-        .filter(item => {
-            // Filter by category if selected
-            if (selectedCategory && item.category !== selectedCategory) {
-                return false;
-            }
-            // Filter by search query
-            return item.name.toLowerCase().includes(searchQuery.toLowerCase());
-        })
-        .sort((a, b) => a.name.localeCompare(b.name));
+    .filter(item => {
+        // Filter by category if selected
+        if (selectedCategory && item.category !== selectedCategory) {
+            return false;
+        }
+        // Filter by search query
+        return item.name.toLowerCase().includes(searchQuery.toLowerCase());
+    })
+    .sort((a, b) => {
+        // Create a collator for case and accent-insensitive sorting
+        const collator = new Intl.Collator('en', { sensitivity: 'base' });
+        return collator.compare(a.name, b.name);
+    });
 
     return (
         <View style={styles.container}>
@@ -133,6 +137,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     image: {
+        flex: 1,
         width: 250,
         height: 150,
         borderRadius: 8,
