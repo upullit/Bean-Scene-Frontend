@@ -12,6 +12,8 @@ import CustomerOrderScreen from '../screens/CustomerOrderScreen'
 import CustomerCheckoutScreen from '../screens/CustomerCheckoutScreen'
 import CustomerMenuScreen from '../screens/CustomerMenuScreen'
 import AdminNewItemScreen from '../screens/AdminNewItemScreen'
+import LoginScreen from '../screens/LoginScreen';
+import RegisterStaffScreen from '../screens/RegisterStaffScreen'
 
 const Stack = createStackNavigator()
 
@@ -41,6 +43,8 @@ const AppNavigator = () => {
                 <Stack.Screen name='CustomerCheckout' component={CustomerCheckoutScreen} />
                 <Stack.Screen name='CustomerMenu' component={CustomerMenuScreen} />
                 <Stack.Screen name='AdminNewItem' component={AdminNewItemScreen} />
+                <Stack.Screen name='Login' component={LoginScreen} />
+                <Stack.Screen name="RegisterStaff" component={RegisterStaffScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     )

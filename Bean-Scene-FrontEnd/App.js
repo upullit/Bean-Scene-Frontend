@@ -1,9 +1,13 @@
 import React from 'react'
 import AppNavigator from './navigation/AppNavigator'
 import { StyleSheet } from 'react-native';
+import { AuthProvider } from './context/authContext';
 
 export default function App(){
-    return <AppNavigator/>
+    return (        
+    <AuthProvider>
+      <AppNavigator />
+  </AuthProvider>)
 }
 
 const styles = StyleSheet.create({

@@ -1,43 +1,126 @@
-import React, { useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
+import { useAuth } from '../context/authContext';
 
 const HomeScreen = ({ navigation }) => {
-    //holds app at landscape
-    const lockOrientation = async () => {
-        await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
-    };
+    const { user, logout } = useAuth();
+    const [logoutModalVisible, setLogoutModalVisible] = useState(false);
+
+    // Lock the app orientation
     useEffect(() => {
+        const lockOrientation = async () => {
+            try {
+                await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
+            } catch (err) {
+                console.warn("Orientation lock not supported:", err.message);
+            }
+        };
         lockOrientation();
+
         return () => {
-            ScreenOrientation.unlockAsync();
+            ScreenOrientation.unlockAsync(); // Reset orientation on unmount
         };
     }, []);
 
+    useEffect(() => {
+        console.log('User object in HomeScreen:', user); // Check what is being passed
+    }, [user]);
+
+
+    const handleLogout = async () => {
+        await logout(); // Clear the user state
+        setLogoutModalVisible(false); // Close the logout modal
+    };
+
     return (
         <View>
-            {/* temporary navigation buttons */}
             <View style={styles.container}>
                 <Text style={styles.title}>Bean Scene Ordering App</Text>
-                <Text style={styles.text}>Hi, this is the Bean Scene menu ordering app</Text>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ServerOrder')}>
-                    <Text style={styles.buttonText}>Server Ordering</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Ticket')}>
-                    <Text style={styles.buttonText}>Tickets</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Kitchen')}>
-                    <Text style={styles.buttonText}>Kitchen Ticket</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Admin')}>
-                    <Text style={styles.buttonText}>Admin</Text>
-                </TouchableOpacity>
+                <Text style={styles.text}>
+                    Welcome, {user ? `${user.name} Role: ${user.role}` : 'Guest'}
+                </Text>
+
+                {/* Role-based navigation buttons */}
+                {user?.role === 'Server' && (
+                    <>
+                        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ServerOrder')}>
+                            <Text style={styles.buttonText}>Server Ordering</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Ticket')}>
+                            <Text style={styles.buttonText}>Tickets</Text>
+                        </TouchableOpacity>
+                    </>
+                )}
+
+                {user?.role === 'Manager' && (
+                    <>
+                        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ServerOrder')}>
+                            <Text style={styles.buttonText}>Server Ordering</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Ticket')}>
+                            <Text style={styles.buttonText}>Tickets</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Admin')}>
+                            <Text style={styles.buttonText}>Admin</Text>
+                        </TouchableOpacity>
+                        </>
+                )}
+
+                {user?.role === 'Chef' && (
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Kitchen')}>
+                        <Text style={styles.buttonText}>Kitchen Ticket</Text>
+                    </TouchableOpacity>
+                )}
+
+                {/* Accessible to all staff */}
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('CustomerMenu')}>
                     <Text style={styles.buttonText}>Customer Menu</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('CustomerOrder')}>
-                    <Text style={styles.buttonText}>Customer Order</Text>
-                </TouchableOpacity>
+                </TouchableOpacity>                
+                {!user && (
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
+                        <Text style={styles.buttonText}>Login</Text>
+                    </TouchableOpacity>
+                )}
+                {!user && (
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('RegisterStaff')}>
+                        <Text style={styles.buttonText}>Register</Text>
+                    </TouchableOpacity>
+                )}
+                {/* Logout button */}
+                {user && (
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={() => setLogoutModalVisible(true)}
+                    >
+                        <Text style={styles.buttonText}>Logout</Text>
+                    </TouchableOpacity>
+                )}
+
+                {/* Logout Confirmation Modal */}
+                <Modal
+                    transparent={true}
+                    visible={logoutModalVisible}
+                    animationType="slide"
+                    onRequestClose={() => setLogoutModalVisible(false)}>
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalContent}>
+                            <Text style={styles.modalText}>Are you sure you want to log out?</Text>
+                            <View style={styles.modalButtons}>
+                                <TouchableOpacity
+                                    style={[styles.modalButton, styles.cancelButton]}
+                                    onPress={() => setLogoutModalVisible(false)}>
+                                    <Text style={styles.buttonText}>Cancel</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={[styles.modalButton, styles.confirmButton]}
+                                    onPress={handleLogout}>
+                                    <Text style={styles.buttonText}>Log Out</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
             </View>
         </View>
     );
@@ -77,6 +160,42 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: 'bold',
         color: '#251605',
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+        backgroundColor: 'white',
+        padding: 20,
+        borderRadius: 10,
+        width: '80%',
+        alignItems: 'center',
+    },
+    modalText: {
+        fontSize: 18,
+        marginBottom: 10,
+        textAlign: 'center',
+    },
+    modalButtons: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+    },
+    modalButton: {
+        flex: 1,
+        padding: 10,
+        margin: 5,
+        borderRadius: 5,
+        alignItems: 'center',
+    },
+    cancelButton: {
+        backgroundColor: '#d9534f',
+    },
+    confirmButton: {
+        backgroundColor: '#5cb85c',
     },
 });
 
