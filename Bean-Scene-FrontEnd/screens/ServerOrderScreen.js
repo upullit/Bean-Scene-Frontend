@@ -233,12 +233,42 @@ const ServerOrderScreen = ({ navigation }) => {
             <View style={styles.column}>
                 {/*menu filter*/}
                 <View style={styles.buttonRow}>
-                    <CustomButton title="All Items" onPress={showAllItems} />
-                    <CustomButton title="Beverages" onPress={() => filterMenu('Drinks')} />
-                    <CustomButton title="Breakfast" onPress={() => filterMenu('Breakfast')} />
-                    <CustomButton title="Lunch" onPress={() => filterMenu('Lunch')} />
-                    <CustomButton title="Dinner" onPress={() => filterMenu('Dinner')} />
-                    <CustomButton title="Cafe/Dessert" onPress={() => filterMenu('Dessert' || 'Cafe')} />
+                    <CustomButton
+                        title="All Items"
+                        onPress={() => {
+                            goBackToList();
+                            showAllItems();
+                        }} />
+                    <CustomButton
+                        title="Beverages"
+                        onPress={() => {
+                            goBackToList();
+                            filterMenu('Drinks');
+                        }} />
+                    <CustomButton
+                        title="Breakfast"
+                        onPress={() => {
+                            goBackToList();
+                            filterMenu('Breakfast');
+                        }} />
+                    <CustomButton
+                        title="Lunch"
+                        onPress={() => {
+                            goBackToList();
+                            filterMenu('Lunch');
+                        }} />
+                    <CustomButton
+                        title="Dinner"
+                        onPress={() => {
+                            goBackToList();
+                            filterMenu('Dinner');
+                        }} />
+                    <CustomButton
+                        title="Cafe/Dessert"
+                        onPress={() => {
+                            goBackToList();
+                            filterMenu('Dessert' || 'Cafe');
+                        }} />
                 </View>
                 {/* shows menu list and details view */}
                 {selectedItem ? (
@@ -264,8 +294,10 @@ const ServerOrderScreen = ({ navigation }) => {
                             <CustomButton title="Back" onPress={goBackToList} />
                             <CustomButton
                                 title="Add to Order"
-                                onPress={() => addToOrder(selectedItem, comment)}
-                            />
+                                onPress={() => {
+                                    addToOrder(selectedItem, comment);
+                                    goBackToList();
+                                }} />
                         </View>
                     </View>
                 ) : (
@@ -492,11 +524,11 @@ const styles = StyleSheet.create({
     },
     veganTag: {
         backgroundColor: '#DFF2BF',
-        color: '#4F8A10', 
+        color: '#4F8A10',
     },
     vegetarianTag: {
         backgroundColor: '#FFECB3',
-        color: '#FFA000', 
+        color: '#FFA000',
     },
     buttonRow2: {
         flexDirection: 'row',

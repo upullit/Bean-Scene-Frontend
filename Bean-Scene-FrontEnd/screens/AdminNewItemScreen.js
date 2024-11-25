@@ -6,8 +6,7 @@ import { createItem } from '../crud/menuitems.js';
 import CustomButton from '../CustomButton.js';
 import CustomModal from '../CustomModal.js';
 
-const AdminNewItemScreen = ({ route, navigation }) => {
-    const { refreshMenu } = route.params;
+const AdminNewItemScreen = ({ navigation }) => {
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
     const [description, setDescription] = useState("");
@@ -17,6 +16,7 @@ const AdminNewItemScreen = ({ route, navigation }) => {
         vegan: false,
         vege: false,
     });
+    const [imageUrl, setImageUrl] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
     const [modalContent, setModalContent] = useState({ title: '', message: '' });
 
@@ -39,6 +39,7 @@ const AdminNewItemScreen = ({ route, navigation }) => {
             available: true,
             category,
             tags: Object.keys(dietTags).filter((tag) => dietTags[tag]), // Only selected tags
+            imageUrl,
         };
 
         try {
@@ -48,7 +49,6 @@ const AdminNewItemScreen = ({ route, navigation }) => {
                 message: 'Menu item created successfully',
             });
             setModalVisible(true);
-            refreshMenu();
         } catch (error) {
             setModalContent({
                 title: 'Error',
@@ -91,6 +91,12 @@ const AdminNewItemScreen = ({ route, navigation }) => {
             </View>
 
             <View style={styles.column}>
+            <Text style={styles.subheading}>Image</Text>
+                <TextInput
+                    style={styles.textInputShort}
+                    value={imageUrl}
+                    onChangeText={setImageUrl}
+                />
                 <Text style={styles.subheading}>Category</Text>
                 <Picker
                     selectedValue={category}
