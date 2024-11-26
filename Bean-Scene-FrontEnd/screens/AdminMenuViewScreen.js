@@ -25,6 +25,8 @@ const AdminMenuViewScreen = ({ route, navigation }) => {
         setModalVisible(true);
     };
 
+    // Atm if item is in a current ticket it will break ticket view
+    // will do a search if it exists in a ticket before deleting in 1.1
     // Handle the deletion of the item
     const handleDelete = async () => {
         try {

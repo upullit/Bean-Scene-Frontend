@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Modal } from 'react-native';
 import { useAuth } from '../context/authContext';
+import CustomButton from '../CustomButton';
 
 const LoginScreen = ({ navigation }) => {
     const [username, setUsername] = useState('');
@@ -40,7 +41,7 @@ const LoginScreen = ({ navigation }) => {
                 id="Password"
                 name="Password"
             />
-            <Button title="Login" onPress={handleLogin} />
+            <CustomButton title="Login" onPress={handleLogin} />
 
             {/* Login Confirmation Modal */}
             <Modal

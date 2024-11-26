@@ -1,5 +1,6 @@
 // url to connect to api points
-const baseUrl = 'http://localhost:3000/api';
+//const baseUrl = 'http://localhost:3000/api';
+const baseUrl = 'http://43.224.182.185:3000/api';
 
 // Function to create a new ticket
 const createTicket = async (data) => {

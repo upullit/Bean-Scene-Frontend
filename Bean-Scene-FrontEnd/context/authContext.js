@@ -6,7 +6,7 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null); // User object: { token, role }
 
     const login = async (username, password) => {
-        const response = await fetch('http://localhost:3000/api/auth/login', {
+        const response = await fetch('http://43.224.182.185:3000/api/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password }),

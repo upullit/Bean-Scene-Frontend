@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Modal, Picker } from 'react-native';
 import { useAuth } from '../context/authContext';
+import CustomButton from '../CustomButton';
 
 const RegisterStaffScreen = ({ navigation }) => {
     const [username, setUsername] = useState('');
@@ -55,7 +56,7 @@ const RegisterStaffScreen = ({ navigation }) => {
             </View>
             <TextInput style={styles.input} placeholder="Name" 
                 value={name} onChangeText={setName} id="Name" name="Name" />
-            <Button title="Register" onPress={registerStaff} />
+            <CustomButton title="Register" onPress={registerStaff} />
             {message ? <Text style={styles.message}>{message}</Text> : null}
 
             {/* Confirmation Modal */}
@@ -66,7 +67,7 @@ const RegisterStaffScreen = ({ navigation }) => {
                         <Text style={styles.modalText}>
                             Registration successful! Welcome, {name}!
                         </Text>
-                        <Button
+                        <CustomButton
                             title="Go to Home"
                             onPress={() => {
                                 setModalVisible(false);

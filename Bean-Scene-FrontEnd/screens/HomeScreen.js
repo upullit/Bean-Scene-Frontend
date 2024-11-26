@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { useAuth } from '../context/authContext';
+import CustomModal from '../CustomModal';
 
 const HomeScreen = ({ navigation }) => {
     const { user, logout } = useAuth();
