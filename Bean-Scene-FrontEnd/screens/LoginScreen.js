@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Modal } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Modal, TouchableOpacity } from 'react-native';
 import { useAuth } from '../context/authContext';
 import CustomButton from '../CustomButton';
 
@@ -50,16 +50,16 @@ const LoginScreen = ({ navigation }) => {
                 animationType="slide"
                 onRequestClose={() => setModalVisible(false)}
             >
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalContent}>
+                <View style={styles.overlay}>
+                    <View style={styles.modalContainer}>
                         <Text style={styles.modalText}>Login successful! Welcome back!</Text>
-                        <Button
-                            title="Go to Home"
-                            onPress={() => {
-                                setModalVisible(false);
-                                navigation.navigate('Home');
-                            }}
-                        />
+                        <TouchableOpacity style={styles.button} 
+                        onPress={() => {
+                            setModalVisible(false);
+                            navigation.navigate('Home');
+                        }}>
+                            <Text style={styles.buttonText}>Continue</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </Modal>
@@ -68,24 +68,59 @@ const LoginScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, justifyContent: 'center', padding: 16 },
-    title: { fontSize: 24, fontWeight: 'bold', marginBottom: 16 },
-    input: { borderWidth: 1, padding: 8, marginBottom: 16, borderRadius: 5 },
-    error: { color: 'red', marginBottom: 16 },
-    modalContainer: {
+    container: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        alignContent: 'center',
+        paddingHorizontal: 300,
     },
-    modalContent: {
-        backgroundColor: 'white',
-        padding: 20,
+    title: {
+        fontSize: 26,
+        fontWeight: 'bold',
+        marginBottom: 16,
+        textAlign: 'center',
+    },
+    input: {
+        borderWidth: 1,
+        padding: 8,
+        marginBottom: 16,
+        borderRadius: 5,
+    },
+    error: {
+        color: 'red',
+        marginBottom: 16
+    },
+    overlay: {
+        flex: 1,
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    modalContainer: {
+        width: 400,
+        backgroundColor: '#F8FAE5',
         borderRadius: 10,
-        width: '80%',
-        alignItems: 'center',
+        padding: 40,
+        alignItems: "center",
+        elevation: 5,
     },
-    modalText: { fontSize: 18, marginBottom: 10 },
+    modalText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 20
+    },
+    button: {
+        backgroundColor: '#43766C',
+        padding: 10,
+        borderRadius: 5,
+        alignItems: 'center',
+        marginVertical: 5,
+    },
+    buttonText: {
+        color: '#F8FAE5',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
 });
 
 export default LoginScreen;

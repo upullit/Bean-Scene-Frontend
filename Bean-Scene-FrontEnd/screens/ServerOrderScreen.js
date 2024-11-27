@@ -273,12 +273,12 @@ const ServerOrderScreen = ({ navigation }) => {
                 {/* shows menu list and details view */}
                 {selectedItem ? (
                     <View style={styles.detailsContainer}>
-                        <Image source={selectedItem.imageUrl} style={styles.detailImage} />
+                        <Image source={selectedItem.imageUrl ? { uri: selectedItem.imageUrl } : require('../Images/Temp.jpg')} style={styles.detailImage} />
                         <Text style={styles.detailsTitle}>{selectedItem.name}</Text>
-                        <Text style={styles.detailsText}><b>Price: </b>${selectedItem.price.toFixed(2)}</Text>
-                        <Text style={styles.detailsText}><b>Description: </b>{selectedItem.description}</Text>
+                        <Text style={styles.detailsText}>Price: ${selectedItem.price.toFixed(2)}</Text>
+                        <Text style={styles.detailsText}>Description:{selectedItem.description}</Text>
                         <Text style={styles.detailsText}>
-                            <b>Ingredients:</b> {selectedItem.ingredients.join(', ')}
+                            Ingredients: {selectedItem.ingredients.join(', ')}
                         </Text>
                         <View style={styles.tagsContainer}>
                             {selectedItem.isVegan && <Text style={[styles.tag, styles.veganTag]}>Vegan</Text>}

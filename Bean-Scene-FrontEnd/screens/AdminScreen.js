@@ -67,7 +67,7 @@ const AdminScreen = ({ navigation }) => {
                     value={searchQuery}
                     onChangeText={text => setSearchQuery(text)}
                 />
-                <CustomButton title="New Item" style={{ paddingHorizontal: 10 }} onPress={() => navigation.navigate('AdminNewItem', { refreshMenu: fetchMenuItems })} />
+                <CustomButton title="New Item" style={{ paddingHorizontal: 10 }} onPress={() => navigation.navigate('AdminNewItem')} />
             </View>
 
             {/* Menu filter */}
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
         borderWidth: 0.5,
         borderColor: '#F8FAE5',
         overflow: 'hidden',
-        maxHeight: 620,
+        maxHeight: 500,
         width: '100%',
     },
 });

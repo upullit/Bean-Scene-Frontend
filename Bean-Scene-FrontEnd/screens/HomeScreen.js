@@ -104,8 +104,8 @@ const HomeScreen = ({ navigation }) => {
                     visible={logoutModalVisible}
                     animationType="slide"
                     onRequestClose={() => setLogoutModalVisible(false)}>
-                    <View style={styles.modalContainer}>
-                        <View style={styles.modalContent}>
+                    <View style={styles.overlay}>
+                        <View style={styles.modalContainer}>
                             <Text style={styles.modalText}>Are you sure you want to log out?</Text>
                             <View style={styles.modalButtons}>
                                 <TouchableOpacity
@@ -162,19 +162,20 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#251605',
     },
-    modalContainer: {
+    overlay: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    },
-    modalContent: {
-        backgroundColor: 'white',
-        padding: 20,
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        justifyContent: "center",
+        alignItems: "center",
+      },
+      modalContainer: {
+        width: 400,
+        backgroundColor: '#F8FAE5',
         borderRadius: 10,
-        width: '80%',
-        alignItems: 'center',
-    },
+        padding: 20,
+        alignItems: "center",
+        elevation: 5,
+      },
     modalText: {
         fontSize: 18,
         marginBottom: 10,

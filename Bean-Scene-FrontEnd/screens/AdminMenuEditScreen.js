@@ -6,7 +6,7 @@ import CustomButton from '../CustomButton.js';
 import CustomModal from '../CustomModal';
 import { updateMenuItem } from '../crud/menuitems.js';
 
-const AdminMenuEditScreen = ({ route }) => {
+const AdminMenuEditScreen = ({ route, navigation }) => {
     const { item } = route.params;
 
     // State for form fields

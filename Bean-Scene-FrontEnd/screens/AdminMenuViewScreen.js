@@ -55,12 +55,12 @@ const AdminMenuViewScreen = ({ route, navigation }) => {
                 style={styles.image}
             />
             <Text style={styles.title}>{item.title}</Text>
-            <Text style={styles.description}><b>Name: </b>{item.name}</Text>
-            <Text style={styles.description}><b>Price: </b>{item.price}</Text>
-            <Text style={styles.description}><b>Description: </b>{item.description}</Text>
-            <Text style={styles.description}><b>Category: </b>{item.category}</Text>
+            <Text style={styles.description}>Name: {item.name}</Text>
+            <Text style={styles.description}>Price: {item.price}</Text>
+            <Text style={styles.description}>Description: {item.description}</Text>
+            <Text style={styles.description}>Category: {item.category}</Text>
             <Text style={styles.description}>
-                <b>Ingredients:</b> {item.ingredients.join(', ')}
+                Ingredients: {item.ingredients.join(', ')}
             </Text>
             <View style={styles.tagsContainer}>
                 {item.isVegan && <Text style={[styles.tag, styles.veganTag]}>Vegan</Text>}

@@ -1,25 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, ActivityIndicator, Alert, ScrollView } from 'react-native';
+import { View, Text, SectionList, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import DownloadPDFButton from '../DownloadPDFButton';
 
 const MenuScreen = () => {
-    const [menuItemsByCategory, setMenuItemsByCategory] = useState({});
+    const [menuSections, setMenuSections] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchMenuItems = async () => {
             try {
-                const response = await fetch('https://api.finch.dev.thickets.onl/api/menuitems'); // Adjust URL if deployed
+                const response = await fetch('https://api.finch.dev.thickets.onl/api/menuitems');
                 const data = await response.json();
 
-                // Group items by category
-                const groupedItems = data.reduce((acc, item) => {
-                    if (!acc[item.category]) acc[item.category] = [];
-                    acc[item.category].push(item);
-                    return acc;
-                }, {});
+                // Group items by category into sections
+                const sections = Object.entries(
+                    data.reduce((acc, item) => {
+                        if (!acc[item.category]) acc[item.category] = [];
+                        acc[item.category].push(item);
+                        return acc;
+                    }, {})
+                ).map(([category, items]) => ({
+                    title: category,
+                    data: items,
+                }));
 
-                setMenuItemsByCategory(groupedItems);
+                setMenuSections(sections);
                 setLoading(false);
             } catch (error) {
                 Alert.alert('Error', 'Failed to load menu items');
@@ -35,35 +40,31 @@ const MenuScreen = () => {
     }
 
     return (
-        <ScrollView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.title}>Bean Scene Menu</Text>
             </View>
 
-            {/* Wrapper div for the scrollable content */}
-            <View style={styles.scrollableContent}>
-                {/* Render menu items by category */}
-                {Object.keys(menuItemsByCategory).map((category) => (
-                    <View key={category}>
-                        <Text style={styles.categoryTitle}>{category}</Text>
-                        <FlatList
-                            data={menuItemsByCategory[category]}
-                            keyExtractor={(item) => item._id}
-                            renderItem={({ item }) => (
-                                <View style={styles.menuItem}>
-                                    <Text style={styles.itemName}>{item.name}</Text>
-                                    <Text style={styles.itemDescription}>{item.description}</Text>
-                                    <Text style={styles.itemPrice}>${item.price.toFixed(2)}</Text>
-                                </View>
-                            )}
-                        />
+            <SectionList
+                sections={menuSections}
+                keyExtractor={(item) => item._id}
+                renderSectionHeader={({ section: { title } }) => (
+                    <Text style={styles.categoryTitle}>{title}</Text>
+                )}
+                renderItem={({ item }) => (
+                    <View style={styles.menuItem}>
+                        <Text style={styles.itemName}>{item.name}</Text>
+                        <View style={styles.itemRow}>
+                            <Text style={styles.itemDescription}>{item.description}</Text>
+                            <Text style={styles.itemPrice}>${item.price.toFixed(2)}</Text>
+                        </View>
                     </View>
-                ))}
-            </View>
+                )}
+                
+            />
 
-            {/* Fixed position for the download button */}
             <DownloadPDFButton style={styles.downloadButton} />
-        </ScrollView>
+        </View>
     );
 };
 
@@ -72,57 +73,68 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 16,
         backgroundColor: '#FAF4E4',
-        position: 'relative', // To ensure the download button stays in position
+        position: 'relative',
+        marginHorizontal: 200,
     },
     title: {
-        fontSize: 28,
+        fontSize: 30,
         fontWeight: 'bold',
-        marginBottom: 16,
+        marginBottom: 14,
         textAlign: 'center',
-        flex: 1,
+        alignItems: 'center',
     },
     categoryTitle: {
-        fontSize: 24,
+        fontSize: 26,
         fontWeight: 'bold',
         marginVertical: 10,
         color: '#333',
         textDecorationLine: 'underline',
         textAlign: 'center',
+        paddingTop: 10,
     },
     menuItem: {
-        padding: 10,
+        padding: 15,
         borderBottomWidth: 1,
         borderBottomColor: '#DDD',
     },
     itemName: {
-        fontSize: 20,
+        fontSize: 22,
         fontWeight: 'bold',
+        marginBottom: 4,
+    },
+    itemRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     itemDescription: {
-        fontSize: 16,
+        flex: 1, 
+        fontSize: 18,
         color: '#666',
     },
     itemPrice: {
-        fontSize: 16,
+        fontSize: 18,
         color: '#76453B',
-        marginTop: 4,
+        textAlign: 'right',
+        marginLeft: 8,
     },
     header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        width: '100%',
+        justifyContent: 'center', 
         alignItems: 'center',
-        marginBottom: 16,
-    },
-    scrollableContent: {
-        maxHeight: 'calc(100vh - 200px)', // Adjust max height to fit screen size and make it scrollable
-        overflowY: 'auto', // Enable vertical scrolling
-        paddingHorizontal: 250,
+        marginBottom: 14,
     },
     downloadButton: {
         position: 'absolute',
         bottom: 20,
         right: 20,
-        zIndex: 999, // Ensure it stays above other content
+        zIndex: 999,
+    },
+    divider: {
+        height: 1,
+        backgroundColor: '#DDD',
+        marginTop: 8, // Space between title and the divider
+        marginBottom: 10, // Space between divider and items
+        width: '100%', // Ensures it spans across the width of the section
     },
 });
 

@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#ccc',
         borderRadius: 5,
-        width: 400,
+        width: 300,
         minHeight: 300,
         maxHeight: 350,
         flexDirection: 'column',

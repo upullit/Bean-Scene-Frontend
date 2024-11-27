@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Modal, Picker } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Modal} from 'react-native';
+import { Picker } from "@react-native-picker/picker";
 import { useAuth } from '../context/authContext';
 import CustomButton from '../CustomButton';
 
@@ -82,18 +83,42 @@ const RegisterStaffScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, padding: 16 },
-    title: { fontSize: 24, fontWeight: 'bold', marginBottom: 16 },
-    input: { borderWidth: 1, padding: 8, marginBottom: 16, borderRadius: 4 },
-    message: { marginTop: 16, color: 'red' },
+    container: { 
+        flex: 1, 
+        justifyContent: 'center',
+        alignContent: 'center',
+        paddingHorizontal: 200,
+    },
+    title: { 
+        fontSize: 26, 
+        fontWeight: 'bold', 
+        marginBottom: 16, 
+        textAlign: 'center',
+    },
+    input: { 
+        borderWidth: 1, 
+        padding: 8, 
+        marginBottom: 16, 
+        borderRadius: 4 
+    },
+    message: { 
+        marginTop: 16, 
+        color: 'red' 
+    },
     pickerContainer: {
         borderWidth: 1,
         borderRadius: 4,
         borderColor: 'gray',
         marginBottom: 16,
     },
-    picker: { height: 50, width: '100%' },
-    message: { marginTop: 16, color: 'red' },
+    picker: { 
+        height: 50, 
+        width: '100%' 
+    },
+    message: { 
+        marginTop: 16, 
+        color: 'red' 
+    },
     modalContainer: {
         flex: 1,
         justifyContent: 'center',
