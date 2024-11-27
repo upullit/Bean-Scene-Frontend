@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Modal, ScrollView } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { useAuth } from '../context/authContext';
 import CustomModal from '../CustomModal';
@@ -9,20 +9,20 @@ const HomeScreen = ({ navigation }) => {
     const [logoutModalVisible, setLogoutModalVisible] = useState(false);
 
     // Lock the app orientation
-    // useEffect(() => {
-    //     const lockOrientation = async () => {
-    //         try {
-    //             await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
-    //         } catch (err) {
-    //             console.warn("Orientation lock not supported:", err.message);
-    //         }
-    //     };
-    //     lockOrientation();
+    useEffect(() => {
+        const lockOrientation = async () => {
+            try {
+                await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
+            } catch (err) {
+                console.warn("Orientation lock not supported:", err.message);
+            }
+        };
+        lockOrientation();
 
-    //     return () => {
-    //         ScreenOrientation.unlockAsync(); // Reset orientation on unmount
-    //     };
-    // }, []);
+        return () => {
+            ScreenOrientation.unlockAsync(); // Reset orientation on unmount
+        };
+    }, []);
 
     useEffect(() => {
         console.log('User object in HomeScreen:', user); // Check what is being passed
