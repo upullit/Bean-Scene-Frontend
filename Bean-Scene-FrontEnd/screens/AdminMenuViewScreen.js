@@ -35,7 +35,7 @@ const AdminMenuViewScreen = ({ route, navigation }) => {
             setModalContent({
                 title: 'Deleted',
                 message: 'Item has been deleted successfully.',
-                confirmAction: () => navigation.goBack(),
+                confirmAction: () => navigation.navigate('Home')
             });
             setModalVisible(true);
         } catch (error) {

@@ -2,6 +2,7 @@ import React from 'react'
 import AppNavigator from './navigation/AppNavigator'
 import { StyleSheet } from 'react-native';
 import { AuthProvider } from './context/authContext';
+import 'react-native-gesture-handler';
 
 export default function App(){
     return (        

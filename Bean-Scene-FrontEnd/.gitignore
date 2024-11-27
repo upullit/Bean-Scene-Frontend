@@ -33,3 +33,24 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# Gradle files
+/android/.gradle/
+/android/.cxx/
+/android/build/
+/android/local.properties
+/android/app/build/
+/android/app/.cxx/
+/android/app/intermediates/
+/android/app/outputs/
+
+# IDE-specific files
+/android/.idea/
+/android/*.iml
+
+# Keystore files (if applicable)
+/android/app/keystore.jks
+
+# Logs and temporary files
+/android/*.log
+/android/**/*.log

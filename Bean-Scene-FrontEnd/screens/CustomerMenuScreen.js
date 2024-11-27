@@ -9,7 +9,7 @@ const MenuScreen = () => {
     useEffect(() => {
         const fetchMenuItems = async () => {
             try {
-                const response = await fetch('http://localhost:3000/api/menuitems'); // Adjust URL if deployed
+                const response = await fetch('https://api.finch.dev.thickets.onl/api/menuitems'); // Adjust URL if deployed
                 const data = await response.json();
 
                 // Group items by category
