@@ -120,7 +120,7 @@ const AdminMenuEditScreen = ({ route, navigation }) => {
                 </View>
                 <CustomButton title="Save" onPress={() => {
                     handleSave();
-                    navigation.goBack();
+                    navigation.navigate('Home');
                 }} />
             </View>
 
